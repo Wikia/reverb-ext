@@ -1,0 +1,54 @@
+{
+	"name": "Reverb",
+	"version": "0.0.1",
+	"author": [
+		"Hydra Wiki Platform Team"
+	],
+	"license-name": "GPL-2.0-or-later",
+	"descriptionmsg": "reverb_description",
+	"type": "other",
+	"requires": {
+		"MediaWiki": ">= 1.31.0"
+	},
+	"SpecialPages": {
+		"Notifications": "SpecialNotifications"
+	},
+	"MessagesDirs": {
+		"HydraCore": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+	},
+	"ResourceModules": {
+		"ext.reverb.notifications.styles": {
+			"targets": [
+				"desktop",
+				"mobile"
+			],
+			"styles": [
+				"resources/css/reverb.notifications.css"
+			],
+			"position": "bottom"
+		},
+		"ext.reverb.notifications.scripts": {
+			"targets": [
+				"desktop",
+				"mobile"
+			],
+			"styles": [
+				"resources/js/reverb.notifications.js"
+			],
+			"position": "bottom"
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteExtPath": "Reverb"
+	},
+	"Hooks": {
+	},
+	"config": {
+	},
+	"manifest_version": 1
+}
