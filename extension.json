@@ -47,6 +47,11 @@
 		"remoteExtPath": "Reverb"
 	},
 	"Hooks": {
+		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged",
+		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
+		"LocalUserCreated": "Reverb\\Hooks::onLocalUserCreated",
+		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
+		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert"
 	},
 	"config": {
 	},
