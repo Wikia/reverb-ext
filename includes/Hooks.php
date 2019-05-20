@@ -9,6 +9,8 @@
  * @license MIT
  **/
 
+declare(strict_types=1);
+
 namespace Reverb;
 
 use Content;
@@ -46,12 +48,23 @@ class Hooks {
 			return true;
 		}
 
+		$title = $wikiPage->getTitle();
+
 		// $thresholds = [ 1, 10, 100, 1000, 10000, 100000, 1000000 ];
 		// Echo sends a 'thank you' notification on certain thresholds.
 		// Do we wish to keep these?
 		// @TODO: Create 'article-edit-thanks' Notification
 
-		// @TODO: User talk page discussion parser.
+		if ($title->getNamespace() == NS_USER_TALK) {
+			$notifyUser = User::newFromName($title->getText());
+			// If the recipient is a valid non-anonymous user and hasn't turned off their notifications, generate a talk page post Echo notification.
+			if ($notifyUser && $notifyUser->getId()) {
+				// If this is a minor edit, only notify if the agent doesn't have talk page minor edit notification blocked.
+				if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
+					// @TODO: Create 'user-interest-talk-page-edit' Notification
+				}
+			}
+		}
 
 		// Reverted edits $undidRevId.
 		if ($undidRevId > 0) {

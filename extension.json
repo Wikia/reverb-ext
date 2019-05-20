@@ -46,6 +46,9 @@
 		"localBasePath": "",
 		"remoteExtPath": "Reverb"
 	},
+	"APIModules": {
+		"notifications": "\\Reverb\\Api\\ApiNotifications"
+	},
 	"Hooks": {
 		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged",
 		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
@@ -54,6 +57,32 @@
 		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert"
 	},
 	"config": {
+		"ReverbNotifications": {
+			"value": {
+				"user-welcome": {
+					"category": "user-interest",
+				},
+				"user-interest-talk-page-edit": {
+					"category": "user-interest"
+				},
+				"article-edit-revert": {
+					"category": "articles"
+				},
+				"user-interest-page-linked": {
+					"category": "articles"
+				},
+				"user-groups-expiration-change": {
+					"category": "user-rights",
+				},
+				"user-groups-changed": {
+					"category": "user-rights",
+				},
+				"article-edit-thanks": {
+					"category": "articles",
+				}
+			},
+			"merge_strategy": "array_plus_2d"
+		}
 	},
 	"manifest_version": 1
 }
