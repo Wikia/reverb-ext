@@ -38,7 +38,7 @@
 				"desktop",
 				"mobile"
 			],
-			"styles": [
+			"scripts": [
 				"resources/js/reverb.notifications.js"
 			],
 			"position": "bottom"
@@ -56,7 +56,8 @@
 		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
 		"LocalUserCreated": "Reverb\\Hooks::onLocalUserCreated",
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
-		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert"
+		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
+		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay"
 	},
 	"config": {
 		"ReverbNotifications": {

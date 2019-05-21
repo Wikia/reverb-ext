@@ -224,4 +224,20 @@ class Hooks {
 
 		return true;
 	}
+
+	/**
+	 * Shoehorn the javascript and styles for reverb into every page.
+	 *
+	 * @param object Mediawiki Output Object
+	 * @param object Mediawiki Skin Object
+	 *
+	 * @return boolean True
+	 */
+	public static function onBeforePageDisplay(&$output, &$skin) {
+		$output->addModuleStyles('ext.reverb.notifications.styles');
+		$output->addModules('ext.reverb.notifications.scripts');
+
+		return true;
+	}
+
 }
