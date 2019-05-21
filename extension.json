@@ -19,6 +19,8 @@
 		]
 	},
 	"AutoloadClasses": {
+		"Reverb\\Hooks": "includes/Hooks.php",
+		"Reverb\\Api\\ApiNotifications": "includes/Hooks.php"
 	},
 	"ResourceModules": {
 		"ext.reverb.notifications.styles": {
@@ -60,7 +62,7 @@
 		"ReverbNotifications": {
 			"value": {
 				"user-welcome": {
-					"category": "user-interest",
+					"category": "user-interest"
 				},
 				"user-interest-talk-page-edit": {
 					"category": "user-interest"
@@ -72,13 +74,13 @@
 					"category": "articles"
 				},
 				"user-groups-expiration-change": {
-					"category": "user-rights",
+					"category": "user-rights"
 				},
 				"user-groups-changed": {
-					"category": "user-rights",
+					"category": "user-rights"
 				},
 				"article-edit-thanks": {
-					"category": "articles",
+					"category": "articles"
 				}
 			},
 			"merge_strategy": "array_plus_2d"
