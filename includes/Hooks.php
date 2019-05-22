@@ -237,6 +237,8 @@ class Hooks {
 		$output->addModuleStyles('ext.reverb.notifications.styles');
 		$output->addModules('ext.reverb.notifications.scripts');
 
+		
+
 		return true;
 	}
 

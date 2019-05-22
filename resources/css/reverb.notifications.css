@@ -1,0 +1,58 @@
+#netbar .netbar-box.reverb-notifications {
+   /* Style this differnetly? */
+}
+
+.reverb-np {
+    display: none;
+    width: 500px;
+    height: auto;
+    border: 1px solid #111;
+    background: #222;
+    color: #fff;
+    padding: 0px;
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    z-index: 9999999;
+}
+
+.reverb-np-header {
+    font-size: 22px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-bottom: 1px solid #111;
+}
+
+.reverb-np-notifications {
+    
+}
+
+.reverb-np-no-unread {
+    text-align: center;
+    padding: 20px 20px;
+}
+
+.reverb-np-actions {
+    /* Todo: Add Action Buttons at Bottom Maybe? */
+}
+
+.reverb-npn-row {
+    padding: 10px 10px;
+    border-bottom: 1px solid #111;
+}
+
+.reverb-npn-row:hover {
+    background: #4f4f4f;
+}
+
+.reverb-npn-row.reverb-npnr-read {
+    color: #cfcfcf;
+}
+
+.reverb-npn-row-header {
+    font-weight: bold;
+}
+
+.reverb-npn-row-body {
+    padding: 3px 0px;
+}

@@ -34,6 +34,9 @@
 			"position": "bottom"
 		},
 		"ext.reverb.notifications.scripts": {
+			"dependencies": [
+				"ext.hydraCore.font-awesome.styles"
+			],
 			"targets": [
 				"desktop",
 				"mobile"
