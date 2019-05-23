@@ -14,15 +14,16 @@ declare(strict_types=1);
 namespace Reverb;
 
 use Content;
+use OutputPage;
 use Revision;
+use SkinTemplate;
 use Status;
 use User;
 
 class Hooks {
 	/**
 	 * Handler for PageContentSaveComplete hook
-	 *
-	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/PageContentSaveComplete
+	 * http://www.mediawiki.org/wiki/Manual:Hooks/PageContentSaveComplete
 	 *
 	 * @param WikiPage $wikiPage   WikiPage modified
 	 * @param User     $user       User performing the modification
@@ -32,7 +33,9 @@ class Hooks {
 	 * @param boolean  $isWatch    (No longer used)
 	 * @param string   $section    (No longer used)
 	 * @param integer  $flags      Flags passed to WikiPage::doEditContent()
-	 * @param Revision $revision   Revision object of the saved content.  If the save did not result in the creation of a new revision (e.g. the submission was equal to the latest revision), this parameter may be null (null edits, or "no-op").
+	 * @param Revision $revision   Revision object of the saved content.
+	 *                             If the save did not result in the creation of a new revision
+	 *                             this parameter may be null (null edits, or "no-op").
 	 * @param Status   $status     Status object about to be returned by doEditContent()
 	 * @param integer  $baseRevId  the rev ID (or false) this edit was based on
 	 * @param integer  $undidRevId the rev ID (or 0) this edit undid - added in MW 1.30
@@ -80,8 +83,7 @@ class Hooks {
 
 	/**
 	 * Handler for LocalUserCreated hook.
-	 *
-	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/LocalUserCreated
+	 * http://www.mediawiki.org/wiki/Manual:Hooks/LocalUserCreated
 	 *
 	 * @param User    $user        User object that was created.
 	 * @param boolean $autocreated True when account was auto-created
@@ -98,8 +100,7 @@ class Hooks {
 
 	/**
 	 * Handler for UserGroupsChanged hook.
-	 *
-	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/UserGroupsChanged
+	 * http://www.mediawiki.org/wiki/Manual:Hooks/UserGroupsChanged
 	 *
 	 * @param User        $user      user that was changed
 	 * @param string[]    $add       strings corresponding to groups added
@@ -152,8 +153,7 @@ class Hooks {
 
 	/**
 	 * Handler for LinksUpdateAfterInsert hook.
-	 *
-	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdateAfterInsert
+	 * http://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdateAfterInsert
 	 *
 	 * @param LinksUpdate $linksUpdate
 	 * @param string      $table
@@ -202,8 +202,7 @@ class Hooks {
 
 	/**
 	 * Handler for ArticleRollbackComplete hook.
-	 *
-	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/ArticleRollbackComplete
+	 * http://www.mediawiki.org/wiki/Manual:Hooks/ArticleRollbackComplete
 	 *
 	 * @param WikiPage $wikiPage    The article that was edited
 	 * @param User     $agent       The user who did the rollback
@@ -228,18 +227,15 @@ class Hooks {
 	/**
 	 * Shoehorn the javascript and styles for reverb into every page.
 	 *
-	 * @param object Mediawiki Output Object
-	 * @param object Mediawiki Skin Object
+	 * @param OutputPage   $output Mediawiki Output Object
+	 * @param SkinTemplate $skin   Mediawiki Skin Object
 	 *
 	 * @return boolean True
 	 */
-	public static function onBeforePageDisplay(&$output, &$skin) {
+	public static function onBeforePageDisplay(OutputPage &$output, SkinTemplate &$skin) {
 		$output->addModuleStyles('ext.reverb.notifications.styles');
 		$output->addModules('ext.reverb.notifications.scripts');
 
-		
-
 		return true;
 	}
-
 }
