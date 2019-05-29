@@ -92,7 +92,7 @@ class Hooks {
 	 */
 	public static function onLocalUserCreated(User $user, bool $autocreated): bool {
 		if (!$autocreated) {
-			// @TODO: Create 'user-welcome' Notification
+			// @TODO: Create 'user-interest-welcome' Notification
 		}
 
 		return true;
@@ -141,11 +141,11 @@ class Hooks {
 		}
 
 		if ($expiryChanged) {
-			// @TODO: Create 'user-groups-expiration-change' Notification
+			// @TODO: Create 'user-account-groups-expiration-change' Notification
 		}
 
 		if ($reallyAdded || $remove) {
-			// @TODO: Create 'user-groups-changed' Notification
+			// @TODO: Create 'user-account-groups-changed' Notification
 		}
 
 		return true;

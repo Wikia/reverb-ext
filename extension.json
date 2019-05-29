@@ -65,26 +65,49 @@
 	"config": {
 		"ReverbNotifications": {
 			"value": {
-				"user-welcome": {
-					"category": "user-interest"
+				"user-interest-welcome": {
+					"importance": "0"
 				},
 				"user-interest-talk-page-edit": {
-					"category": "user-interest"
-				},
-				"article-edit-revert": {
-					"category": "articles"
+					"importance": "9"
 				},
 				"user-interest-page-linked": {
-					"category": "articles"
+					"importance": "1"
 				},
-				"user-groups-expiration-change": {
-					"category": "user-rights"
-				},
-				"user-groups-changed": {
-					"category": "user-rights"
+				"article-edit-revert": {
+					"importance": "8"
 				},
 				"article-edit-thanks": {
-					"category": "articles"
+					"importance": "0"
+				},
+				"user-account-groups-expiration-change": {
+					"importance": "9"
+				},
+				"user-account-groups-changed": {
+					"importance": "9"
+				}
+			},
+			"merge_strategy": "array_plus_2d"
+		},
+		"ReverbIcons": {
+			"value": {
+				"category": {
+					"user": ".svg",
+					"article": ".svg"
+				},
+				"subcategory": {
+					"user-account": ".svg",
+					"user-interest": ".svg",
+					"article-edit": ".svg"
+				},
+				"notification": {
+					"user-interest-welcome": ".svg",
+					"user-interest-talk-page-edit": ".svg",
+					"user-interest-page-linked": ".svg",
+					"article-edit-revert": ".svg",
+					"article-edit-thanks": ".svg",
+					"user-account-groups-expiration-change": ".svg",
+					"user-account-groups-changed": ".svg"
 				}
 			},
 			"merge_strategy": "array_plus_2d"
