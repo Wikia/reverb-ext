@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Reverb\Notification;
 
 use MediaWikiServices;
+use MWException;
 
 class Notification {
 	/**
@@ -93,8 +94,10 @@ class Notification {
 	/**
 	 * Get icon configuration.
 	 *
-	 * @param string Icon Type, one of: 'notification', 'category', 'subcategory'
+	 * @param string $type Icon Type, one of: 'notification', 'category', 'subcategory'
+	 *
 	 * @return array Array containing key of type name to the URL location for it.
+	 * @throws MWException
 	 */
 	private function getIconsConfig(string $type = 'notification'): array {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
