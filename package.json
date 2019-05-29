@@ -1,0 +1,20 @@
+{
+  "name": "Reverb",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "spec"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine": "^3.4.0"
+  },
+  "scripts": { "test": "jasmine" },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:hydrawiki/extensions/reverb.git"
+  },
+  "author": "",
+  "license": "GPL-2.0-or-later"
+}

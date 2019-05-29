@@ -21,7 +21,6 @@ class ApiNotifications extends ApiBase {
 	 * @return boolean
 	 */
 	public function execute() {
-
 	}
 
 	/**

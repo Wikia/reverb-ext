@@ -23,7 +23,6 @@ use User;
 class Hooks {
 	/**
 	 * Handler for PageContentSaveComplete hook
-	 * http://www.mediawiki.org/wiki/Manual:Hooks/PageContentSaveComplete
 	 *
 	 * @param WikiPage $wikiPage   WikiPage modified
 	 * @param User     $user       User performing the modification
@@ -33,16 +32,31 @@ class Hooks {
 	 * @param boolean  $isWatch    (No longer used)
 	 * @param string   $section    (No longer used)
 	 * @param integer  $flags      Flags passed to WikiPage::doEditContent()
-	 * @param Revision $revision   Revision object of the saved content.
-	 *                             If the save did not result in the creation of a new revision
-	 *                             this parameter may be null (null edits, or "no-op").
+	 * @param Revision $revision   Revision object of the saved content.  If the save did not result in the creation
+	 *                             of a new revision (e.g. the submission was equal to the latest revision), this
+	 *                             parameter may be null (null edits, or "no-op").
 	 * @param Status   $status     Status object about to be returned by doEditContent()
 	 * @param integer  $baseRevId  the rev ID (or false) this edit was based on
 	 * @param integer  $undidRevId the rev ID (or 0) this edit undid - added in MW 1.30
 	 *
+	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/PageContentSaveComplete
+	 *
 	 * @return boolean True
 	 */
-	public static function onPageContentSaveComplete(WikiPage &$wikiPage, User &$user, Content $content, string $summary, bool $isMinor, bool $isWatch, string $section, int &$flags, $revision, Status &$status, $baseRevId, int $undidRevId = 0): bool {
+	public static function onPageContentSaveComplete(
+		WikiPage &$wikiPage,
+		User &$user,
+		Content $content,
+		string $summary,
+		bool $isMinor,
+		bool $isWatch,
+		string $section,
+		int &$flags,
+		$revision,
+		Status &$status,
+		$baseRevId,
+		int $undidRevId = 0
+	): bool {
 		if (!$revision) {
 			return true;
 		}
@@ -60,9 +74,11 @@ class Hooks {
 
 		if ($title->getNamespace() == NS_USER_TALK) {
 			$notifyUser = User::newFromName($title->getText());
-			// If the recipient is a valid non-anonymous user and hasn't turned off their notifications, generate a talk page post Echo notification.
+			// If the recipient is a valid non-anonymous user and hasn't turned off their
+			// notifications, generate a talk page post Echo notification.
 			if ($notifyUser && $notifyUser->getId()) {
-				// If this is a minor edit, only notify if the agent doesn't have talk page minor edit notification blocked.
+				// If this is a minor edit, only notify if the agent doesn't have talk page
+				// minor edit notification blocked.
 				if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
 					// @TODO: Create 'user-interest-talk-page-edit' Notification
 				}
@@ -83,10 +99,11 @@ class Hooks {
 
 	/**
 	 * Handler for LocalUserCreated hook.
-	 * http://www.mediawiki.org/wiki/Manual:Hooks/LocalUserCreated
 	 *
 	 * @param User    $user        User object that was created.
 	 * @param boolean $autocreated True when account was auto-created
+	 *
+	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/LocalUserCreated
 	 *
 	 * @return boolean
 	 */
@@ -100,7 +117,6 @@ class Hooks {
 
 	/**
 	 * Handler for UserGroupsChanged hook.
-	 * http://www.mediawiki.org/wiki/Manual:Hooks/UserGroupsChanged
 	 *
 	 * @param User        $user      user that was changed
 	 * @param string[]    $add       strings corresponding to groups added
@@ -110,9 +126,19 @@ class Hooks {
 	 * @param array       $oldUGMs
 	 * @param array       $newUGMs
 	 *
+	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/UserGroupsChanged
+	 *
 	 * @return boolean
 	 */
-	public static function onUserGroupsChanged($user, $add, $remove, $performer, $reason = false, array $oldUGMs = [], array $newUGMs = []): bool {
+	public static function onUserGroupsChanged(
+		$user,
+		$add,
+		$remove,
+		$performer,
+		$reason = false,
+		array $oldUGMs = [],
+		array $newUGMs = []
+	): bool {
 		if (!$performer) {
 			// TODO: Implement support for autopromotion
 			return true;
@@ -153,11 +179,12 @@ class Hooks {
 
 	/**
 	 * Handler for LinksUpdateAfterInsert hook.
-	 * http://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdateAfterInsert
 	 *
 	 * @param LinksUpdate $linksUpdate
 	 * @param string      $table
 	 * @param array       $insertions
+	 *
+	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdateAfterInsert
 	 *
 	 * @return boolean True
 	 */
@@ -177,7 +204,11 @@ class Hooks {
 		// 2. content namespace pages &&
 		// 3. non-transcluding pages &&
 		// 4. non-redirect pages
-		if ($table !== 'pagelinks' || !MWNamespace::isContent($linksUpdate->getTitle()->getNamespace())	|| !$linksUpdate->mRecursive || $linksUpdate->getTitle()->isRedirect()) {
+		if ($table !== 'pagelinks'
+		|| !MWNamespace::isContent($linksUpdate->getTitle()->getNamespace())
+		|| !$linksUpdate->mRecursive
+		|| $linksUpdate->getTitle()->isRedirect()
+		) {
 			return true;
 		}
 
@@ -202,16 +233,22 @@ class Hooks {
 
 	/**
 	 * Handler for ArticleRollbackComplete hook.
-	 * http://www.mediawiki.org/wiki/Manual:Hooks/ArticleRollbackComplete
 	 *
 	 * @param WikiPage $wikiPage    The article that was edited
 	 * @param User     $agent       The user who did the rollback
 	 * @param Revision $newRevision The revision the page was reverted back to
 	 * @param Revision $oldRevision The revision of the top edit that was reverted
 	 *
+	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/ArticleRollbackComplete
+	 *
 	 * @return boolean True
 	 */
-	public static function onArticleRollbackComplete(WikiPage $wikiPage, User $agent, Revision $newRevision, Revision $oldRevision): bool {
+	public static function onArticleRollbackComplete(
+		WikiPage $wikiPage,
+		User $agent,
+		Revision $newRevision,
+		Revision $oldRevision
+	): bool {
 		$victimId = $oldRevision->getUser();
 		$latestRevision = $wikiPage->getRevision();
 		self::$lastRevertedRevision = $latestRevision;
