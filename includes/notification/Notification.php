@@ -63,10 +63,9 @@ class Notification {
 	 * @return string|null URL or null if missing.
 	 */
 	public function getNotificationIcon(): ?string {
-		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
-		$reverbIcons = $config->get('ReverbIcons');
+		$icons = $this->getIconsConfig('notification')
 
-		return $reverbIcons['notification'][$this->getType()] ?? null;
+		return $icons['notification'][$this->getType()] ?? null;
 	}
 
 	/**
@@ -75,10 +74,9 @@ class Notification {
 	 * @return string|null URL or null if missing.
 	 */
 	public function getCategoryIcon(): ?string {
-		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
-		$reverbIcons = $config->get('ReverbIcons');
+		$icons = $this->getIconsConfig('category')
 
-		return $reverbIcons['category'][$this->getCategory()] ?? null;
+		return $icons[$this->getCategory()] ?? null;
 	}
 
 	/**
@@ -87,9 +85,25 @@ class Notification {
 	 * @return string|null URL or null if missing.
 	 */
 	public function getSubcategoryIcon(): ?string {
+		$icons = $this->getIconsConfig('subcategory')
+
+		return $icons[$this->getSubcategory()] ?? null;
+	}
+
+	/**
+	 * Get icon configuration.
+	 *
+	 * @param string Icon Type, one of: 'notification', 'category', 'subcategory'
+	 * @return array Array containing key of type name to the URL location for it.
+	 */
+	private function getIconsConfig(string $type = 'notification'): array {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
 		$reverbIcons = $config->get('ReverbIcons');
 
-		return $reverbIcons['subcategory'][$this->getSubcategory()] ?? null;
+		if (!isset($reverbIcons[$type])) {
+			throw new MWException("The request icon type '{$type}' is missing from the \$wgReverbIcons configuration.");
+		}
+
+		return $reverbIcons[$type];
 	}
 }
