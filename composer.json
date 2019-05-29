@@ -1,10 +1,44 @@
 {
-    "require-dev": {
-        "hydrawiki/hydrawiki-codesniffer": "^1.0"
-    },
     "require": {
         "hydrawiki/reverb-client": "^0.1.0",
         "php-http/guzzle6-adapter": "^2.0",
         "php-http/discovery": "^1.6"
+    },
+    "require-dev": {
+        "hydrawiki/hydrawiki-codesniffer": "^1.0",
+        "jakub-onderka/php-console-highlighter": "^0.4.0",
+        "jakub-onderka/php-parallel-lint": "^1.0",
+        "mediawiki/minus-x": "^0.3.2",
+        "mockery/mockery": "^1.2",
+        "phpunit/phpunit": "^8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Reverb\\": "includes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": [
+            "parallel-lint . --exclude vendor --exclude node_modules",
+            "phpcs -p -s",
+            "minus-x check .",
+            "phpunit",
+            "npm test"
+        ],
+        "fix": [
+            "minus-x fix .",
+            "phpcbf"
+        ]
     }
+
 }
