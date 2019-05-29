@@ -25,7 +25,6 @@ class Notification {
 	/**
 	 * Main Constructor
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function __construct() {
@@ -34,8 +33,7 @@ class Notification {
 	/**
 	 * Get the type for this notification.
 	 *
-	 * @access public
-	 * @return string	Notification Type
+	 * @return string Notification Type
 	 */
 	public function getType(): string {
 		return $this->data['type'];
@@ -44,8 +42,7 @@ class Notification {
 	/**
 	 * Get the category for this notification.
 	 *
-	 * @access public
-	 * @return string	Category
+	 * @return string Category
 	 */
 	public function getCategory(): string {
 		return substr($this->getType(), 0, strpos($this->getType(), '-'));
@@ -54,8 +51,7 @@ class Notification {
 	/**
 	 * Get the subcategory for this notification.
 	 *
-	 * @access public
-	 * @return string	Subcategory
+	 * @return string Subcategory
 	 */
 	public function getSubcategory(): string {
 		return substr($this->getType(), 0, strpos($this->getType(), '-', strpos($this->getType()) + 1));
@@ -64,7 +60,6 @@ class Notification {
 	/**
 	 * Return the URL for the notification icon.
 	 *
-	 * @access public
 	 * @return string|null URL or null if missing.
 	 */
 	public function getNotificationIcon(): ?string {
@@ -77,7 +72,6 @@ class Notification {
 	/**
 	 * Return the URL for the category icon.
 	 *
-	 * @access public
 	 * @return string|null URL or null if missing.
 	 */
 	public function getCategoryIcon(): ?string {
@@ -90,7 +84,6 @@ class Notification {
 	/**
 	 * Return the URL for the subcategory icon.
 	 *
-	 * @access public
 	 * @return string|null URL or null if missing.
 	 */
 	public function getSubcategoryIcon(): ?string {
