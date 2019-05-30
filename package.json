@@ -10,7 +10,9 @@
   "devDependencies": {
     "jasmine": "^3.4.0"
   },
-  "scripts": { "test": "jasmine" },
+  "scripts": {
+    "test": "jasmine"
+  },
   "repository": {
     "type": "git",
     "url": "git@gitlab.com:hydrawiki/extensions/reverb.git"
