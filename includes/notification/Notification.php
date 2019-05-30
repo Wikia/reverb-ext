@@ -64,7 +64,7 @@ class Notification {
 	 * @return string|null URL or null if missing.
 	 */
 	public function getNotificationIcon(): ?string {
-		$icons = $this->getIconsConfig('notification')
+		$icons = $this->getIconsConfig('notification');
 
 		return $icons['notification'][$this->getType()] ?? null;
 	}
@@ -75,7 +75,7 @@ class Notification {
 	 * @return string|null URL or null if missing.
 	 */
 	public function getCategoryIcon(): ?string {
-		$icons = $this->getIconsConfig('category')
+		$icons = $this->getIconsConfig('category');
 
 		return $icons[$this->getCategory()] ?? null;
 	}
@@ -86,7 +86,7 @@ class Notification {
 	 * @return string|null URL or null if missing.
 	 */
 	public function getSubcategoryIcon(): ?string {
-		$icons = $this->getIconsConfig('subcategory')
+		$icons = $this->getIconsConfig('subcategory');
 
 		return $icons[$this->getSubcategory()] ?? null;
 	}
