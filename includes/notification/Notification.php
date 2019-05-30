@@ -14,6 +14,7 @@ namespace Reverb\Notification;
 
 use MediaWikiServices;
 use MWException;
+use Reverb\Identifier\Identifier;
 
 class Notification {
 	/**
@@ -21,7 +22,15 @@ class Notification {
 	 *
 	 * @var array
 	 */
-	private $data = [];
+	private $data = [
+		'id' => '',
+		'origin_id' => '',
+		'agent_id' => '',
+		'type' => '',
+		'message_data' => '',
+		'created_at' => 0,
+		'url' => ''
+	];
 
 	/**
 	 * Main Constructor
@@ -38,6 +47,16 @@ class Notification {
 	 */
 	public function getType(): string {
 		return $this->data['type'];
+	}
+
+	/**
+	 * Get the origin.
+	 *
+	 * @return array Notification Type
+	 */
+	public function getOrigin(): array {
+		// @TODO: Cache this.
+		return Identifier::factory($this->data['origin_id']);
 	}
 
 	/**
