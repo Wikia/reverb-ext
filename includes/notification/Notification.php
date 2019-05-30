@@ -15,6 +15,7 @@ namespace Reverb\Notification;
 use MediaWikiServices;
 use MWException;
 use Reverb\Identifier\Identifier;
+use Reverb\Identifier\InvalidIdentifierException;
 
 class Notification {
 	/**
@@ -31,6 +32,20 @@ class Notification {
 		'created_at' => 0,
 		'url' => ''
 	];
+
+	/**
+	 * Cached Origin SiteIdentifier
+	 *
+	 * @var SiteIdentifier|null
+	 */
+	private $originIdCache = null;
+
+	/**
+	 * Cached Agent UserIdentifier
+	 *
+	 * @var SiteIdentifier|null
+	 */
+	private $agentIdCache = null;
 
 	/**
 	 * Main Constructor
@@ -50,13 +65,35 @@ class Notification {
 	}
 
 	/**
-	 * Get the origin.
+	 * Get the origin SiteIdentifier.
 	 *
-	 * @return array Notification Type
+	 * @return SiteIdentifier|null
 	 */
-	public function getOrigin(): array {
-		// @TODO: Cache this.
-		return Identifier::factory($this->data['origin_id']);
+	public function getOrigin(): ?SiteIdentifier {
+		if ($this->originIdCache === null) {
+			try {
+				$this->originIdCache = Identifier::factory($this->data['origin_id']);
+			} catch (InvalidIdentifierException $e) {
+				$this->originIdCache = null;
+			}
+		}
+		return $this->originIdCache;
+	}
+
+	/**
+	 * Get the agent UserIdentifier.
+	 *
+	 * @return UserIdentifier|null
+	 */
+	public function getAgent(): ?UserIdentifier {
+		if ($this->agentIdCache === null) {
+			try {
+				$this->agentIdCache = Identifier::factory($this->data['origin_id']);
+			} catch (InvalidIdentifierException $e) {
+				$this->agentIdCache = null;
+			}
+		}
+		return $this->agentIdCache;
 	}
 
 	/**
