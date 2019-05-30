@@ -14,11 +14,14 @@ declare(strict_types=1);
 namespace Reverb;
 
 use Content;
+use LinksUpdate;
+use MWNamespace;
 use OutputPage;
 use Revision;
 use SkinTemplate;
 use Status;
 use User;
+use WikiPage;
 
 class Hooks {
 	/**
@@ -95,6 +98,8 @@ class Hooks {
 				}
 			}
 		}
+
+		return true;
 	}
 
 	/**
