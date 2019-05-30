@@ -14,24 +14,17 @@ namespace Reverb\Notification;
 
 use MediaWikiServices;
 use MWException;
+use Hydrawiki\Reverb\Client\V1\Resources\Notification;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
 
 class Notification {
 	/**
-	 * Data container.
+	 * Data Resource
 	 *
-	 * @var array
+	 * @var Hydrawiki\Reverb\Client\V1\Resources\Notification
 	 */
-	private $data = [
-		'id' => '',
-		'origin_id' => '',
-		'agent_id' => '',
-		'type' => '',
-		'message_data' => '',
-		'created_at' => 0,
-		'url' => ''
-	];
+	private $resource = null;
 
 	/**
 	 * Cached Origin SiteIdentifier
