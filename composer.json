@@ -1,6 +1,6 @@
 {
     "require": {
-        "hydrawiki/reverb-client": "^0.1.0",
+        "hydrawiki/reverb-client": "dev-master",
         "php-http/guzzle6-adapter": "^2.0",
         "php-http/discovery": "^1.6"
     },
