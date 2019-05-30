@@ -19,8 +19,12 @@
 		]
 	},
 	"AutoloadClasses": {
+		"Reverb\\Api\\ApiNotifications": "includes/api/ApiNotifications.php",
 		"Reverb\\Hooks": "includes/Hooks.php",
-		"Reverb\\Api\\ApiNotifications": "includes/Hooks.php"
+		"Reverb\\Identifier\\Identifier": "includes/identifier/Identifier.php",
+		"Reverb\\Identifier\\InvalidIdentifierException": "includes/identifier/InvalidIdentifierException.php",
+		"Reverb\\Identifier\\SiteIdentifier": "includes/identifier/SiteIdentifier.php",
+		"Reverb\\Identifier\\UserIdentifier": "includes/identifier/UserIdentifier.php"
 	},
 	"ResourceModules": {
 		"ext.reverb.notifications.styles": {

@@ -56,6 +56,15 @@ class Notification {
 	}
 
 	/**
+	 * Get the unique ID for this notification used by the service.
+	 *
+	 * @return string ID
+	 */
+	public function getID(): string {
+		return $this->data['id'];
+	}
+
+	/**
 	 * Get the type for this notification.
 	 *
 	 * @return string Notification Type
@@ -120,7 +129,7 @@ class Notification {
 	 * @return string|null URL or null if missing.
 	 */
 	public function getNotificationIcon(): ?string {
-		$icons = $this->getIconsConfig('notification')
+		$icons = $this->getIconsConfig('notification');
 
 		return $icons['notification'][$this->getType()] ?? null;
 	}
@@ -131,7 +140,7 @@ class Notification {
 	 * @return string|null URL or null if missing.
 	 */
 	public function getCategoryIcon(): ?string {
-		$icons = $this->getIconsConfig('category')
+		$icons = $this->getIconsConfig('category');
 
 		return $icons[$this->getCategory()] ?? null;
 	}
@@ -142,7 +151,7 @@ class Notification {
 	 * @return string|null URL or null if missing.
 	 */
 	public function getSubcategoryIcon(): ?string {
-		$icons = $this->getIconsConfig('subcategory')
+		$icons = $this->getIconsConfig('subcategory');
 
 		return $icons[$this->getSubcategory()] ?? null;
 	}

@@ -20,21 +20,21 @@ abstract class Identifier {
 	 *
 	 * @var string
 	 */
-	private $namespace = '';
+	protected $namespace = '';
 
 	/**
 	 * What am I?(Type such as site, user.)
 	 *
 	 * @var string
 	 */
-	private $what = '';
+	protected $what = '';
 
 	/**
 	 * Unique ID
 	 *
 	 * @var string
 	 */
-	private $id = '';
+	protected $id = '';
 
 	/**
 	 * What/Type to class mapping.
@@ -42,8 +42,8 @@ abstract class Identifier {
 	 * @var array
 	 */
 	private static $whatClassMap = [
-		'site' => 'SiteIdentifier',
-		'user' => 'UserIdentifier'
+		'site' => 'Reverb\Identifier\SiteIdentifier',
+		'user' => 'Reverb\Identifier\UserIdentifier'
 	];
 
 	/**
@@ -102,7 +102,7 @@ abstract class Identifier {
 	 * @return string
 	 */
 	public function __toString(): string {
-		return $this->whereIsHome() . "/" . $this->whatAmI() . ':' . $this->whoAmI()
+		return $this->whereIsHome() . "/" . $this->whatAmI() . ':' . $this->whoAmI();
 	}
 
 	/**
@@ -138,7 +138,6 @@ abstract class Identifier {
 	 * @return boolean
 	 */
 	public function isLocal(): bool {
-		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
 		return $this->namespace === $this->getConfiguredNamespace();
 	}
 

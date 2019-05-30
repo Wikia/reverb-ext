@@ -18,5 +18,5 @@ class UserIdentifier extends Identifier {
 	 *
 	 * @var string
 	 */
-	private $what = 'user';
+	protected $what = 'user';
 }
