@@ -56,6 +56,15 @@ class Notification {
 	}
 
 	/**
+	 * Get the unique ID for this notification used by the service.
+	 *
+	 * @return string ID
+	 */
+	public function getID(): string {
+		return $this->data['id'];
+	}
+
+	/**
 	 * Get the type for this notification.
 	 *
 	 * @return string Notification Type

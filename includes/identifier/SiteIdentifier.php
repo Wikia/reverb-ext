@@ -18,14 +18,14 @@ class SiteIdentifier extends Identifier {
 	 *
 	 * @var string
 	 */
-	private $what = 'site';
+	protected $what = 'site';
 
 	/**
 	 * Did this notification originate from this place?
 	 *
 	 * @return boolean
 	 */
-	public function isLocal() {
+	public function isLocal(): bool {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
 		return $this->whereIsHome() === $this->getConfiguredNamespace() && $this->whoAmI() === wfWikiID();
 	}
