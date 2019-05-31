@@ -56,12 +56,12 @@ abstract class Identifier {
 	 * @throws InvalidIdentifierException
 	 */
 	public static function factory(string $identifier): Identifier {
-		$identifier = self::splitIdentifier($identifier);
-		if ($identifier === null || !isset(self::$whatClassMap[$identifier['what']])) {
+		$idPieces = self::splitIdentifier($identifier);
+		if ($idPieces === null || !isset(self::$whatClassMap[$idPieces['what']])) {
 			throw new InvalidIdentifierException();
 		}
 
-		return new self::$whatClassMap[$identifier['what']]($identifier['namespace'], $identifier['id']);
+		return new self::$whatClassMap[$idPieces['what']]($idPieces['namespace'], $idPieces['id']);
 	}
 
 	/**
