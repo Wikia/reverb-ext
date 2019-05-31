@@ -70,10 +70,12 @@ class Notification {
 	/**
 	 * Get the type for this notification.
 	 *
-	 * @return string Notification Type
+	 * @param string $type Notification Type
+	 *
+	 * @return void
 	 */
 	public function setType(string $type) {
-		return $this->resource->setType();
+		$this->resource->setType($type);
 	}
 
 	/**
