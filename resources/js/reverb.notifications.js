@@ -154,8 +154,8 @@
     for (i = 0; i < 3; i++) { 
         addNotification(
             buildNotification({
-                header: "Someone <b>ACTIONED</b> your edit on <b>SOMEWHERE</b>",
-                body: "It was really great that it happened and I think you should be really happy about it. If you dont like it then you can just get over it. WOW. Really.",
+                header: `Someone <b>ACTIONED</b> your edit on <b>SOMEWHERE</b>`,
+                body: `It was really great that it happened and I think you should be really happy about it. If you dont like it then you can just get over it. WOW. Really.`,
                 read: false,
                 icon: icons[Math.floor(Math.random()*icons.length)]
             })
@@ -165,8 +165,8 @@
     for (i = 0; i < 5; i++) {      
         addNotification(
             buildNotification({
-                header: "Your edit on <b>MEMES GALORE</b> was <b>BELETED</b>.",
-                body: "On no. RIP.",
+                header: `Your edit on <b>MEMES GALORE</b> was <b>BELETED</b>.`,
+                body: `On no. RIP.`,
                 read: true,
                 icon: icons[Math.floor(Math.random()*icons.length)]
             })
