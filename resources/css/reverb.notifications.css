@@ -2,25 +2,61 @@
    /* Style this differnetly? */
 }
 
+.reverb-icon {
+    width: 24px;
+    height: 24px;
+}
+
 .reverb-np {
-    display: none;
+    /*display: none;*/
     width: 500px;
     height: auto;
-    border: 1px solid #111;
-    background: #222;
-    color: #fff;
-    padding: 0px;
+    border: 1px solid #4f4f4f;
+    background: #202020;
+    color: #ffffff;
     position: absolute;
     top: 5px;
     right: 15px;
     z-index: 9999999;
+    border-radius: 5px;
+    padding: 20px;
+    font-family: 'Helvetica', sans-serif;
 }
 
 .reverb-np-header {
-    font-size: 22px;
+    font-size: 16px;
     font-weight: bold;
-    padding: 5px 10px;
-    border-bottom: 1px solid #111;
+    padding: 0px 0px 15px 0px;
+    border-bottom: 1px solid #4f4f4f;
+}
+
+.reverb-nph-right {
+    float: right;
+    font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-align: right;
+  color: #ffffff;
+}
+
+.reverb-nph-notifications {
+    padding: 0px 10px 0px 0px;
+    border-right: 1px solid #4f4f4f;
+    font-family: Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #ffffff;
+}
+
+.reverb-nph-preferences {
+    padding: 0px 0px 0px 5px;
 }
 
 .reverb-np-notifications {
@@ -32,27 +68,100 @@
     padding: 20px 20px;
 }
 
-.reverb-np-actions {
-    /* Todo: Add Action Buttons at Bottom Maybe? */
+.reverb-npn {
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 .reverb-npn-row {
-    padding: 10px 10px;
-    border-bottom: 1px solid #111;
+    padding: 10px 0px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.reverb-npn-row-global {
+    border-bottom: 1px solid #4f4f4f;
+    margin-bottom: 5px;
+}
+
+.reverb-npn-row-global > .reverb-npnr-right {
+    border-bottom: 0;
+    padding: 5px 0px;
+}
+
+.reverb-npnr-unread-global {
+    position: relative;
+    top: 5px;
+}
+
+.reverb-icon-global {
+    position: relative;
+    top: 5px;
+}
+
+.reverb-npnr-left {
+    padding: 0px 15px 0px 5px;
+}
+
+.reverb-npnr-right {
+    flex: 1;
+    margin-right: 5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #4f4f4f;
 }
 
 .reverb-npn-row:hover {
-    background: #4f4f4f;
+   /* background: #4f4f4f; */
 }
 
-.reverb-npn-row.reverb-npnr-read {
-    color: #cfcfcf;
+
+
+.reverb-npnr-unread {
+  width: 10px;
+  height: 10px;
+  background-color: #f37f20;
+  border-radius: 25px;
+  float: right;
 }
 
-.reverb-npn-row-header {
+.reverb-npnr-read {
+    width: 10px;
+    height: 10px;
+    background-color: #202020;
+    border-radius: 25px;
+    float: right;
+  }
+
+.reverb-npnr-header {
+    font-family: Helvetica, sans-serif;
+    font-size: 16px;
     font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: #ffffff;
 }
 
-.reverb-npn-row-body {
+.reverb-npnr-body {
+    margin-top: 10px;
     padding: 3px 0px;
+
+    opacity: 0.75;
+    font-family: Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: #ffffff;
+}
+
+.reverb-npnr-bottom {
+    margin-top: 10px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: bold;
 }

@@ -16,6 +16,35 @@
 
     log('Display Logic Loaded.');
 
+
+    /**
+     * Globals or something. I dont know.
+     */
+
+    var icons = [
+        "articleCheck.svg",
+        "bell.svg",
+        "edit.svg",
+        "feedback.svg",
+        "help.svg",
+        "mention-failure.svg",
+        "mention-success.svg",
+        "message.svg",
+        "revert.svg",
+        "tray.svg",
+        "user-speech-bubble.svg",
+        "changes.svg",
+        "edit-user-talk.svg",
+        "global.svg",
+        "link.svg",
+        "mention-status-bundle.svg",
+        "mention.svg",
+        "notice.svg",
+        "speechBubbles.svg",
+        "user-rights.svg",
+        "userTalk.svg"
+    ];
+
     /**
      *  Identify user box to place notifications directly next to it.
      *  Also remove any echo notification boxes that may exist.
@@ -25,7 +54,7 @@
     $('.netbar-box').each(function(){
         nbx = $(this);
         if (nbx.hasClass('echo')) {
-            nbx.hide();
+            //nbx.hide();
             lastRemoved = nbx;
         }
         if (nbx.hasClass('user')) {
@@ -44,13 +73,31 @@
         </div>
     `);
 
+    var globalNotifications = `<div class="reverb-npn-row reverb-npn-row-global">
+        <div class="reverb-npnr-left">
+            <img src="/extensions/Reverb/resources/icons/global.svg" class="reverb-icon reverb-icon-global">
+        </div>
+        <div class="reverb-npnr-right">
+            <div class="reverb-npnr-header">
+                3 unread notifications from other wikis. <i class="fa fa-chevron-down"></i>
+                <span class="reverb-npnr-unread reverb-npnr-unread-global"></span>
+            </div>
+        </div>
+    </div>`;
+
+    
+
     var notificationPanel = $(`
         <div class="reverb-np">
-            <div class="reverb-np-header"><i class="fa fa-envelope"></i> <span class="reverb-total-notifications">0</span> Unread Notifications</div>
+            <div class="reverb-np-header">
+                <span class="reverb-nph-right">View All <i class="fa fa-arrow-right"></i></span>
+                <span class="reverb-nph-notifications">Notifications (<span class="reverb-total-notifications">0</span>)</span>
+                <span class="reverb-nph-preferences"><i class="fa fa-cog"></i></span>
+            </div>
+            ${globalNotifications}
             <div class="reverb-npn">
                 <div class="reverb-np-no-unread">No Unread Notifications</div>
             </div>
-            <div class="reverb-np-actions"></div>
         </div>
     `);
     
@@ -72,13 +119,23 @@
     var buildNotification = function(data) {
         var header = data.header;
         var body = data.body;
-        var extraClass = data.read?"reverb-npnr-read":"reverb-npnr-unread"; 
-        var envelope = data.read?"fa-envelope-open":"fa-envelope";       
+        var lastread = "1 day ago";
+        var read = data.read ? "read" : "unread";
+        var icon = data.icon;
 
         return $(`
-            <div class="reverb-npn-row ${extraClass}">
-                <div class="reverb-npn-row-header"><i class="fa ${envelope}"></i> ${header}</div>
-                <div class="reverb-npn-row-body">${body}</div>
+            <div class="reverb-npn-row">
+                <div class="reverb-npnr-left">
+                    <img src="/extensions/Reverb/resources/icons/${icon}" class="reverb-icon" />
+                </div>
+                <div class="reverb-npnr-right">
+                    <div class="reverb-npnr-header">${header}</div>
+                    <div class="reverb-npnr-body">${body}</div>
+                    <div class="reverb-npnr-bottom">
+                        <span class="reverb-npnr-${read}"></span>
+                        ${lastread}
+                    </div>
+                </div>
             </div>
         `);
     }
@@ -88,28 +145,37 @@
         $('.reverb-np-no-unread').hide();
         notification.appendTo('.reverb-npn');
     }
+
     /**
      * Inject fake notification data until we have real data.
      */
 
+    updateUnread(3);
+    for (i = 0; i < 3; i++) { 
+        addNotification(
+            buildNotification({
+                header: "Someone <b>ACTIONED</b> your edit on <b>SOMEWHERE</b>",
+                body: "It was really great that it happened and I think you should be really happy about it. If you dont like it then you can just get over it. WOW. Really.",
+                read: false,
+                icon: icons[Math.floor(Math.random()*icons.length)]
+            })
+        );
+    }
 
-    updateUnread(1);
+    for (i = 0; i < 5; i++) {      
+        addNotification(
+            buildNotification({
+                header: "Your edit on <b>MEMES GALORE</b> was <b>BELETED</b>.",
+                body: "On no. RIP.",
+                read: true,
+                icon: icons[Math.floor(Math.random()*icons.length)]
+            })
+        );
+    }
 
-    addNotification(
-        buildNotification({
-            header: "Wiki Page Deleted",
-            body: "Something you cared about was destroyed.",
-            read: false
-        })
-    );
+    
 
-    addNotification(
-        buildNotification({
-            header: "Wiki Page Changed",
-            body: "Something you cared about was just changed to it was OK.",
-            read: true
-        })
-    );
+
 
 
     /*
