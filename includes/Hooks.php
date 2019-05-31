@@ -25,6 +25,13 @@ use WikiPage;
 
 class Hooks {
 	/**
+	 * Store last reverted revision
+	 *
+	 * @var Revision
+	 */
+	protected static $lastRevertedRevision;
+
+	/**
 	 * Handler for PageContentSaveComplete hook
 	 *
 	 * @param WikiPage $wikiPage   WikiPage modified
@@ -124,8 +131,8 @@ class Hooks {
 	 * Handler for UserGroupsChanged hook.
 	 *
 	 * @param User        $user      user that was changed
-	 * @param string[]    $add       strings corresponding to groups added
-	 * @param string[]    $remove    strings corresponding to groups removed
+	 * @param array       $add       strings corresponding to groups added
+	 * @param array       $remove    strings corresponding to groups removed
 	 * @param User|bool   $performer
 	 * @param string|bool $reason    Reason given by the user changing the rights
 	 * @param array       $oldUGMs
