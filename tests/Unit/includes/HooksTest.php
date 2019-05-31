@@ -24,6 +24,26 @@ class HooksTest extends TestCase {
 	}
 
 	/**
+	 * Get a group of mocks
+	 *
+	 * @return array
+	 */
+	protected function getMocks() {
+		return [
+			'mockWikiPage' => $this->getMock('WikiPage'),
+			'mockUser' => $this->getOverloadMock('User'),
+			'mockContent' => $this->getMock('Content'),
+			'mockRevision' => $this->getOverloadMock('Revision'),
+			'mockStatus' => $this->getMock('Status'),
+			'mockTitle' => $this->getMock('Title'),
+			'mockLinksUpdate' => $this->getMock('LinksUpdate'),
+			'mockMWNamespace' => $this->getOverloadMock('MWNamespace'),
+			'mockOutputPage' => $this->getMock('OutputPage'),
+			'mockSkinTemplate' => $this->getMock('SkinTemplate')
+		];
+	}
+
+	/**
 	 * Test that Hooks can be initialized
 	 *
 	 * @covers Hooks::_construct
@@ -45,12 +65,7 @@ class HooksTest extends TestCase {
 	public function testOnPageContentSaveCompleteGood() {
 		define('NS_USER_TALK', 3);
 		$hooks = $this->createHooks();
-		$mockWikiPage = $this->getMock('WikiPage');
-		$mockUser = $this->getOverloadMock('User');
-		$mockContent = $this->getMock('Content');
-		$mockRevision = $this->getOverloadMock('Revision');
-		$mockStatus = $this->getMock('Status');
-		$mockTitle = $this->getMock('Title');
+		extract($this->getMocks());
 		$flag = 1;
 
 		$mockStatus->shouldReceive('isGood')->andReturn(true);
@@ -90,11 +105,7 @@ class HooksTest extends TestCase {
 	 */
 	public function testOnPageContentSaveCompleteBadStatus() {
 		$hooks = $this->createHooks();
-		$mockWikiPage = $this->getMock('WikiPage');
-		$mockUser = $this->getOverloadMock('User');
-		$mockContent = $this->getMock('Content');
-		$mockRevision = $this->getOverloadMock('Revision');
-		$mockStatus = $this->getMock('Status');
+		extract($this->getMocks());
 		$flag = 1;
 
 		$mockStatus->shouldReceive('isGood')->andReturn(false);
@@ -113,6 +124,129 @@ class HooksTest extends TestCase {
 			1,
 			0
 		);
+		$this->assertTrue($result);
+	}
+
+	/**
+	 * Test onLocalUserCreated
+	 *
+	 * @covers Hooks:onLocalUserCreated
+	 *
+	 * @return void
+	 */
+	public function testOnLocalUserCreated() {
+		$hooks = $this->createHooks();
+		extract($this->getMocks());
+		$result = $hooks->onLocalUserCreated($mockUser, true);
+
+		$this->assertTrue($result);
+	}
+
+	/**
+	 * Test onUserGroupsChange
+	 *
+	 * @covers Hooks:onUserGroupsChanged
+	 *
+	 * @return void
+	 */
+	public function testOnUserGroupsChanged() {
+		$hooks = $this->createHooks();
+		extract($this->getMocks());
+		$addArray = [];
+		$removeArray = [];
+
+		$mockUser->shouldReceive('equals')->with($mockUser)->andReturn(false);
+
+		$result = $hooks->onUserGroupsChanged(
+			$mockUser,
+			$addArray,
+			$removeArray,
+			$mockUser
+		);
+
+		$this->assertTrue($result);
+	}
+
+	/**
+	 * Test onLinksUpdateAfterInsert
+	 *
+	 * @covers Hooks:onLinksUpdateAfterInsert
+	 *
+	 * @return void
+	 */
+	public function testOnLinksUpdateAfterInsert() {
+		global $wgRequest;
+		$wgRequest = $this->getMock('RequestContext');
+		$hooks = $this->createHooks();
+		extract($this->getMocks());
+
+		$wgRequest->shouldReceive('getVal')->with('wpUndidRevision')->andReturn(false);
+		$wgRequest->shouldReceive('getVal')->with('action')->andReturn('notRollback');
+
+		$namespace = 'Reverb';
+		$mockTitle->shouldReceive('getNamespace')->andReturn($namespace);
+		$mockTitle->shouldReceive('isRedirect')->andReturn(false);
+		$mockLinksUpdate->shouldReceive('getTitle')->twice()->set('mRecursive', true)->andReturn($mockTitle);
+		$mockMWNamespace->shouldReceive('isContent')->with($namespace)->andReturn(true);
+
+		$mockLinksUpdate->shouldReceive('getTriggeringUser')->andReturn($mockUser);
+		$mockRevision->shouldReceive('getId')->andReturn(1);
+		$mockLinksUpdate->shouldReceive('getRevision')->twice()->andReturn($mockRevision);
+		$result = $hooks->onLinksUpdateAfterInsert(
+			$mockLinksUpdate,
+			'pagelinks',
+			[]
+		);
+
+		$this->assertTrue($result);
+	}
+
+	/**
+	 * Test onArticleRollbackComplete
+	 *
+	 * @covers Hooks:onArticleRollbackComplete
+	 *
+	 * @return void
+	 */
+	public function testOnArticleRollbackComplete() {
+		$hooks = $this->createHooks();
+		extract($this->getMocks());
+
+		$mockRevision->shouldReceive('getUser')->andReturn($mockUser);
+		$mockWikiPage->shouldReceive('getRevision')->andReturn($mockRevision);
+
+		$mockContent->shouldReceive('equals')->with($mockContent)->andReturn(false);
+		$mockRevision->shouldReceive('getContent')->twice()->andReturn($mockContent);
+
+		$result = $hooks->onArticleRollbackComplete(
+			$mockWikiPage,
+			$mockUser,
+			$mockRevision,
+			$mockRevision
+		);
+
+		$this->assertTrue($result);
+	}
+
+	/**
+	 * Test onBeforePageDisplay
+	 *
+	 * @covers Hooks:onBeforePageDisplay
+	 *
+	 * @return void
+	 */
+	public function testOnBeforePageDisplay() {
+		$hooks = $this->createHooks();
+		extract($this->getMocks());
+
+		$mockOutputPage->shouldReceive('addModuleStyles')->with('ext.reverb.notifications.styles');
+		$mockOutputPage->shouldReceive('addModules')->with('ext.reverb.notifications.scripts');
+
+		$result = $hooks->onBeforePageDisplay(
+			$mockOutputPage,
+			$mockSkinTemplate
+		);
+
 		$this->assertTrue($result);
 	}
 }
