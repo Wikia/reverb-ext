@@ -148,6 +148,6 @@ abstract class Identifier {
 	 */
 	public function getConfiguredNamespace(): string {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
-		return $config->get('ReverbNamespace');
+		return $mainConfig->get('ReverbNamespace');
 	}
 }

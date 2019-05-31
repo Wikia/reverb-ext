@@ -26,7 +26,6 @@ class SiteIdentifier extends Identifier {
 	 * @return boolean
 	 */
 	public function isLocal(): bool {
-		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
 		return $this->whereIsHome() === $this->getConfiguredNamespace() && $this->whoAmI() === wfWikiID();
 	}
 }

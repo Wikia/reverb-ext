@@ -14,6 +14,32 @@ use Tests\TestCase;
 
 class IdentifierTest extends TestCase {
 	/**
+	 * Container for Mock MediaWikiServices
+	 *
+	 * @var MediaWikiServices
+	 */
+	private $mockMWService;
+
+	/**
+	 * Container for mock of GlobalConfig
+	 *
+	 * @var GlobalVarConfig
+	 */
+	private $mockGlobalConfig;
+
+	/**
+	 * Initialize
+	 *
+	 * @return void
+	 */
+	public function setUp(): void {
+		parent::setup();
+		$this->mockMWService = $this->getOverloadMock('MediaWikiServices');
+		$this->mockGlobalConfig = $this->getOverloadMock('GlobalVarConfig');
+		$this->mockMWService->shouldReceive('getInstance')->andReturn($this->mockMWService);
+	}
+
+	/**
 	 * Make sure type/what returned is 'site'.
 	 *
 	 * @coversNothing
@@ -73,10 +99,11 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testIdentifierIsLocal() {
-		// @TODO: Use Mockery to spin up a fake MediaWikiServices to return the configuration value for $wgReverbNamespace = 'hydra'.
+		$this->mockGlobalConfig->shouldReceive('get')->andReturn('hydra');
+		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
 		$identifier = Identifier::factory('hydra/user:124234532');
 
-		$this->assertFalse($identifier->isLocal());
+		$this->assertTrue($identifier->isLocal());
 	}
 
 	/**
@@ -87,7 +114,8 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testIdentifierIsForeign() {
-		// @TODO: Use Mockery to spin up a fake MediaWikiServices to return the configuration value for $wgReverbNamespace = 'hydra'.
+		$this->mockGlobalConfig->shouldReceive('get')->andReturn('hydra');
+		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
 		$identifier = Identifier::factory('fandom/user:124234532');
 
 		$this->assertFalse($identifier->isLocal());
@@ -101,11 +129,13 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testSiteIdentifierIsLocal() {
-		// @TODO: Use Mockery to spin up a fake MediaWikiServices to return the configuration value for $wgReverbNamespace = 'hydra'.
-		// @TODO: Also mock wfWikiID() to return the correct unique ID.
+		$this->mockGlobalConfig->shouldReceive('get')->andReturn('hydra');
+		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
+		$mockWfWikiID = $this->getPHPMock('Reverb\Identifier', 'wfWikiID');
+		$mockWfWikiID->andReturn('lol_gamepedia_en');
 		$identifier = Identifier::factory('hydra/site:lol_gamepedia_en');
 
-		$this->assertFalse($identifier->isLocal());
+		$this->assertTrue($identifier->isLocal());
 	}
 
 	/**
@@ -116,8 +146,10 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testSiteIdentifierIsForeign() {
-		// @TODO: Use Mockery to spin up a fake MediaWikiServices to return the configuration value for $wgReverbNamespace = 'hydra'.
-		// @TODO: Also mock wfWikiID() to return the "correct" unique ID.
+		$this->mockGlobalConfig->shouldReceive('get')->andReturn('hydra');
+		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
+		$mockWfWikiID = $this->getPHPMock('Reverb\Identifier', 'wfWikiID');
+		$mockWfWikiID->andReturn('lol_gamepedia_en');
 		$identifier = Identifier::factory('fandom/site:lol_gamepedia_en');
 
 		$this->assertFalse($identifier->isLocal());

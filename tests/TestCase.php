@@ -10,6 +10,7 @@
 namespace Tests;
 
 use Mockery;
+use phpmock\mockery\PHPMockery;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase {
@@ -42,6 +43,18 @@ abstract class TestCase extends BaseTestCase {
 	 */
 	public function getOverloadMock($class) {
 		return Mockery::mock('overload:' . $class);
+	}
+
+	/**
+	 * Create Overloaded Mock for global functions
+	 *
+	 * @param string $namespace
+	 * @param string $function
+	 *
+	 * @return PHPMockery
+	 */
+	public function getPHPMock($namespace, $function) {
+		return PHPMockery::mock($namespace, $function);
 	}
 
 	/**
