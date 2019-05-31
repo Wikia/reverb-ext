@@ -14,7 +14,7 @@ namespace Reverb\Notification;
 
 use MediaWikiServices;
 use MWException;
-use Hydrawiki\Reverb\Client\V1\Resources\Notification;
+use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
 
@@ -46,6 +46,7 @@ class Notification {
 	 * @return void
 	 */
 	public function __construct() {
+		$this->resource = new NotificationResource();
 	}
 
 	/**
@@ -54,7 +55,7 @@ class Notification {
 	 * @return string ID
 	 */
 	public function getID(): string {
-		return $this->data['id'];
+		return $this->resource->getId();
 	}
 
 	/**
@@ -63,7 +64,16 @@ class Notification {
 	 * @return string Notification Type
 	 */
 	public function getType(): string {
-		return $this->data['type'];
+		return $this->resource->getType();
+	}
+
+	/**
+	 * Get the type for this notification.
+	 *
+	 * @return string Notification Type
+	 */
+	public function setType(string $type) {
+		return $this->resource->setType();
 	}
 
 	/**
