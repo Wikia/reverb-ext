@@ -10,6 +10,7 @@
 namespace Tests\Unit\Includes\Identifier;
 
 use Reverb\Identifier\Identifier;
+use Reverb\Identifier\InvalidIdentifierException;
 use Tests\TestCase;
 
 class IdentifierTest extends TestCase {
@@ -89,6 +90,42 @@ class IdentifierTest extends TestCase {
 		$identifier = Identifier::factory('hydra/user:124234532');
 
 		$this->assertTrue($identifier->whereIsHome() === 'hydra');
+	}
+
+	/**
+	 * Test that the namespace is caught as being too long.
+	 *
+	 * @coversNothing
+	 *
+	 * @return void
+	 */
+	public function testNamespaceTooLong() {
+		$this->expectException(InvalidIdentifierException::class);
+		$identifier = Identifier::factory('hydra' . str_repeat('a', 100) . '/user:124234532'); // @codingStandardsIgnoreLine
+	}
+
+	/**
+	 * Test that the type is caught as being too long.
+	 *
+	 * @coversNothing
+	 *
+	 * @return void
+	 */
+	public function testTypeTooLong() {
+		$this->expectException(InvalidIdentifierException::class);
+		$identifier = Identifier::factory('hydra/user' . str_repeat('user', 10) . ':124234532');
+	}
+
+	/**
+	 * Test that the ID is caught as being too long.
+	 *
+	 * @coversNothing
+	 *
+	 * @return void
+	 */
+	public function testIdTooLong() {
+		$this->expectException(InvalidIdentifierException::class);
+		$identifier = Identifier::factory('hydra/user:124234532' . str_repeat(1, 100));
 	}
 
 	/**

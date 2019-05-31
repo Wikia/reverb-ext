@@ -12,5 +12,7 @@ declare(strict_types=1);
 
 namespace Reverb\Identifier;
 
+use Exception;
+
 class InvalidIdentifierException extends Exception {
 }

@@ -72,7 +72,7 @@ abstract class Identifier {
 	 * @return array|null Array with ['namespace' => 'hydra', 'what' => 'hydra', 'id' => 'hydra'] or null if invalid.
 	 */
 	private static function splitIdentifier(string $identifier): ?array {
-		$regex = '#^([a-z]{1,64})/([a-z]{1,64}):([\w]+)$#';
+		$regex = '#^([a-z]{1,64})/([a-z]{1,64}):([\w]{1,64})$#';
 		$matches = [];
 		if (preg_match($regex, $identifier, $matches) > 0) {
 			return [
@@ -81,6 +81,7 @@ abstract class Identifier {
 				'id' => $matches[3]
 			];
 		}
+		return null;
 	}
 
 	/**
