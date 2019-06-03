@@ -102,7 +102,7 @@ class Notification {
 	public function getAgent(): ?UserIdentifier {
 		if ($this->agentIdCache === null) {
 			try {
-				$this->agentIdCache = Identifier::factory($this->data['origin_id']);
+				$this->agentIdCache = Identifier::factory($this->data['agent_id']);
 			} catch (InvalidIdentifierException $e) {
 				$this->agentIdCache = null;
 			}
