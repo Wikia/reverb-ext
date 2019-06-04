@@ -15,12 +15,41 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase {
 	/**
+	 * Container for Mock MediaWikiServices
+	 *
+	 * @var MediaWikiServices
+	 */
+	public $mockMWService;
+
+	/**
+	 * Container for mock of GlobalConfig
+	 *
+	 * @var GlobalVarConfig
+	 */
+	public $mockGlobalConfig;
+
+	/**
+	 * Container for mock of ReverbApiClient
+	 *
+	 * @var Hydrawiki\Reverb\Client\V1\ClientFactory
+	 */
+	public $mockReverbApiClient;
+
+	/**
 	 * Setup the test case.
 	 *
 	 * @return void
 	 */
 	public function setUp(): void {
 		parent::setUp();
+		$this->mockMWService = $this->getOverloadMock('MediaWiki\MediaWikiServices');
+		$this->mockGlobalConfig = $this->getOverloadMock('GlobalVarConfig');
+		$this->mockReverbApiClient = $this->getOverloadMock('Hydrawiki\Reverb\Client\V1\ClientFactory');
+		$this->mockMWService
+			->shouldReceive('getService')
+			->with('ReverbApiClient')
+			->andReturn($this->mockReverbApiClient);
+		$this->mockMWService->shouldReceive('getInstance')->andReturn($this->mockMWService);
 	}
 
 	/**

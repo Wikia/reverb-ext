@@ -15,6 +15,7 @@ namespace Reverb;
 
 use Content;
 use LinksUpdate;
+use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
 use Revision;
@@ -77,6 +78,8 @@ class Hooks {
 
 		$title = $wikiPage->getTitle();
 
+		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
+
 		// $thresholds = [ 1, 10, 100, 1000, 10000, 100000, 1000000 ];
 		// Echo sends a 'thank you' notification on certain thresholds.
 		// Do we wish to keep these?
@@ -122,6 +125,7 @@ class Hooks {
 	public static function onLocalUserCreated(User $user, bool $autocreated): bool {
 		if (!$autocreated) {
 			// @TODO: Create 'user-interest-welcome' Notification
+			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
 		}
 
 		return true;
@@ -165,6 +169,8 @@ class Hooks {
 			// Don't notify for self changes.
 			return true;
 		}
+
+		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
 
 		// If any old groups are in $add, those groups are having their expiry
 		// changed, not actually being added
@@ -224,6 +230,8 @@ class Hooks {
 			return true;
 		}
 
+		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
+
 		$user = $linksUpdate->getTriggeringUser();
 
 		$revid = $linksUpdate->getRevision() ? $linksUpdate->getRevision()->getId() : null;
@@ -267,6 +275,7 @@ class Hooks {
 
 		// Skip anonymous users and null edits.
 		if ($victimId && !$oldRevision->getContent()->equals($newRevision->getContent())) {
+			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
 			// @TODO: Create 'article-edit-revert' Notification
 		}
 

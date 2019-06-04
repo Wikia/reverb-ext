@@ -15,29 +15,12 @@ use Tests\TestCase;
 
 class IdentifierTest extends TestCase {
 	/**
-	 * Container for Mock MediaWikiServices
-	 *
-	 * @var MediaWikiServices
-	 */
-	private $mockMWService;
-
-	/**
-	 * Container for mock of GlobalConfig
-	 *
-	 * @var GlobalVarConfig
-	 */
-	private $mockGlobalConfig;
-
-	/**
 	 * Initialize
 	 *
 	 * @return void
 	 */
 	public function setUp(): void {
 		parent::setup();
-		$this->mockMWService = $this->getOverloadMock('MediaWiki\MediaWikiServices');
-		$this->mockGlobalConfig = $this->getOverloadMock('GlobalVarConfig');
-		$this->mockMWService->shouldReceive('getInstance')->andReturn($this->mockMWService);
 	}
 
 	/**
