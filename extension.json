@@ -20,6 +20,7 @@
 	},
 	"AutoloadClasses": {
 		"Reverb\\Api\\ApiNotifications": "includes/api/ApiNotifications.php",
+		"Reverb\\ApiClient\\Client": "includes/apiclient/Client.php",
 		"Reverb\\Hooks": "includes/Hooks.php",
 		"Reverb\\Identifier\\Identifier": "includes/identifier/Identifier.php",
 		"Reverb\\Identifier\\InvalidIdentifierException": "includes/identifier/InvalidIdentifierException.php",
@@ -68,6 +69,9 @@
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay"
 	},
 	"config": {
+		"ReverbApiEndPoint": {
+			"value": null
+		},
 		"ReverbNotifications": {
 			"value": {
 				"user-interest-welcome": {
