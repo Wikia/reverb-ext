@@ -27,6 +27,9 @@
 		"Reverb\\Identifier\\UserIdentifier": "includes/identifier/UserIdentifier.php",
 		"Reverb\\Special\\SpecialNotifications": "includes/special/SpecialNotifications.php"
 	},
+	"ServiceWiringFiles": [
+		"includes/ServiceWiring.php"
+	],
 	"ResourceModules": {
 		"ext.reverb.notifications.styles": {
 			"targets": [
@@ -68,6 +71,9 @@
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay"
 	},
 	"config": {
+		"ReverbApiEndPoint": {
+			"value": "https://reverb.localhost/v1/"
+		},
 		"ReverbNotifications": {
 			"value": {
 				"user-interest-welcome": {
@@ -121,5 +127,6 @@
 			"value": "hydra"
 		}
 	},
+	"load_composer_autoloader": true,
 	"manifest_version": 2
 }
