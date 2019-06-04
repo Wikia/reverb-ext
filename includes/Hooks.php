@@ -20,6 +20,7 @@ use MWNamespace;
 use OutputPage;
 use Revision;
 use SkinTemplate;
+use SpecialPage;
 use Status;
 use User;
 use WikiPage;
@@ -295,5 +296,18 @@ class Hooks {
 		$output->addModules('ext.reverb.notifications.scripts');
 
 		return true;
+	}
+
+	/**
+	 * Register the Twig template location with TwiggyService
+	 *
+	 * @param SpecialPage $special
+	 * @param string      $subPage the subpage string or null if no subpage was specified
+	 *
+	 * @return void
+	 */
+	public static function onSpecialPageBeforeExecute(SpecialPage $special, $subPage) {
+		$twig = MediaWikiServices::getInstance()->getService('TwiggyService');
+		$twig->setTemplateLocation('Reverb', __DIR__ . '/../resources/templates');
 	}
 }
