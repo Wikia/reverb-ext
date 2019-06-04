@@ -21,6 +21,7 @@
     border-radius: 5px;
     padding: 20px;
     font-family: 'Helvetica', sans-serif;
+    display: none;
 }
 
 .reverb-np-header {
@@ -33,13 +34,13 @@
 .reverb-nph-right {
     float: right;
     font-size: 14px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  text-align: right;
-  color: #ffffff;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: right;
+    color: #ffffff;
 }
 
 .reverb-nph-notifications {
@@ -60,7 +61,7 @@
 }
 
 .reverb-np-notifications {
-    
+    /* MEMES GO HERE */
 }
 
 .reverb-np-no-unread {
@@ -73,7 +74,7 @@
     overflow-y: auto;
 }
 
-.reverb-npn-row {
+.reverb-npn-row, .reverb-notification-page-row {
     padding: 10px 0px;
     display: flex;
     justify-content: flex-start;
@@ -82,6 +83,7 @@
 .reverb-npn-row-global {
     border-bottom: 1px solid #4f4f4f;
     margin-bottom: 5px;
+    background-color: #212121;
 }
 
 .reverb-npn-row-global > .reverb-npnr-right {
@@ -114,14 +116,12 @@
    /* background: #4f4f4f; */
 }
 
-
-
 .reverb-npnr-unread {
-  width: 10px;
-  height: 10px;
-  background-color: #f37f20;
-  border-radius: 25px;
-  float: right;
+    width: 10px;
+    height: 10px;
+    background-color: #f37f20;
+    border-radius: 25px;
+    float: right;
 }
 
 .reverb-npnr-read {
@@ -146,7 +146,6 @@
 .reverb-npnr-body {
     margin-top: 10px;
     padding: 3px 0px;
-
     opacity: 0.75;
     font-family: Helvetica, sans-serif;
     font-size: 14px;
@@ -164,4 +163,52 @@
     font-size: 14px;
     line-height: 21px;
     font-weight: bold;
+}
+
+.reverb-notification-page {
+    padding: 10px 0px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.reverb-notification-page-left {
+    width: 300px;
+    border: solid 1px #bed1cf;
+}
+
+.reverb-notification-page-right {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.reverb-pull-right {
+    float: right;
+}
+
+.reverb-filter-title {
+    margin: 20px 10px;
+    
+    height: 18px;
+    font-family: Rubik, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.13;
+    letter-spacing: normal;
+    color: #ffffff;
+}
+
+.reverb-filter-row {
+    margin: 0px 10px;
+    padding: 12px 0px;
+    font-family: Rubik, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #ffffff;
+    border-bottom: 1px solid #4f4f4f;
 }
