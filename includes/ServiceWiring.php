@@ -16,7 +16,7 @@ use MediaWiki\MediaWikiServices;
 use Hydrawiki\Reverb\Client\V1\ClientFactory;
 
 return [
-	'ReverbApiClient' => function(MediaWikiServices $services) {
+	'ReverbApiClient' => function (MediaWikiServices $services) {
 		$mainConfig = $services->getMainConfig();
 		$endPoint = $mainConfig->get('ReverbApiEndPoint');
 

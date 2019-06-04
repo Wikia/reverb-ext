@@ -35,7 +35,7 @@ class IdentifierTest extends TestCase {
 	 */
 	public function setUp(): void {
 		parent::setup();
-		$this->mockMWService = $this->getOverloadMock('MediaWikiServices');
+		$this->mockMWService = $this->getOverloadMock('MediaWiki\MediaWikiServices');
 		$this->mockGlobalConfig = $this->getOverloadMock('GlobalVarConfig');
 		$this->mockMWService->shouldReceive('getInstance')->andReturn($this->mockMWService);
 	}

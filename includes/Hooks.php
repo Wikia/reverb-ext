@@ -15,7 +15,6 @@ namespace Reverb;
 
 use Content;
 use LinksUpdate;
-use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
 use Revision;
