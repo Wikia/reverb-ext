@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Reverb\Notification;
 
-use MediaWikiServices;
+use MediaWiki\MediaWikiServices;
 use MWException;
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use Reverb\Identifier\Identifier;
@@ -171,7 +171,7 @@ class Notification {
 	 */
 	private function getIconsConfig(string $type = 'notification'): array {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
-		$reverbIcons = $config->get('ReverbIcons');
+		$reverbIcons = $mainConfig->get('ReverbIcons');
 
 		if (!isset($reverbIcons[$type])) {
 			throw new MWException("The request icon type '{$type}' is missing from the \$wgReverbIcons configuration.");

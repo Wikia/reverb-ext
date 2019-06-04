@@ -20,7 +20,6 @@
 	},
 	"AutoloadClasses": {
 		"Reverb\\Api\\ApiNotifications": "includes/api/ApiNotifications.php",
-		"Reverb\\ApiClient\\Client": "includes/apiclient/Client.php",
 		"Reverb\\Hooks": "includes/Hooks.php",
 		"Reverb\\Identifier\\Identifier": "includes/identifier/Identifier.php",
 		"Reverb\\Identifier\\InvalidIdentifierException": "includes/identifier/InvalidIdentifierException.php",
@@ -28,6 +27,9 @@
 		"Reverb\\Identifier\\UserIdentifier": "includes/identifier/UserIdentifier.php",
 		"Reverb\\Special\\SpecialNotifications": "includes/special/SpecialNotifications.php"
 	},
+	"ServiceWiringFiles": [
+		"includes/ServiceWiring.php"
+	],
 	"ResourceModules": {
 		"ext.reverb.notifications.styles": {
 			"targets": [
@@ -70,7 +72,7 @@
 	},
 	"config": {
 		"ReverbApiEndPoint": {
-			"value": null
+			"value": "https://reverb.localhost/v1/"
 		},
 		"ReverbNotifications": {
 			"value": {
@@ -125,5 +127,6 @@
 			"value": "hydra"
 		}
 	},
+	"load_composer_autoloader": true,
 	"manifest_version": 2
 }

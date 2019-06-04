@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Reverb\Identifier;
 
-use MediaWikiServices;
+use MediaWiki\MediaWikiServices;
 
 abstract class Identifier {
 	/**

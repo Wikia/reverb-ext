@@ -15,6 +15,7 @@ namespace Reverb;
 
 use Content;
 use LinksUpdate;
+use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
 use Revision;
@@ -282,6 +283,7 @@ class Hooks {
 	 * @return boolean True
 	 */
 	public static function onBeforePageDisplay(OutputPage &$output, SkinTemplate &$skin) {
+		var_dump(MediaWikiServices::getInstance()->getService('ReverbApiClient'));
 		$output->addModuleStyles('ext.reverb.notifications.styles');
 		$output->addModules('ext.reverb.notifications.scripts');
 
