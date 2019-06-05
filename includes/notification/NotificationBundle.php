@@ -15,9 +15,10 @@ namespace Reverb\Notification;
 use ArrayObject;
 use CentralIdLookup;
 use MWException;
+use User;
 
 class NotificationBundle extends ArrayObject {
-	use Reverb\Traits\UserContextTrait;
+	use \Reverb\Traits\UserContextTrait;
 
 	/**
 	 * Main Constructor
