@@ -19,6 +19,8 @@ use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
 
 class Notification {
+	use Reverb\Traits\UserContextTrait;
+
 	/**
 	 * Data Resource
 	 *
