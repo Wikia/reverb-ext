@@ -60,6 +60,16 @@ class NotificationBundle extends ArrayObject {
 			// @TODO: Collect notifications into an array and construct NotificationBundle.
 			$notifications = [];
 
+			/*
+			foreach (NotificationResources-returned-from-service as $key => $resource) {
+				$notification = new Notification($resource);
+				// Do sanity checks.
+				if (all good) {
+					$notifications[inferred key] = $notification;
+				}
+			}
+			*/
+
 			$bundle = new NotificationBundle($notifications);
 
 			// Set user context on NotificationBundle.
