@@ -33,7 +33,7 @@ class IdentifierTest extends TestCase {
 	public function testTypeIsSite() {
 		$identifier = Identifier::factory('hydra/site:asdfbe');
 
-		$this->assertTrue($identifier->whatAmI() === 'site');
+		$this->assertSame('site', $identifier->whatAmI());
 	}
 
 	/**
@@ -46,7 +46,7 @@ class IdentifierTest extends TestCase {
 	public function testTypeIsUser() {
 		$identifier = Identifier::factory('hydra/user:124234532');
 
-		$this->assertTrue($identifier->whatAmI() === 'user');
+		$this->assertSame('user', $identifier->whatAmI());
 	}
 
 	/**
@@ -59,7 +59,7 @@ class IdentifierTest extends TestCase {
 	public function testValidUniqueIdIsReturned() {
 		$identifier = Identifier::factory('hydra/user:124234532');
 
-		$this->assertTrue($identifier->whoAmI() === '124234532');
+		$this->assertSame('124234532', $identifier->whoAmI());
 	}
 
 	/**
@@ -72,7 +72,7 @@ class IdentifierTest extends TestCase {
 	public function testValidNamespaceIsReturned() {
 		$identifier = Identifier::factory('hydra/user:124234532');
 
-		$this->assertTrue($identifier->whereIsHome() === 'hydra');
+		$this->assertSame('hydra', $identifier->whereIsHome());
 	}
 
 	/**
