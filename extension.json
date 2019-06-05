@@ -25,6 +25,8 @@
 		"Reverb\\Identifier\\InvalidIdentifierException": "includes/identifier/InvalidIdentifierException.php",
 		"Reverb\\Identifier\\SiteIdentifier": "includes/identifier/SiteIdentifier.php",
 		"Reverb\\Identifier\\UserIdentifier": "includes/identifier/UserIdentifier.php",
+		"Reverb\\Notification\\Notification": "includes/notification/Notification.php",
+		"Reverb\\Notification\\NotificationBundle": "includes/notification/NotificationBundle.php",
 		"Reverb\\Special\\SpecialNotifications": "includes/special/SpecialNotifications.php"
 	},
 	"ServiceWiringFiles": [
