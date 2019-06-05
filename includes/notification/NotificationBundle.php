@@ -12,9 +12,13 @@ declare(strict_types=1);
 
 namespace Reverb\Notification;
 
+use ArrayObject;
+use CentralIdLookup;
 use MWException;
 
 class NotificationBundle extends ArrayObject {
+	use Reverb\Traits\UserContextTrait;
+
 	/**
 	 * Main Constructor
 	 *
@@ -31,5 +35,45 @@ class NotificationBundle extends ArrayObject {
 			}
 		}
 		parent::__construct($notifications, $flags, $iterator);
+	}
+
+	/**
+	 * Get a bundle of notifications for an user with optional filters.
+	 *
+	 * @param User  $user    User object to use for look up.
+	 * @param array $filters [Optional] Filters for notifications.
+	 *
+	 * @return NotificationBundle|null Returns null if a bad user(No global account or robot account) is passed.
+	 */
+	public static function getBundleForUser(User $user, array $filters = []): ?NotificationBundle {
+		if ($user->isBot()) {
+			return null;
+		}
+
+		$lookup = CentralIdLookup::factory();
+		$globalId = $lookup->centralIdFromLocalUser($user);
+
+		if (!empty($globalId)) {
+			// @TODO: Call out to the service with $globalId and optional filters.
+
+			// @TODO: Collect notifications into an array and construct NotificationBundle.
+			$notifications = [];
+
+			$bundle = new NotificationBundle($notifications);
+
+			// Set user context on NotificationBundle.
+			$bundle->setUser($user);
+			return $bundle;
+		}
+		return null;
+	}
+
+	/**
+	 * Get the next page of bundled notifications.
+	 *
+	 * @return NotificationBundle|null
+	 */
+	public function nextPage(): ?NotificationBundle {
+		// code...
 	}
 }
