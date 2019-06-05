@@ -43,10 +43,12 @@ class Notification {
 	/**
 	 * Main Constructor
 	 *
+	 * @param NotificationResource $resource Already known notification resource.
+	 *
 	 * @return void
 	 */
-	public function __construct() {
-		$this->resource = new NotificationResource();
+	public function __construct(NotificationResource $resource) {
+		$this->resource = $resource;
 	}
 
 	/**
