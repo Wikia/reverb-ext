@@ -14,7 +14,11 @@ namespace Reverb\Notification;
 
 use ArrayObject;
 use CentralIdLookup;
+use Exception;
+use Hydrawiki\Reverb\Client\V1\Exceptions\ApiResponseInvalid;
+use MediaWiki\MediaWikiServices;
 use MWException;
+use Reverb\Identifier\Identifier;
 use User;
 
 class NotificationBundle extends ArrayObject {
@@ -59,6 +63,18 @@ class NotificationBundle extends ArrayObject {
 
 			// @TODO: Collect notifications into an array and construct NotificationBundle.
 			$notifications = [];
+
+			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
+			$userIdentifier = Identifier::factory(['namespace' => 'hydra', 'what' => 'user', 'id' => $globalId]);
+
+			try {
+				$userResource = $client->users()->find((string)$userIdentifier);
+			} catch (ApiResponseInvalid $e) {
+				// @TODO: Logging and error reporting.
+				return null;
+			} catch (Exception $e) {
+				return null;
+			}
 
 			/*
 			foreach (NotificationResources-returned-from-service as $key => $resource) {
