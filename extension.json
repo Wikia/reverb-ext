@@ -75,7 +75,7 @@
 	},
 	"config": {
 		"ReverbApiEndPoint": {
-			"value": "https://reverb.localhost/v1/"
+			"value": "https://reverb.localhost/v1"
 		},
 		"ReverbNotifications": {
 			"value": {

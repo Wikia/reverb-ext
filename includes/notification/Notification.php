@@ -17,7 +17,6 @@ use MWException;
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
-use User;
 
 class Notification {
 	use \Reverb\Traits\UserContextTrait;
