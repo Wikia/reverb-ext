@@ -18,7 +18,6 @@ use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
-use Reverb\Notification\NotificationBundle;
 use Revision;
 use SkinTemplate;
 use Status;
@@ -292,8 +291,6 @@ class Hooks {
 	 * @return boolean True
 	 */
 	public static function onBeforePageDisplay(OutputPage &$output, SkinTemplate &$skin) {
-		$bundle = NotificationBundle::getBundleForUser($output->getContext()->getUser());
-		var_dump($bundle);
 		$output->addModuleStyles('ext.reverb.notifications.styles');
 		$output->addModules('ext.reverb.notifications.scripts');
 
