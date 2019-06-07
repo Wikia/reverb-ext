@@ -58,8 +58,8 @@ class Notification {
 	 *
 	 * @return string ID
 	 */
-	public function getID(): string {
-		return $this->resource->getId();
+	public function getId(): string {
+		return $this->resource->id();
 	}
 
 	/**
@@ -68,7 +68,7 @@ class Notification {
 	 * @return string Notification Type
 	 */
 	public function getType(): string {
-		return $this->resource->getType();
+		return $this->resource->type;
 	}
 
 	/**
@@ -79,7 +79,25 @@ class Notification {
 	 * @return void
 	 */
 	public function setType(string $type) {
-		$this->resource->setType($type);
+		$this->resource->setId($type);
+	}
+
+	/**
+	 * Get the message for this notification.
+	 *
+	 * @return string Message
+	 */
+	public function getMessage(): string {
+		return $this->resource->message;
+	}
+
+	/**
+	 * Get the created date for this notification.
+	 *
+	 * @return int Creation Date
+	 */
+	public function getCreatedAt(): int {
+		return $this->resource->created_at;
 	}
 
 	/**
@@ -129,7 +147,7 @@ class Notification {
 	 * @return string Subcategory
 	 */
 	public function getSubcategory(): string {
-		return substr($this->getType(), 0, strpos($this->getType(), '-', strpos($this->getType()) + 1));
+		return substr($this->getType(), 0, strpos($this->getType(), '-', strpos($this->getType(), '-') + 1));
 	}
 
 	/**
@@ -182,5 +200,26 @@ class Notification {
 		}
 
 		return $reverbIcons[$type];
+	}
+
+	/**
+	 * Function Documentation
+	 *
+	 * @return array
+	 */
+	public function toArray(): array {
+		return [
+			'icons' => [
+				'notification' => $this->getNotificationIcon(),
+				'category' => $this->getCategoryIcon(),
+				'subcategory' => $this->getSubcategoryIcon()
+			],
+			'category' => $this->getCategory(),
+			'subcategory' => $this->getSubcategory(),
+			'id' => $this->getId(),
+			'type' => $this->getType(),
+			'message' => $this->getMessage(),
+			'created_at' => $this->getCreatedAt()
+		];
 	}
 }

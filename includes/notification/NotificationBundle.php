@@ -68,7 +68,9 @@ class NotificationBundle extends ArrayObject {
 			$userIdentifier = Identifier::factory(['namespace' => 'hydra', 'what' => 'user', 'id' => $globalId]);
 
 			try {
-				$userResource = $client->users()->find((string)$userIdentifier);
+				// $userResource = $client->users()->find((string)$userIdentifier);
+				// ->filter(['target-id' => 'hydra:user:'.$globalId])
+				$notificationResources = $client->notifications()->page(100, 0)->filter(['target-id' => 'hydra:user:' . $globalId])->all();
 			} catch (ApiResponseInvalid $e) {
 				// @TODO: Logging and error reporting.
 				return null;
@@ -76,15 +78,10 @@ class NotificationBundle extends ArrayObject {
 				return null;
 			}
 
-			/*
-			foreach (NotificationResources-returned-from-service as $key => $resource) {
+			foreach ($notificationResources as $key => $resource) {
 				$notification = new Notification($resource);
-				// Do sanity checks.
-				if (all good) {
-					$notifications[inferred key] = $notification;
-				}
+				$notifications[$notification->getId()] = $notification;
 			}
-			*/
 
 			$bundle = new NotificationBundle($notifications);
 
