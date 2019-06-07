@@ -53,7 +53,8 @@ class ApiNotifications extends ApiBase {
 		];
 
 		$bundle = NotificationBundle::getBundleForUser($this->getUser());
-		if (is_array($bundle)) {
+
+		if ($bundle !== null) {
 			foreach ($bundle as $key => $notification) {
 				$return['notifications'][] = $notification->toArray();
 			}
