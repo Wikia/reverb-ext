@@ -117,7 +117,6 @@ class SpecialNotifications extends SpecialPage {
 	 * @return void [Outputs to screen]
 	 */
 	public function execute($subpage) {
-
 		$html = '
 		<div class="reverb-notification-page">
 			<div class="reverb-notification-page-left">
@@ -125,16 +124,16 @@ class SpecialNotifications extends SpecialPage {
 					<span class="reverb-pull-right"><i class="fa fa-sliders-h"></i></span>
 					Filter by Type
 				</div>
-				
+
 				<div class="reverb-filter-row">
-					<input type="checkbox" name=\filter_all" class="revberb-filter-checkbox"> 
+					<input type="checkbox" name=\filter_all" class="revberb-filter-checkbox">
 					<label for="filter_all"> All
 				</div>';
 
 		foreach ($this->types as $id => $type) {
 			$html .= "
 				<div class=\"reverb-filter-row\">
-					<input type=\"checkbox\" name=\"filter_${id}\" class=\"revberb-filter-checkbox\"> 
+					<input type=\"checkbox\" name=\"filter_${id}\" class=\"revberb-filter-checkbox\">
 					<label for=\"filter_${id}\"> ${type['title']}
 				</div>
 			";
@@ -151,7 +150,8 @@ class SpecialNotifications extends SpecialPage {
 				</div>
 				<div class="reverb-notification-page-row reverb-npn-row-global">
 						<div class="reverb-npnr-left">
-							<img src="/extensions/Reverb/resources/icons/global.svg" class="reverb-icon reverb-icon-global">
+							<img src="/extensions/Reverb/resources/icons/global.svg"
+								class="reverb-icon reverb-icon-global">
 						</div>
 						<div class="reverb-npnr-right">
 							<div class="reverb-npnr-header">
@@ -161,7 +161,7 @@ class SpecialNotifications extends SpecialPage {
 						</div>
 					</div>
 				<div class="reverb-notification-page-notifications">';
-			
+
 		for ($x = 0; $x <= 10; $x++) {
 			$html .= $this->notificationRow([
 				'header' => "Header",
@@ -171,21 +171,26 @@ class SpecialNotifications extends SpecialPage {
 			]);
 		}
 
-        $html .= '</div>
+		$html .= '</div>
 			</div>
 		</div>';
 
-
 		$this->output->addHtml($html);
-		return;
 	}
 
+	/**
+	 * Builds HTML for a notification row.
+	 *
+	 * @param array $data
+	 *
+	 * @return string
+	 */
 	public function notificationRow($data) {
-        $header = $data['header'];
-        $body = $data['body'];
-        $lastread = "1 day ago";
-        $read = $data['read'] ? "read" : "unread";
-        $icon = $data['icon'];
+		$header = $data['header'];
+		$body = $data['body'];
+		$lastread = "1 day ago";
+		$read = $data['read'] ? "read" : "unread";
+		$icon = $data['icon'];
 
 		return "
             <div class=\"reverb-npn-row\">
@@ -202,7 +207,7 @@ class SpecialNotifications extends SpecialPage {
                 </div>
             </div>
         ";
-    }
+	}
 
 	/**
 	 * Hides special page from SpecialPages special page.
