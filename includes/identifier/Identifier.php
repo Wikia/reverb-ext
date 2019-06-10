@@ -49,19 +49,23 @@ abstract class Identifier {
 	/**
 	 * Get a new instance based on the identifier given.
 	 *
-	 * @param string $identifier String based identifier with namespace, what, and ID.
+	 * @param string|array $identifier String or array based identifier with namespace, what, and ID.
 	 *
 	 * @return Identifier One of the Identifier children.
 	 *
 	 * @throws InvalidIdentifierException
 	 */
-	public static function factory(string $identifier): Identifier {
-		$idPieces = self::splitIdentifier($identifier);
+	public static function factory($identifier): Identifier {
+		if (!is_array($identifier)) {
+			$idPieces = self::splitIdentifier($identifier);
+		} else {
+			$idPieces = $identifier;
+		}
 		if ($idPieces === null || !isset(self::$whatClassMap[$idPieces['what']])) {
 			throw new InvalidIdentifierException();
 		}
 
-		return new self::$whatClassMap[$idPieces['what']]($idPieces['namespace'], $idPieces['id']);
+		return new self::$whatClassMap[$idPieces['what']]((string)$idPieces['namespace'], (string)$idPieces['id']);
 	}
 
 	/**
@@ -72,7 +76,7 @@ abstract class Identifier {
 	 * @return array|null Array with ['namespace' => 'hydra', 'what' => 'hydra', 'id' => 'hydra'] or null if invalid.
 	 */
 	private static function splitIdentifier(string $identifier): ?array {
-		$regex = '#^([a-z]{1,64})/([a-z]{1,64}):([\w]{1,64})$#';
+		$regex = '#^([a-z]{1,64}):([a-z]{1,64}):([\w]{1,64})$#';
 		$matches = [];
 		if (preg_match($regex, $identifier, $matches) > 0) {
 			return [
