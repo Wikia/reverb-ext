@@ -100,10 +100,28 @@ class Notification {
 	/**
 	 * Get the created date for this notification.
 	 *
-	 * @return int Creation Date
+	 * @return integer Creation Date
 	 */
 	public function getCreatedAt(): int {
 		return $this->resource->created_at;
+	}
+
+	/**
+	 * Is this notification dismissed?
+	 *
+	 * @return boolean Is dismissed
+	 */
+	public function isDismissed(): bool {
+		return bool_val($this->resource->dismissed_at);
+	}
+
+	/**
+	 * Get the dismissed date for this notification.
+	 *
+	 * @return integer Dismissed Date
+	 */
+	public function getDismissedAt(): int {
+		return $this->resource->dismissed_at;
 	}
 
 	/**
@@ -289,6 +307,7 @@ class Notification {
 			'type' => $this->getType(),
 			'message' => $this->getMessage(),
 			'created_at' => $this->getCreatedAt(),
+			'dismissed_at' => $this->getDismissedAt(),
 			'origin_url' => $this->getOriginUrl(),
 			'agent_url' => $this->getAgentUrl()
 		];
