@@ -12,14 +12,10 @@ declare(strict_types=1);
 
 namespace Reverb\Notification;
 
-use ArrayObject;
 use CentralIdLookup;
-use Exception;
-use Hydrawiki\Reverb\Client\V1\Exceptions\ApiResponseInvalid;
 use Hydrawiki\Reverb\Client\V1\Resources\NotificationBroadcast as NotificationBroadcastResource;
 use MediaWiki\MediaWikiServices;
 use MWException;
-use Reverb\Identifier\Identifier;
 use User;
 
 class NotificationBroadcast {
@@ -54,17 +50,17 @@ class NotificationBroadcast {
 		$targetGlobalId = $lookup->centralIdFromLocalUser($target);
 
 		if (!$agentGlobalId || !$targetGlobalId) {
-			
+
 		}
 
 		$user1 = $client->users()->find('hydra:user:1');
 
 		$notification = new NotificationBroadcastResource(
 			[
-			    'type'        => 'example',
-			    'message'     => 'Hello, World!',
-			    'created-at'  => '2018-01-01 00:00:00',
-			    'url'         => 'https://www.example.com',
+				'type'        => 'example',
+				'message'     => 'Hello, World!',
+				'created-at'  => '2018-01-01 00:00:00',
+				'url'         => 'https://www.example.com',
 			]
 		);
 
