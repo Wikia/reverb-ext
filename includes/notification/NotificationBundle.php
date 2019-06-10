@@ -70,7 +70,11 @@ class NotificationBundle extends ArrayObject {
 			try {
 				// $userResource = $client->users()->find((string)$userIdentifier);
 				// ->filter(['target-id' => 'hydra:user:'.$globalId])
-				$notificationResources = $client->notifications()->page(100, 0)->filter(['target-id' => 'hydra:user:' . $globalId])->all();
+				$notificationResources = $client->notifications()->page(100, 0)->filter(
+					[
+						'target-id' => 'hydra:user:' . $globalId
+					]
+				)->all();
 			} catch (ApiResponseInvalid $e) {
 				// @TODO: Logging and error reporting.
 				return null;
