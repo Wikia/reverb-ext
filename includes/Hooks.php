@@ -80,11 +80,6 @@ class Hooks {
 
 		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
 
-		// $thresholds = [ 1, 10, 100, 1000, 10000, 100000, 1000000 ];
-		// Echo sends a 'thank you' notification on certain thresholds.
-		// Do we wish to keep these?
-		// @TODO: Create 'article-edit-thanks' Notification
-
 		if ($title->getNamespace() == NS_USER_TALK) {
 			$notifyUser = User::newFromName($title->getText());
 			// If the recipient is a valid non-anonymous user and hasn't turned off their
@@ -94,6 +89,20 @@ class Hooks {
 				// minor edit notification blocked.
 				if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
 					// @TODO: Create 'user-interest-talk-page-edit' Notification
+					/*NotificationBroadcast::new(
+						[
+							'type' => 'user-interest-talk-page-edit',
+							'title' => $title,
+							'extra' => [
+								'revid' => $revision->getId(),
+								'minoredit' => $revision->isMinor(),
+								'section-title' => $section['section-title'],
+								'section-text' => $section['section-text'],
+								'target-page' => $title->getArticleID(),
+							],
+							'agent' => $user,
+						]
+					);*/
 				}
 			}
 		}
