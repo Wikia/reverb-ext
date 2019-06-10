@@ -12,11 +12,17 @@ declare(strict_types=1);
 
 namespace Reverb\Notification;
 
+use CentralIdLookup;
+use DynamicSettings\Wiki;
+use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use MediaWiki\MediaWikiServices;
 use MWException;
-use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
+use Reverb\Identifier\SiteIdentifier;
+use Reverb\Identifier\UserIdentifier;
+use Title;
+use User;
 
 class Notification {
 	use \Reverb\Traits\UserContextTrait;
@@ -105,10 +111,10 @@ class Notification {
 	 *
 	 * @return SiteIdentifier|null
 	 */
-	public function getOrigin(): ?SiteIdentifier {
+	public function getOriginId(): ?SiteIdentifier {
 		if ($this->originIdCache === null) {
 			try {
-				$this->originIdCache = Identifier::factory($this->data['origin_id']);
+				$this->originIdCache = Identifier::factory($this->resource->origin_id);
 			} catch (InvalidIdentifierException $e) {
 				$this->originIdCache = null;
 			}
@@ -117,19 +123,82 @@ class Notification {
 	}
 
 	/**
+	 * Return a Wiki object that has wiki information.
+	 *
+	 * @return Wiki|null
+	 */
+	public function getOrigin(): ?Wiki {
+		$id = $this->getOriginId();
+		if ($id !== null) {
+			if ($id->whoAmI() === 'master') {
+				$wiki = Wiki::getFakeMainWiki();
+			} else {
+				$wiki = Wiki::loadFromHash($id->whoAmI());
+			}
+			if (!empty($wiki)) {
+				return $wiki;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get an URL to the origin.
+	 *
+	 * @return string|null
+	 */
+	public function getOriginUrl(): ?string {
+		$origin = $this->getOrigin();
+		if ($origin !== null) {
+			return wfExpandUrl('//'.$origin->getDomains()->getDomain(), PROTO_HTTPS);
+		}
+		return null;
+	}
+
+	/**
 	 * Get the agent UserIdentifier.
 	 *
 	 * @return UserIdentifier|null
 	 */
-	public function getAgent(): ?UserIdentifier {
+	public function getAgentId(): ?UserIdentifier {
 		if ($this->agentIdCache === null) {
 			try {
-				$this->agentIdCache = Identifier::factory($this->data['agent_id']);
+				$this->agentIdCache = Identifier::factory($this->resource->agent_id);
 			} catch (InvalidIdentifierException $e) {
 				$this->agentIdCache = null;
 			}
 		}
 		return $this->agentIdCache;
+	}
+
+	/**
+	 * Return an User object of the agent that created this notification.
+	 *
+	 * @return Wiki|null
+	 */
+	public function getAgent(): ?User {
+		$id = $this->getAgentId();
+		if ($id !== null) {
+			$lookup = CentralIdLookup::factory();
+			$user = $lookup->localUserFromCentralId($id->whoAmI());
+			if ($user !== null) {
+				return $user;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get an URL to the agent.
+	 *
+	 * @return string|null
+	 */
+	public function getAgentUrl(): ?string {
+		$agent = $this->getAgent();
+		if ($agent !== null) {
+			return Title::newFromText($agent->getName(), NS_USER)->getCanonicalURL();
+		}
+		return null;
 	}
 
 	/**
@@ -219,7 +288,9 @@ class Notification {
 			'id' => $this->getId(),
 			'type' => $this->getType(),
 			'message' => $this->getMessage(),
-			'created_at' => $this->getCreatedAt()
+			'created_at' => $this->getCreatedAt(),
+			'origin_url' => $this->getOriginUrl(),
+			'agent_url' => $this->getAgentUrl()
 		];
 	}
 }
