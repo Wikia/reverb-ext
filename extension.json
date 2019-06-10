@@ -35,6 +35,9 @@
 	],
 	"ResourceModules": {
 		"ext.reverb.notifications.styles": {
+			"dependencies": [
+				"ext.hydraCore.font-awesome.styles"
+			],
 			"targets": [
 				"desktop",
 				"mobile"
@@ -46,13 +49,14 @@
 		},
 		"ext.reverb.notifications.scripts": {
 			"dependencies": [
-				"ext.hydraCore.font-awesome.styles"
+				"mediawiki.api"
 			],
 			"targets": [
 				"desktop",
 				"mobile"
 			],
 			"scripts": [
+				"resources/js/reverb.moment.js",
 				"resources/js/reverb.notifications.js"
 			],
 			"position": "bottom"
@@ -106,8 +110,8 @@
 		"ReverbIcons": {
 			"value": {
 				"category": {
-					"user": ".svg",
-					"article": ".svg"
+					"user": "feedback.svg",
+					"article": "feedback.svg"
 				},
 				"subcategory": {
 					"user-account": ".svg",

@@ -16,35 +16,6 @@
 
     log('Display Logic Loaded.');
 
-
-    /**
-     * Globals or something. I dont know.
-     */
-
-    var icons = [
-        "articleCheck.svg",
-        "bell.svg",
-        "edit.svg",
-        "feedback.svg",
-        "help.svg",
-        "mention-failure.svg",
-        "mention-success.svg",
-        "message.svg",
-        "revert.svg",
-        "tray.svg",
-        "user-speech-bubble.svg",
-        "changes.svg",
-        "edit-user-talk.svg",
-        "global.svg",
-        "link.svg",
-        "mention-status-bundle.svg",
-        "mention.svg",
-        "notice.svg",
-        "speechBubbles.svg",
-        "user-rights.svg",
-        "userTalk.svg"
-    ];
-
     /**
      *  Identify user box to place notifications directly next to it.
      *  Also remove any echo notification boxes that may exist.
@@ -69,7 +40,7 @@
    
     var notificationButton = $(`
         <div class="netbar-box right reverb-notifications">
-            <i class="fa fa-envelope"></i> <span class="reverb-total-notifications">0</span>
+            <i class="fa fa-envelope"></i> <span class="reverb-total-notifications"></span>
         </div>
     `);
 
@@ -85,6 +56,8 @@
         </div>
     </div>`;
 
+    // clear it. We dont have support for this yet.
+    globalNotifications = '';
     
 
     var notificationPanel = $(`
@@ -119,7 +92,7 @@
     var buildNotification = function(data) {
         var header = data.header;
         var body = data.body;
-        var lastread = "1 day ago";
+        var created = moment(data.created).fromNow();
         var read = data.read ? "read" : "unread";
         var icon = data.icon;
 
@@ -133,7 +106,7 @@
                     <div class="reverb-npnr-body">${body}</div>
                     <div class="reverb-npnr-bottom">
                         <span class="reverb-npnr-${read}"></span>
-                        ${lastread}
+                        ${created}
                     </div>
                 </div>
             </div>
@@ -150,33 +123,44 @@
      * Inject fake notification data until we have real data.
      */
 
-    updateUnread(3);
-    for (i = 0; i < 3; i++) { 
-        addNotification(
-            buildNotification({
-                header: `Someone <b>ACTIONED</b> your edit on <b>SOMEWHERE</b>`,
-                body: `It was really great that it happened and I think you should be really happy about it. If you dont like it then you can just get over it. WOW. Really.`,
-                read: false,
-                icon: icons[Math.floor(Math.random()*icons.length)]
-            })
-        );
-    }
+    var api = new mw.Api();
+    api.get({action:'notifications', do:'getNotificationsForUser', format:'json'})
+    .done(function(data) {
+        if (data.notifications && data.notifications.length) {
+            console.log(data.notifications);
+            var unread = 0;
+            for (var x in data.notifications) {
+                var n = data.notifications[x];
 
-    for (i = 0; i < 5; i++) {      
-        addNotification(
-            buildNotification({
-                header: `Your edit on <b>MEMES GALORE</b> was <b>BELETED</b>.`,
-                body: `On no. RIP.`,
-                read: true,
-                icon: icons[Math.floor(Math.random()*icons.length)]
-            })
-        );
-    }
+                // Setup header
+                var header = "Not available from API";
 
-    
+                // Setup message body 
+                var message = n.message ? n.message : "No message was returned from the API";
 
+                // Try Notification, then Subcategory, then Category...
+                var icon = n.icons.notification ? n.icons.notification : (n.icons.subcategory ? n.icons.subcategory : (n.icons.category ? n.icons.category : false));
+                icon = icon ? icon : "feedback.svg"; // set a default fallback icon
 
+                // Convert for javascript
+                var created = n.created_at * 1000;
 
+                // Handle Read Count -- Not available from API yet
+                var read = n.dismissed_at ? true : false;
+                if (!read) { unread++; } 
+                
+                var notification = buildNotification({
+                    header: header,
+                    body: message,
+                    read: read,
+                    icon: icon,
+                    created: created
+                });
+                addNotification(notification);
+            }
+            updateUnread(unread);
+        }
+    });
 
     /*
         Developer: 
