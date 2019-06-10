@@ -32,6 +32,14 @@
             userBox = nbx;
         }
     });
+    
+    // Check if we are inside the notification page.
+    // There may be a more "mediawiki" was of doing this...
+    var notificationPage = false;
+    if (window.location.pathname == "/Special:Notifications" ||
+        window.location.pathname == "/index.php" && window.location.search.indexOf('title=Special:Notifications') !== -1) {
+        notificationPage = true;
+    }
 
     /**
      *  Inject the new Reverb notifications HTML.
@@ -63,7 +71,7 @@
     var notificationPanel = $(`
         <div class="reverb-np">
             <div class="reverb-np-header">
-                <span class="reverb-nph-right">View All <i class="fa fa-arrow-right"></i></span>
+                <span class="reverb-nph-right"><a href="/Special:Notifications">View All <i class="fa fa-arrow-right"></i></a></span>
                 <span class="reverb-nph-notifications">Notifications (<span class="reverb-total-notifications">0</span>)</span>
                 <span class="reverb-nph-preferences"><i class="fa fa-cog"></i></span>
             </div>
@@ -127,16 +135,15 @@
     api.get({action:'notifications', do:'getNotificationsForUser', format:'json'})
     .done(function(data) {
         if (data.notifications && data.notifications.length) {
-            console.log(data.notifications);
             var unread = 0;
             for (var x in data.notifications) {
                 var n = data.notifications[x];
 
                 // Setup header
-                var header = "Not available from API";
+                var header = n.header ? n.header : false;
 
                 // Setup message body 
-                var message = n.message ? n.message : "No message was returned from the API";
+                var message = n.message ? n.message : false;
 
                 // Try Notification, then Subcategory, then Category...
                 var icon = n.icons.notification ? n.icons.notification : (n.icons.subcategory ? n.icons.subcategory : (n.icons.category ? n.icons.category : false));
@@ -145,18 +152,22 @@
                 // Convert for javascript
                 var created = n.created_at * 1000;
 
-                // Handle Read Count -- Not available from API yet
-                var read = n.dismissed_at ? true : false;
-                if (!read) { unread++; } 
-                
-                var notification = buildNotification({
-                    header: header,
-                    body: message,
-                    read: read,
-                    icon: icon,
-                    created: created
-                });
-                addNotification(notification);
+                // Lets not display broken notifications to end users
+                if (header && message) {
+
+                    // Handle Read Count -- Not available from API yet
+                    var read = n.dismissed_at ? true : false;
+                    if (!read) { unread++; } 
+                    
+                    var notification = buildNotification({
+                        header: header,
+                        body: message,
+                        read: read,
+                        icon: icon,
+                        created: created
+                    });
+                    addNotification(notification);
+                }
             }
             updateUnread(unread);
         }

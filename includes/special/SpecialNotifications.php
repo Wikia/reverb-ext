@@ -163,14 +163,14 @@ class SpecialNotifications extends SpecialPage {
 					</div>
 				<div class="reverb-notification-page-notifications">';
 
-		for ($x = 0; $x <= 10; $x++) {
+		/*for ($x = 0; $x <= 10; $x++) {
 			$html .= $this->notificationRow([
 				'header' => "Header",
 				'body' => "Body",
 				'read' => true,
 				'icon' => $this->icons[array_rand($this->icons)]
 			]);
-		}
+		}*/
 
 		$html .= '</div>
 			</div>

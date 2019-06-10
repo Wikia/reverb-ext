@@ -43,6 +43,17 @@
     color: #ffffff;
 }
 
+.reverb-nph-right a:link, 
+.reverb-nph-right a:active, 
+.reverb-nph-right a:visited {
+    color: #fff;
+} 
+
+.reverb-nph-right a:hover {
+    text-decoration: none;
+    color: #fff;
+}
+
 .reverb-nph-notifications {
     padding: 0px 10px 0px 0px;
     border-right: 1px solid #4f4f4f;
