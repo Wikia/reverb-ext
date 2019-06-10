@@ -212,3 +212,57 @@
     color: #ffffff;
     border-bottom: 1px solid #4f4f4f;
 }
+
+
+
+input[type=checkbox].reverb-filter-checkbox {
+    position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+}
+
+input[type=checkbox].reverb-filter-checkbox + label.reverb-filter-label {
+    padding-left:21px;
+    height:16px; 
+    display:inline-block;
+    line-height:16px;
+    background-repeat:no-repeat;
+    background-position: 0 0;
+    font-size:16px;
+    vertical-align:middle;
+    cursor:pointer;
+
+}
+
+input[type=checkbox].reverb-filter-checkbox:checked + label.reverb-filter-label {
+    background-position: 0 -16px;
+}
+label.reverb-filter-label {
+    background-image:url(../images/checkbox.png);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.reverb-button-bar {
+    padding: 0px 0px 20px 0px;
+    border-bottom: 1px solid #fff;
+}
+
+.reverb-button-bar  button {
+    border-radius: 2px;
+    border: solid 1px #f37f20;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px;
+    margin-left: -5px; /* Dumb way to bump them all together. Roll Tide */
+    font-size: 14px;
+    font-family: Helveta, sans-serif;
+    font-weight: bold;
+}
+
+.reverb-button-bar  button:hover, 
+.reverb-button-bar  button.reverb-selected {
+    color: #f37f20;
+}
