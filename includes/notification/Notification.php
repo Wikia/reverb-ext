@@ -16,6 +16,7 @@ use CentralIdLookup;
 use DynamicSettings\Wiki;
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use MediaWiki\MediaWikiServices;
+use Message;
 use MWException;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
@@ -89,12 +90,36 @@ class Notification {
 	}
 
 	/**
+	 * Get the header for this notification.
+	 *
+	 * @return string Message
+	 */
+	public function getHeader(): Message {
+		return wfMessage('web-header-'.$this->getType())->params($this->getMessageParameters());
+	}
+
+	/**
 	 * Get the message for this notification.
 	 *
 	 * @return string Message
 	 */
-	public function getMessage(): string {
-		return $this->resource->message;
+	public function getMessage(): Message {
+		return wfMessage('web-body-'.$this->getType())->params($this->getMessageParameters());
+	}
+
+	/**
+	 * Do any clean up and representation changes on message parameters then return them.
+	 *
+	 * @return array
+	 */
+	protected function getMessageParameters(): array {
+		$json = (array) json_decode($this->resource->message);
+
+		$parameters = [];
+		foreach ($json as $parameter) {
+			$parameters[$parameter[0]] = $parameter[1];
+		}
+		return $parameters;
 	}
 
 	/**
@@ -305,6 +330,7 @@ class Notification {
 			'subcategory' => $this->getSubcategory(),
 			'id' => $this->getId(),
 			'type' => $this->getType(),
+			'header' => $this->getHeader(),
 			'message' => $this->getMessage(),
 			'created_at' => $this->getCreatedAt(),
 			'dismissed_at' => $this->getDismissedAt(),
