@@ -95,7 +95,7 @@ class Notification {
 	 * @return string Message
 	 */
 	public function getHeader(): Message {
-		return wfMessage('web-header-'.$this->getType())->params($this->getMessageParameters());
+		return wfMessage('web-header-' . $this->getType())->params($this->getMessageParameters());
 	}
 
 	/**
@@ -104,7 +104,7 @@ class Notification {
 	 * @return string Message
 	 */
 	public function getMessage(): Message {
-		return wfMessage('web-body-'.$this->getType())->params($this->getMessageParameters());
+		return wfMessage('web-body-' . $this->getType())->params($this->getMessageParameters());
 	}
 
 	/**
@@ -113,7 +113,7 @@ class Notification {
 	 * @return array
 	 */
 	protected function getMessageParameters(): array {
-		$json = (array) json_decode($this->resource->message);
+		$json = (array)json_decode($this->resource->message);
 
 		$parameters = [];
 		foreach ($json as $parameter) {
