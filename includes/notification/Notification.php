@@ -150,7 +150,7 @@ class Notification {
 	public function getOriginUrl(): ?string {
 		$origin = $this->getOrigin();
 		if ($origin !== null) {
-			return wfExpandUrl('//'.$origin->getDomains()->getDomain(), PROTO_HTTPS);
+			return wfExpandUrl('//' . $origin->getDomains()->getDomain(), PROTO_HTTPS);
 		}
 		return null;
 	}
