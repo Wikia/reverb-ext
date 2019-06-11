@@ -1,0 +1,48 @@
+<div class="reverb-notification-page">
+    <div class="reverb-notification-page-left">
+        <div class="reverb-filter-title">
+            <span class="reverb-pull-right"><i class="fa fa-sliders-h"></i></span>
+            Filter by Type
+        </div>
+
+        <div class="reverb-filter-row">
+            <input type="checkbox" id="filter_all" class="reverb-filter-checkbox" checked="checked"> 
+            <label for="filter_all" class="reverb-filter-label"> All
+        </div>
+
+        {% for id, type in types %}
+            <div class="reverb-filter-row">
+                <input type="checkbox" name="filter_{{ id }}" class="revberb-filter-checkbox">
+                <label for="filter_{{ id }}"> {{ type.title }}
+            </div>
+        {% endfor %}
+
+        </div>
+    <div class="reverb-notification-page-right">
+        <div class="reverb-button-bar">
+            <span class="reverb-pull-right">
+                <button>Mark All As Read</button>
+            </span>
+            <button>{{ wfMessage('reverb_all', 'plain', '50') }}</button>
+            <button>{{ wfMessage('reverb_read', 'plain', '48') }}</button>
+            <button>{{ wfMessage('reverb_unread', 'plain', '4') }}</button>
+        </div>
+        <div class="reverb-notification-page-row reverb-npn-row-global">
+                <div class="reverb-npnr-left">
+                    <img src="/extensions/Reverb/resources/icons/global.svg"
+                        class="reverb-icon reverb-icon-global">
+                </div>
+                <div class="reverb-npnr-right">
+                    <div class="reverb-npnr-header">
+                        3 unread notifications from other wikis. <i class="fa fa-chevron-down"></i>
+                        <span class="reverb-npnr-unread reverb-npnr-unread-global"></span>
+                    </div>
+                </div>
+            </div>
+        <div class="reverb-notification-page-notifications">
+
+            <!-- Notifications will be filled here by glorius JAVASCRIPT -->
+
+        </div>
+    </div>
+</div>

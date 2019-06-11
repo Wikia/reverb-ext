@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Reverb\Special;
 
 use SpecialPage;
+use MediaWiki\MediaWikiServices;
 
 class SpecialNotifications extends SpecialPage {
 	/**
@@ -117,69 +118,9 @@ class SpecialNotifications extends SpecialPage {
 	 * @return void [Outputs to screen]
 	 */
 	public function execute($subpage) {
-		$html = '
-		<div class="reverb-notification-page">
-			<div class="reverb-notification-page-left">
-				<div class="reverb-filter-title">
-					<span class="reverb-pull-right"><i class="fa fa-sliders-h"></i></span>
-					Filter by Type
-				</div>
-
-				<div class="reverb-filter-row">
-					<input type="checkbox" id="filter_all" class="reverb-filter-checkbox" checked="checked"> 
-					<label for="filter_all" class="reverb-filter-label"> All
-				</div>';
-
-		foreach ($this->types as $id => $type) {
-			$html .= "
-				<div class=\"reverb-filter-row\">
-					<input type=\"checkbox\" id=\"filter_${id}\" class=\"reverb-filter-checkbox\"> 
-					<label for=\"filter_${id}\" class=\"reverb-filter-label\"> ${type['title']}
-				</div>
-			";
-		}
-
-		$html .= '
-			</div>
-			<div class="reverb-notification-page-right">
-				<div class="reverb-button-bar">
-					<span class="reverb-pull-right">
-						<button>Mark All As Read</button>
-					</span>
-					<button>All (52)</button>
-					<button>Read (48)</button>
-					<button>Unread (4)</button>
-				</div>
-				<div class="reverb-notification-page-row reverb-npn-row-global">
-						<div class="reverb-npnr-left">
-							<img src="/extensions/Reverb/resources/icons/global.svg"
-								class="reverb-icon reverb-icon-global">
-						</div>
-						<div class="reverb-npnr-right">
-							<div class="reverb-npnr-header">
-								3 unread notifications from other wikis. <i class="fa fa-chevron-down"></i>
-								<span class="reverb-npnr-unread reverb-npnr-unread-global"></span>
-							</div>
-						</div>
-					</div>
-				<div class="reverb-notification-page-notifications">';
-
-
-		/*for ($x = 0; $x <= 10; $x++) {
-
-			$html .= $this->notificationRow([
-				'header' => "Header",
-				'body' => "Body",
-				'read' => true,
-				'icon' => $this->icons[array_rand($this->icons)]
-			]);
-		}*/
-
-		$html .= '</div>
-			</div>
-		</div>';
-
-		$this->output->addHtml($html);
+		$twig = MediaWikiServices::getInstance()->getService( 'TwiggyService' );
+		$template = $twig->load('@Reverb/notifications.twig');
+		$this->output->addHtml($template->render(['types' => $this->types]));
 	}
 
 	/**

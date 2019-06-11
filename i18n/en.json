@@ -32,5 +32,8 @@
 	"web-header-article-edit-revert": "",
 	"web-body-article-edit-revert": "",
 	"email-header-article-edit-revert": "",
-	"email-body-article-edit-revert": ""
+	"email-body-article-edit-revert": "",
+	"reverb_all": "All ($1)",
+	"reverb_read": "Read ($1)",
+	"reverb_unread": "Unread ($1)"
 }
