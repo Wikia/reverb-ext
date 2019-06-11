@@ -1,0 +1,36 @@
+{
+    "@metadata": {
+        "authors": [
+            "Cainamarques",
+            "GoEThe",
+            "Helder.wiki",
+            "Imperadeiro98",
+            "Lijealso",
+            "Polyethylen",
+            "Vitorvicentevalente",
+            "He7d3r",
+            "F\u00falvio",
+            "Jkb8",
+            "Macofe",
+            "\u00d6nni",
+            "Diniscoelho",
+            "Gato Preto",
+            "Mansil",
+            "Hamilton Abreu",
+            "Athena in Wonderland",
+            "Opraco"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|deixou}} uma mensagem na <strong>{{GENDER:$3|sua}} p\u00e1gina de discuss\u00e3o<\/strong>.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|deixou}}{{GENDER:$3|-lhe}} uma mensagem.",
+    "long-header-user-interest-page-linked": "Foi feita uma hiperliga\u00e7\u00e3o em <strong>$4<\/strong> para <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Hiperliga\u00e7\u00e3o a partir de <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "Os {{GENDER:$6|seus}} privil\u00e9gios foram {{GENDER:$1|alterados}}. Foi {{GENDER:$6|adicionado|adicionada|adicionado(a)}} a: $2. Deixou de pertencer a: $4.",
+    "long-header-user-account-groups-changed": "Os {{GENDER:$6|seus}} privil\u00e9gios foram {{GENDER:$1|alterados}}. Foi {{GENDER:$6|adicionado|adicionada|adicionado(a)}} a: $2. Deixou de pertencer a: $4.",
+    "short-header-user-account-groups-expiration-change": "A expira\u00e7\u00e3o da {{GENDER:$4|sua}} associa\u00e7\u00e3o {{PLURAL:$3|ao seguinte grupo|aos seguintes grupos}} foi {{GENDER:$1|alterada}}: $2",
+    "long-header-user-account-groups-expiration-change": "A expira\u00e7\u00e3o da {{GENDER:$4|sua}} associa\u00e7\u00e3o {{PLURAL:$3|ao seguinte grupo|aos seguintes grupos}} foi {{GENDER:$1|alterada}}: $2",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Bem-vindo|Bem-vinda|Bem-vindo(a)}} \u00e0 wiki {{SITENAME}}, $1! Ficamos satisfeitos por {{GENDER:$2|t\u00ea-lo|t\u00ea-la|t\u00ea-lo(a)}} aqui.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Bem-vindo|Bem-vinda|Bem-vindo(a)}} \u00e0 wiki {{SITENAME}}, $1! Ficamos satisfeitos por {{GENDER:$2|t\u00ea-lo|t\u00ea-la|t\u00ea-lo(a)}} aqui.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|A sua edi\u00e7\u00e3o em <strong>$3<\/strong> foi revertida|As suas edi\u00e7\u00f5es em <strong>$3<\/strong> foram {{GENDER:$2|revertidas}}}}.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|A sua edi\u00e7\u00e3o em <strong>$3<\/strong> foi revertida|As suas edi\u00e7\u00f5es em <strong>$3<\/strong> foram {{GENDER:$2|revertidas}}}}."
+}

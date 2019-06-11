@@ -1,0 +1,10 @@
+{
+    "@metadata": {
+        "authors": [
+            "Als-Holder",
+            "J. 'mach' wust"
+        ]
+    },
+    "short-header-article-edit-revert": "{{GENDER:$2|Der $1|D $1|$1}} het dyni {{PLURAL:$4|\u00c4nderig|\u00c4nderigen}} ar Syte $3 r\u00fcckg\u00e4ngig gemacht.",
+    "long-header-article-edit-revert": "{{GENDER:$2|Der $1|D $1|$1}} het dyni {{PLURAL:$4|\u00c4nderig|\u00c4nderigen}} ar Syte $3 r\u00fcckg\u00e4ngig gemacht."
+}

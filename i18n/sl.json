@@ -1,0 +1,25 @@
+{
+    "@metadata": {
+        "authors": [
+            "Dbc334",
+            "Eleassar",
+            "Matej1234",
+            "Pinky sl",
+            "Yerpo",
+            "Macofe",
+            "Janezdrilc"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 je na <strong>{{GENDER:$3|tvoji}} pogovorni strani<\/strong> {{GENDER:$2|pustil|pustila}} sporo\u010dilo.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$3|ti}} {{GENDER:$2|je pustil}} sporo\u010dilo.",
+    "long-header-user-interest-page-linked": "V \u010dlanku <strong>$4<\/strong> je bila narejena notranja povezava na \u010dlanek <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Povezava narejena iz <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "{{GENDER:$6|Tvoje}} uporabni\u0161ke pravice {{GENDER:$1|so bile spremenjene}}. Postal si del skupine: $2. Nisi ve\u010d v skupini: $4.",
+    "long-header-user-account-groups-changed": "{{GENDER:$6|Tvoje}} uporabni\u0161ke pravice {{GENDER:$1|so bile spremenjene}}. Postal si del skupine: $2. Nisi ve\u010d v skupini: $4.",
+    "short-header-user-account-groups-expiration-change": "\u010cas poteka {{GENDER:$4|tvojega}} tvojega \u010dlanstva v naslednjih {{PLURAL:$3|skupini|skupinama|skupinah}} je bil {{GENDER:$1|spremenjen}}: $2.",
+    "long-header-user-account-groups-expiration-change": "\u010cas poteka {{GENDER:$4|tvojega}} tvojega \u010dlanstva v naslednjih {{PLURAL:$3|skupini|skupinama|skupinah}} je bil {{GENDER:$1|spremenjen}}: $2.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Dobrodo\u0161el|Dobrodo\u0161la}} na {{SITENAME}}, $1! Veseli smo, da si se {{GENDER:$2|oglasil|oglasila}}.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Dobrodo\u0161el|Dobrodo\u0161la}} na {{SITENAME}}, $1! Veseli smo, da si se {{GENDER:$2|oglasil|oglasila}}.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|Tvoje urejanje strani <strong>$3<\/strong> je bilo {{GENDER:$2|vrnjeno}}|Tvoji urejanji strani <strong>$3<\/strong> sta bili vrnjeni|Tvoja urejanja strani <strong>$3<\/strong> so bila vrnjena}}.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Tvoje urejanje strani <strong>$3<\/strong> je bilo {{GENDER:$2|vrnjeno}}|Tvoji urejanji strani <strong>$3<\/strong> sta bili vrnjeni|Tvoja urejanja strani <strong>$3<\/strong> so bila vrnjena}}."
+}

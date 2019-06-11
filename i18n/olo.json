@@ -1,0 +1,11 @@
+{
+    "@metadata": {
+        "authors": [
+            "Mashoi7",
+            "Ilja.mos",
+            "Macofe"
+        ]
+    },
+    "short-header-article-edit-revert": "{{PLURAL:$4|Sinun kohendus|Sinun kohendukset}} sivul <strong>$3<\/strong> {{GENDER:$2|{{PLURAL:$4|on kumottu|oldih kumottu}}}}",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Sinun kohendus|Sinun kohendukset}} sivul <strong>$3<\/strong> {{GENDER:$2|{{PLURAL:$4|on kumottu|oldih kumottu}}}}"
+}

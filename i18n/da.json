@@ -1,0 +1,28 @@
+{
+    "@metadata": {
+        "authors": [
+            "Byrial",
+            "Christian List",
+            "Palnatoke",
+            "Sarrus",
+            "Tjernobyl",
+            "Thomsen",
+            "Cgtdk",
+            "Macofe",
+            "Simeondahl",
+            "SimmeD",
+            "EeveeSylveon",
+            "Saederup92",
+            "Weblars"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|efterlod}} en meddelelse p\u00e5 <strong>{{GENDER:$3|din}} diskussionsside<\/strong>.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|efterlod}} en besked til {{GENDER:$3|dig}}.",
+    "long-header-user-interest-page-linked": "Der blev oprettet et link fra <strong>$4<\/strong> til <strong>$3<\/strong>",
+    "short-header-user-account-groups-changed": "{{GENDER:$6|Dine}} brugerrettigheder blev {{GENDER:$1|\u00c6ndret}}. Du er blevet tilf\u00f8jet til: $2. Du er ikke l\u00e6ngere medlem af: $4.",
+    "long-header-user-account-groups-changed": "{{GENDER:$6|Dine}} brugerrettigheder blev {{GENDER:$1|\u00c6ndret}}. Du er blevet tilf\u00f8jet til: $2. Du er ikke l\u00e6ngere medlem af: $4.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Velkommen}} til {{SITENAME}}, $1! Vi er glade for {{GENDER:$2|du}} er her.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Velkommen}} til {{SITENAME}}, $1! Vi er glade for {{GENDER:$2|du}} er her.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|Din redigering af <strong>$3<\/strong> er blevet tilbagestillet|Dine redigeringer af <strong>$3<\/strong> er blevet tilbagestillede}} af $2",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Din redigering af <strong>$3<\/strong> er blevet tilbagestillet|Dine redigeringer af <strong>$3<\/strong> er blevet tilbagestillede}} af $2"
+}

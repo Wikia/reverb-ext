@@ -1,0 +1,27 @@
+{
+    "@metadata": {
+        "authors": [
+            "Arnaugir",
+            "Papapep",
+            "Pitort",
+            "QuimGil",
+            "Vriullop",
+            "\u0db4\u0dc3\u0dd2\u0db3\u0dd4 \u0d9a\u0dcf\u0dc0\u0dd2\u0db1\u0dca\u0daf",
+            "Fitoschido",
+            "Ssola",
+            "Nemo bis",
+            "Toniher",
+            "Lluis tgn"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|ha deixat}} un missatge en la <strong>{{GENDER:$3|vostra}} p\u00e0gina de discussi\u00f3<\/strong>.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|us ha}} {{GENDER:$3|deixat}} un missatge.",
+    "long-header-user-interest-page-linked": "S'ha creat un enlla\u00e7 a <strong>$4<\/strong> vers <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Enlla\u00e7ades des de <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "Els vostres drets d'usuari han estat {{GENDER:$1|modificats}}. Heu estat {{GENDER:$6|afegit|afegida}} a: $2. Ja no sou membre de: $4.",
+    "long-header-user-account-groups-changed": "Els vostres drets d'usuari han estat {{GENDER:$1|modificats}}. Heu estat {{GENDER:$6|afegit|afegida}} a: $2. Ja no sou membre de: $4.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Benvingut|Benvinguda}} al projecte {{SITENAME}}, $1! Ens alegrem que {{GENDER:$2|estigueu}} aqu\u00ed.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Benvingut|Benvinguda}} al projecte {{SITENAME}}, $1! Ens alegrem que {{GENDER:$2|estigueu}} aqu\u00ed.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|La vostra edici\u00f3 a <strong>$3<\/strong> ha estat revertida|Les vostres edicions a <strong>$3<\/strong> han estat revertides}}{{GENDER:$2|}}.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|La vostra edici\u00f3 a <strong>$3<\/strong> ha estat revertida|Les vostres edicions a <strong>$3<\/strong> han estat revertides}}{{GENDER:$2|}}."
+}

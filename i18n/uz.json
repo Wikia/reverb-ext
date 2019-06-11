@@ -1,0 +1,11 @@
+{
+    "@metadata": {
+        "authors": [
+            "CoderSI",
+            "Nataev",
+            "Sociologist"
+        ]
+    },
+    "short-header-article-edit-revert": "$3 sahifasidagi {{PLURAL:$4|1=tahriringizni|tahrirlaringizni}} $1 {{GENDER:$2|bekor qildi}}.",
+    "long-header-article-edit-revert": "$3 sahifasidagi {{PLURAL:$4|1=tahriringizni|tahrirlaringizni}} $1 {{GENDER:$2|bekor qildi}}."
+}

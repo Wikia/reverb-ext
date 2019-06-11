@@ -1,0 +1,24 @@
+{
+    "@metadata": {
+        "authors": [
+            "Amire80",
+            "MaGa",
+            "Roberta F.",
+            "Ex13",
+            "Bugoslav",
+            "Wumbolo"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|Vam je ostavio|Vam je ostavila}} poruku na <strong>{{GENDER:$3|Va\u0161oj}} stranici za razgovor<\/strong>.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$3|Vam}} je {{GENDER:$2|ostavio|ostavila}} poruku.",
+    "long-header-user-interest-page-linked": "Stranica <strong>$3<\/strong> povezana je s <strong>$4<\/strong>.",
+    "short-header-user-interest-page-linked": "Povezano sa stranice <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "{{GENDER:$6|Va\u0161a}} suradni\u010dka prava su {{GENDER:$1|promijenjena}}. Dodani ste u sljede\u0107e grupe: $2. Vi\u0161e niste \u010dlan grupa: $4.",
+    "long-header-user-account-groups-changed": "{{GENDER:$6|Va\u0161a}} suradni\u010dka prava su {{GENDER:$1|promijenjena}}. Dodani ste u sljede\u0107e grupe: $2. Vi\u0161e niste \u010dlan grupa: $4.",
+    "short-header-user-account-groups-expiration-change": "Istek {{GENDER:$4|Va\u0161eg}} \u010dlanstva u {{PLURAL:$3|sljede\u0107oj grupi|sljede\u0107im grupama}} je {{GENDER:$1|promijenjen}}: $2.",
+    "long-header-user-account-groups-expiration-change": "Istek {{GENDER:$4|Va\u0161eg}} \u010dlanstva u {{PLURAL:$3|sljede\u0107oj grupi|sljede\u0107im grupama}} je {{GENDER:$1|promijenjen}}: $2.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Dobro do\u0161li}} na projekt {{SITENAME}}, $1! Drago nam je da {{GENDER:$2|ste}} ovdje.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Dobro do\u0161li}} na projekt {{SITENAME}}, $1! Drago nam je da {{GENDER:$2|ste}} ovdje.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|Va\u0161e ure\u0111ivanje na stranici $3|Va\u0161a ure\u0111ivanja na stranici $3}} {{GENDER:$2|uklonio je suradnik|uklonila je suradnica}} $2.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Va\u0161e ure\u0111ivanje na stranici $3|Va\u0161a ure\u0111ivanja na stranici $3}} {{GENDER:$2|uklonio je suradnik|uklonila je suradnica}} $2."
+}

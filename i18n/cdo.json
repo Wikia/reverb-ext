@@ -1,0 +1,12 @@
+{
+    "@metadata": {
+        "authors": [
+            "Amire80",
+            "Yejianfei",
+            "\u5510\u5409\u8a36\u5fb7\u7684\u4f8d\u5f9e",
+            "Davidzdh"
+        ]
+    },
+    "short-header-article-edit-revert": "\u6c5d{{PLURAL:$4|\u6546$3\u4e0a\u5176\u4fee\u6539}}\u5df2\u7d93\u4e5e$1{{GENDER:$2|\u56de\u6efe}}\u3002",
+    "long-header-article-edit-revert": "\u6c5d{{PLURAL:$4|\u6546$3\u4e0a\u5176\u4fee\u6539}}\u5df2\u7d93\u4e5e$1{{GENDER:$2|\u56de\u6efe}}\u3002"
+}

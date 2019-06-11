@@ -1,0 +1,12 @@
+{
+    "@metadata": {
+        "authors": [
+            "Aursani",
+            "Mehtab ahmed",
+            "Tweety"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 <strong>{{GENDER:$3|\u062a\u0648\u06be\u0627\u0646 \u062c\u064a}} \u0628\u062d\u062b \u0635\u0641\u062d\u064a<\/strong> \u062a\u064a \u06be\u06aa \u067e\u064a\u063a\u0627\u0645 {{GENDER:$2|\u0687\u068f\u064a\u0648}}.",
+    "long-header-user-interest-page-linked": "<strong>$4<\/strong> \u06a9\u0627\u0646 \u06be\u06aa \u06b3\u0646\u068d\u06bb\u0648 <strong>$3<\/strong> \u068f\u0627\u0646\u06be\u0646 \u067a\u0627\u06be\u064a\u0648 \u0648\u064a\u0648.",
+    "short-header-user-interest-page-linked": "<strong>$1<\/strong> \u062a\u0627\u0646 \u06b3\u0646\u068d\u06bb\u0648."
+}

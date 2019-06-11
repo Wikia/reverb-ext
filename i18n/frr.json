@@ -1,0 +1,9 @@
+{
+    "@metadata": {
+        "authors": [
+            "Murma174"
+        ]
+    },
+    "short-header-article-edit-revert": "Din {{PLURAL:$4|feranrang \u00fc\u00fcb $3 as|feranrangen \u00fc\u00fcb $3 san}} {{GENDER:$2|turagsaat}} wurden faan $1.",
+    "long-header-article-edit-revert": "Din {{PLURAL:$4|feranrang \u00fc\u00fcb $3 as|feranrangen \u00fc\u00fcb $3 san}} {{GENDER:$2|turagsaat}} wurden faan $1."
+}
