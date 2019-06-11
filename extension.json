@@ -8,6 +8,9 @@
 	"descriptionmsg": "reverb_description",
 	"type": "other",
 	"requires": {
+		"extensions": {
+			"Twiggy": ">= 0.0.1"
+		},
 		"MediaWiki": ">= 1.31.0"
 	},
 	"SpecialPages": {
@@ -68,7 +71,8 @@
 		"LocalUserCreated": "Reverb\\Hooks::onLocalUserCreated",
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
 		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
-		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay"
+		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
+		"SpecialPageBeforeExecute": "Reverb\\Hooks::onSpecialPageBeforeExecute"
 	},
 	"config": {
 		"ReverbApiEndPoint": {
