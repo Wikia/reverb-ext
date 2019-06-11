@@ -97,7 +97,7 @@ class Notification {
 	 * @return string Message
 	 */
 	public function getHeader(bool $long = false): Message {
-		return wfMessage(($long ? 'long' : 'short').'-header-' . $this->getType())->params($this->getMessageParameters());
+		return wfMessage(($long ? 'long' : 'short') . '-header-' . $this->getType())->params($this->getMessageParameters());
 	}
 
 	/**
