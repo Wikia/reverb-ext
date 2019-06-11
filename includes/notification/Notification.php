@@ -92,19 +92,22 @@ class Notification {
 	/**
 	 * Get the header for this notification.
 	 *
-	 * @return string Message
-	 */
-	public function getHeader(): Message {
-		return wfMessage('web-header-' . $this->getType())->params($this->getMessageParameters());
-	}
-
-	/**
-	 * Get the message for this notification.
+	 * @param boolean $long Use the short or long version of the header.
 	 *
 	 * @return string Message
 	 */
-	public function getMessage(): Message {
-		return wfMessage('web-body-' . $this->getType())->params($this->getMessageParameters());
+	public function getHeader(bool $long = false): Message {
+		return wfMessage(($long ? 'long' : 'short').'-header-' . $this->getType())->params($this->getMessageParameters());
+	}
+
+	/**
+	 * If there is an available user note get it from the parameters.
+	 *
+	 * @return string|null Defined user note or null.
+	 */
+	protected function getUserNote(): ?string {
+		$parameters = $this->getMessageParameters();
+		return $parameters['user_note'] ?? null;
 	}
 
 	/**
@@ -330,8 +333,9 @@ class Notification {
 			'subcategory' => $this->getSubcategory(),
 			'id' => $this->getId(),
 			'type' => $this->getType(),
-			'header' => $this->getHeader(),
-			'message' => $this->getMessage(),
+			'header_short' => $this->getHeader(),
+			'header_long' => $this->getHeader(true),
+			'user_note' => $this->getUserNote(),
 			'created_at' => $this->getCreatedAt(),
 			'dismissed_at' => $this->getDismissedAt(),
 			'origin_url' => $this->getOriginUrl(),

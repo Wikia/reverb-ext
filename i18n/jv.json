@@ -1,0 +1,19 @@
+{
+    "@metadata": {
+        "authors": [
+            "Anggoro",
+            "Bennylin",
+            "NoiX180"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|ninggal}} layang ing <strong>kaca parembugan\u00e9 {{GENDER:$3|panjenengan}}<\/strong>.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|m\u00e8n\u00e8hi}} {{GENDER:$3|panjenengan}} layang.",
+    "long-header-user-interest-page-linked": "Sawijining pranala digaw\u00e9 saka <strong>$4<\/strong> nyang <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Kagayut saka <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "Hak\u00e9 {{GENDER:$6|panjenengan}} wis {{GENDER:$1|diowahi}}. Panjenengan wis dilebokak\u00e9 nyang: $2. Panjenengan wis dudu anggota: $4.",
+    "long-header-user-account-groups-changed": "Hak\u00e9 {{GENDER:$6|panjenengan}} wis {{GENDER:$1|diowahi}}. Panjenengan wis dilebokak\u00e9 nyang: $2. Panjenengan wis dudu anggota: $4.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Sugeng rawuh}} ing {{SITENAME}}, $1! Kita bungah banget {{GENDER:$2|panjenengan}} wis teka mr\u00e9n\u00e9.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Sugeng rawuh}} ing {{SITENAME}}, $1! Kita bungah banget {{GENDER:$2|panjenengan}} wis teka mr\u00e9n\u00e9.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|Besutan\u00e9 panjenengan ing <strong>$3<\/strong>}} {{GENDER:$2|dibal\u00e8kak\u00e9}}.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Besutan\u00e9 panjenengan ing <strong>$3<\/strong>}} {{GENDER:$2|dibal\u00e8kak\u00e9}}."
+}

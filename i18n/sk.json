@@ -1,0 +1,21 @@
+{
+    "@metadata": {
+        "authors": [
+            "Sudo77(new)",
+            "Teslaton",
+            "Macofe",
+            "Urbanecm",
+            "Martin Urbanec",
+            "Tom\u00e1\u0161Polonec"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$3|v\u00e1m}} {{GENDER:$2|nap\u00edsal|nap\u00edsala}} na va\u0161u diskusn\u00fa str\u00e1nku.",
+    "long-header-user-interest-page-linked": "Zo str\u00e1nky <strong>$4<\/strong> bol vytvoren\u00fd odkaz na str\u00e1nku <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Zo str\u00e1nky <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "{{GENDER:$6|Va\u0161e}} pou\u017e\u00edvate\u013esk\u00e9 pr\u00e1va boli {{GENDER:$1|zmenen\u00e9}}: Stali ste sa {{GENDER:$6|\u010dlenom|\u010dlenkou}} {{PLURAL:$3|skupiny|skup\u00edn}} $2 a u\u017e nie ste {{GENDER:$6|\u010dlenom|\u010dlenkou}} {{PLURAL:$5|skupiny|skup\u00edn}} $4.",
+    "long-header-user-account-groups-changed": "{{GENDER:$6|Va\u0161e}} pou\u017e\u00edvate\u013esk\u00e9 pr\u00e1va boli {{GENDER:$1|zmenen\u00e9}}: Stali ste sa {{GENDER:$6|\u010dlenom|\u010dlenkou}} {{PLURAL:$3|skupiny|skup\u00edn}} $2 a u\u017e nie ste {{GENDER:$6|\u010dlenom|\u010dlenkou}} {{PLURAL:$5|skupiny|skup\u00edn}} $4.",
+    "short-header-user-interest-welcome": "Vitajte na {{GRAMMAR:6sg|{{SITENAME}}}}, {{GENDER:$2|$1}}! Te\u0161\u00ed n\u00e1s, \u017ee ste tu.",
+    "long-header-user-interest-welcome": "Vitajte na {{GRAMMAR:6sg|{{SITENAME}}}}, {{GENDER:$2|$1}}! Te\u0161\u00ed n\u00e1s, \u017ee ste tu.",
+    "short-header-article-edit-revert": "$1 {{GENDER:$2|vr\u00e1til|vr\u00e1tila}} {{PLURAL:$4|va\u0161u \u00fapravu|va\u0161e \u00fapravy}} str\u00e1nky $3",
+    "long-header-article-edit-revert": "$1 {{GENDER:$2|vr\u00e1til|vr\u00e1tila}} {{PLURAL:$4|va\u0161u \u00fapravu|va\u0161e \u00fapravy}} str\u00e1nky $3"
+}

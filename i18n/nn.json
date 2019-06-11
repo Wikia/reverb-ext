@@ -1,0 +1,17 @@
+{
+    "@metadata": {
+        "authors": [
+            "Amire80",
+            "Njardarlogar",
+            "Jon Harald S\u00f8by",
+            "Ranveig"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|la att}} ei melding p\u00e5 <strong>diskusjonssida<\/strong> {{GENDER:$3|di}}.",
+    "long-header-user-interest-page-linked": "Ei lenkje vart oppretta fr\u00e5 <strong>$4<\/strong> til <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Lenkja fr\u00e5 <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "Brukarrettane {{GENDER:$4|dine}} vart endra {{GENDER:$1|endra}}. Du er no medlem av: $2. Du er ikkje lenger medlem av: $2.",
+    "long-header-user-account-groups-changed": "Brukarrettane {{GENDER:$4|dine}} vart endra {{GENDER:$1|endra}}. Du er no medlem av: $2. Du er ikkje lenger medlem av: $2.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|Endringa di|Endringane dine}} p\u00e5 <strong>$3<\/strong> vart {{GENDER:$2|fjerna}}.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Endringa di|Endringane dine}} p\u00e5 <strong>$3<\/strong> vart {{GENDER:$2|fjerna}}."
+}

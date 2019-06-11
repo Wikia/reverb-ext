@@ -1,0 +1,21 @@
+{
+    "@metadata": {
+        "authors": [
+            "C.R.",
+            "Chelin",
+            "Macofe",
+            "Catrope",
+            "Nemo bis",
+            "Ruthven"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|lassaje}} na mmasciata dint'a <strong>paggena 'e chiacchiera {{GENDER:$3|vosta}}<\/strong>.",
+    "long-header-user-interest-page-linked": "Nu cullegamento \u00e8 stato fatto 'a <strong>$4<\/strong> a <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Cullegata 'a <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "'E deritte utente {{GENDER:$6|vuoste}} so state {{GENDER:$1|cagnate}}. Vuje site m\u00f2 mpizzato\/a dint'a: $2. Vuje nun site cchi\u00f9 nu membro 'e: $4.",
+    "long-header-user-account-groups-changed": "'E deritte utente {{GENDER:$6|vuoste}} so state {{GENDER:$1|cagnate}}. Vuje site m\u00f2 mpizzato\/a dint'a: $2. Vuje nun site cchi\u00f9 nu membro 'e: $4.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Bemmenuto|Bemmenuta}} ncopp' 'a {{SITENAME}}, $1! Simmo cuntente {{GENDER:$2|ca state}} cc\u00e0.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Bemmenuto|Bemmenuta}} ncopp' 'a {{SITENAME}}, $1! Simmo cuntente {{GENDER:$2|ca state}} cc\u00e0.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|'O cagnamiento ncopp'a <strong>$3<\/strong> vuosto \u00e8 stato|'E cagnamiente vuoste ncopp' 'a <strong>$3<\/strong> so state}} {{GENDER:$2|annullate}}",
+    "long-header-article-edit-revert": "{{PLURAL:$4|'O cagnamiento ncopp'a <strong>$3<\/strong> vuosto \u00e8 stato|'E cagnamiente vuoste ncopp' 'a <strong>$3<\/strong> so state}} {{GENDER:$2|annullate}}"
+}

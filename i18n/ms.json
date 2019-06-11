@@ -1,0 +1,13 @@
+{
+    "@metadata": {
+        "authors": [
+            "Anakmalaysia",
+            "Pizza1016",
+            "Aviator",
+            "Kurniasan",
+            "Jeluang Terluang"
+        ]
+    },
+    "short-header-article-edit-revert": "{{PLURAL:$4|Suntingan|Suntingan-suntingan}} anda di $3 telah {{GENDER:$2|dibalikkan}} oleh $1",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Suntingan|Suntingan-suntingan}} anda di $3 telah {{GENDER:$2|dibalikkan}} oleh $1"
+}

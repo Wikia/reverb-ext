@@ -1,0 +1,25 @@
+{
+    "@metadata": {
+        "authors": [
+            "KuboF",
+            "Tlustulimu",
+            "Yekrats",
+            "Robin van der Vliet",
+            "Lucas",
+            "Macofe",
+            "Gamliel Fishkin",
+            "NMaia",
+            "Joao Xavier",
+            "Mirin"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|lasis}} mesa\u011don sur <strong>{{GENDER:$3|via}} diskutpa\u011do<\/strong>.",
+    "long-header-user-interest-page-linked": "Ligilo estis kreita de <strong>$4<\/strong> al <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Ligita el <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "{{GENDER:$6|Viaj}} rajtoj de uzanto estis {{GENDER:$1|\u015dan\u011ditaj}}. Vi estis aldonita al: $2. Vi ne plu estas membro de: $4.",
+    "long-header-user-account-groups-changed": "{{GENDER:$6|Viaj}} rajtoj de uzanto estis {{GENDER:$1|\u015dan\u011ditaj}}. Vi estis aldonita al: $2. Vi ne plu estas membro de: $4.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Bonvenon}} al {{SITENAME}}, $1! Ni \u011dojas, ke {{GENDER:$2|vi}} estas \u0109i tie.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Bonvenon}} al {{SITENAME}}, $1! Ni \u011dojas, ke {{GENDER:$2|vi}} estas \u0109i tie.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|Via redakto sur $3 estis {{GENDER:$2|malfarita}}|Viaj redaktoj sur $3 estis {{GENDER:$2|malfaritaj}}}}.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Via redakto sur $3 estis {{GENDER:$2|malfarita}}|Viaj redaktoj sur $3 estis {{GENDER:$2|malfaritaj}}}}."
+}

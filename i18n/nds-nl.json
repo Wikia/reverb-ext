@@ -1,0 +1,9 @@
+{
+    "@metadata": {
+        "authors": [
+            "Servien"
+        ]
+    },
+    "short-header-article-edit-revert": "Joew {{PLURAL:$4|bewarking op $3 is|bewarkingen op $3 bin}} {{GENDER:$2|weerummedreid}} deur $1",
+    "long-header-article-edit-revert": "Joew {{PLURAL:$4|bewarking op $3 is|bewarkingen op $3 bin}} {{GENDER:$2|weerummedreid}} deur $1"
+}

@@ -1,0 +1,24 @@
+{
+    "@metadata": {
+        "authors": [
+            "Avjoska",
+            "Kyng",
+            "Pikne",
+            "\u0418\u0433\u043e\u0440\u044c \u0411\u0440\u043e\u0434\u0441\u043a\u0438\u0439",
+            "Macofe",
+            "Cumbril"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|j\u00e4ttis}} s\u00f5numi <strong>{{GENDER:$3|sinu}} arutelulehek\u00fcljele<\/strong>.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|j\u00e4ttis}} {{GENDER:$3|sulle}} s\u00f5numi.",
+    "long-header-user-interest-page-linked": "Lehek\u00fcljele \"<strong>$3<\/strong>\" lingiti asukohast \"<strong>$4<\/strong>\".",
+    "short-header-user-interest-page-linked": "Lingitud lehek\u00fcljelt \"<strong>$1<\/strong>\".",
+    "short-header-user-account-groups-changed": "{{GENDER:$6|Sinu}} kasutaja\u00f5igused {{GENDER:$1|muudeti}}. Kuulud n\u00fc\u00fcd j\u00e4rgmistesse r\u00fchmadesse: $2. Sa ei kuulu enam j\u00e4rgmistesse r\u00fchmadesse: $4.",
+    "long-header-user-account-groups-changed": "{{GENDER:$6|Sinu}} kasutaja\u00f5igused {{GENDER:$1|muudeti}}. Kuulud n\u00fc\u00fcd j\u00e4rgmistesse r\u00fchmadesse: $2. Sa ei kuulu enam j\u00e4rgmistesse r\u00fchmadesse: $4.",
+    "short-header-user-account-groups-expiration-change": "{{GENDER:$4|Sinu}} liikmesuse aegumist\u00e4htaeg {{PLURAL:$3|j\u00e4rgmises r\u00fchmas|j\u00e4rgmistes r\u00fchmades}} on {{GENDER:$1|muudetud}}: $2.",
+    "long-header-user-account-groups-expiration-change": "{{GENDER:$4|Sinu}} liikmesuse aegumist\u00e4htaeg {{PLURAL:$3|j\u00e4rgmises r\u00fchmas|j\u00e4rgmistes r\u00fchmades}} on {{GENDER:$1|muudetud}}: $2.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Tere}} tulemast saidile {{SITENAME}}, $1! Meil on hea meel, et siin oled.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Tere}} tulemast saidile {{SITENAME}}, $1! Meil on hea meel, et siin oled.",
+    "short-header-article-edit-revert": "Sinu {{PLURAL:$4|muudatus|muudatused}} lehek\u00fcljel \"<strong>$3<\/strong>\" on {{GENDER:$2|t\u00fchistatud}}.",
+    "long-header-article-edit-revert": "Sinu {{PLURAL:$4|muudatus|muudatused}} lehek\u00fcljel \"<strong>$3<\/strong>\" on {{GENDER:$2|t\u00fchistatud}}."
+}

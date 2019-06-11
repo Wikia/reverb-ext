@@ -1,0 +1,32 @@
+{
+    "@metadata": {
+        "authors": [
+            "Chmee2",
+            "Jkjk",
+            "Mormegil",
+            "Vks",
+            "Mat\u011bj Such\u00e1nek",
+            "Cvanca",
+            "Teslaton",
+            "Kvetoslav47",
+            "Dvorapa",
+            "Danny B.",
+            "Meliganai",
+            "Martin Urbanec",
+            "Ilimanaq29",
+            "Patriccck"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$3|v\u00e1m}} {{GENDER:$2|napsal|napsala}} na <strong>va\u0161i diskusn\u00ed str\u00e1nku<\/strong>.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$3|v\u00e1m}} {{GENDER:$2|napsal|napsala|napsal(a)}} zpr\u00e1vu.",
+    "long-header-user-interest-page-linked": "Ze str\u00e1nky <strong>$4<\/strong> byl vytvo\u0159en odkaz na str\u00e1nku <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Ze str\u00e1nky <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "Va\u0161e u\u017eivatelsk\u00e1 pr\u00e1va byla {{GENDER:$1|zm\u011bn\u011bna}}. Nyn\u00ed pat\u0159\u00edte do: $2. U\u017e nejste {{GENDER:$6|\u010dlenem|\u010dlenkou}}: $4.",
+    "long-header-user-account-groups-changed": "Va\u0161e u\u017eivatelsk\u00e1 pr\u00e1va byla {{GENDER:$1|zm\u011bn\u011bna}}. Nyn\u00ed pat\u0159\u00edte do: $2. U\u017e nejste {{GENDER:$6|\u010dlenem|\u010dlenkou}}: $4.",
+    "short-header-user-account-groups-expiration-change": "\u010cas vypr\u0161en\u00ed {{GENDER:$4|va\u0161eho}} \u010dlenstv\u00ed v {{PLURAL:$3|n\u00e1sleduj\u00edc\u00ed skupin\u011b|n\u00e1sleduj\u00edc\u00edch skupin\u00e1ch}} byl {{GENDER:$1|zm\u011bn\u011bn}}: $2.",
+    "long-header-user-account-groups-expiration-change": "\u010cas vypr\u0161en\u00ed {{GENDER:$4|va\u0161eho}} \u010dlenstv\u00ed v {{PLURAL:$3|n\u00e1sleduj\u00edc\u00ed skupin\u011b|n\u00e1sleduj\u00edc\u00edch skupin\u00e1ch}} byl {{GENDER:$1|zm\u011bn\u011bn}}: $2.",
+    "short-header-user-interest-welcome": "V\u00edtejte na {{GRAMMAR:6sg|{{SITENAME}}}}, {{GENDER:$2|u\u017eivateli|u\u017eivatelko}} $1! Jsme r\u00e1di, \u017ee jste zde.",
+    "long-header-user-interest-welcome": "V\u00edtejte na {{GRAMMAR:6sg|{{SITENAME}}}}, {{GENDER:$2|u\u017eivateli|u\u017eivatelko}} $1! Jsme r\u00e1di, \u017ee jste zde.",
+    "short-header-article-edit-revert": "Va\u0161e editace str\u00e1nky <strong>$3<\/strong> {{PLURAL:$4|byla vr\u00e1cena|byly vr\u00e1ceny}} {{GENDER:$2|zp\u011bt}}.",
+    "long-header-article-edit-revert": "Va\u0161e editace str\u00e1nky <strong>$3<\/strong> {{PLURAL:$4|byla vr\u00e1cena|byly vr\u00e1ceny}} {{GENDER:$2|zp\u011bt}}."
+}

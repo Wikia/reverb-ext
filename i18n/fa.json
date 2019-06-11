@@ -1,0 +1,43 @@
+{
+    "@metadata": {
+        "authors": [
+            "A.R.Rostamzade",
+            "Dalba",
+            "Ebraminio",
+            "Ladsgroup",
+            "Mjbmr",
+            "Omidh",
+            "Reza1615",
+            "Rtemis",
+            "\u062f\u0631\u0641\u0634 \u06a9\u0627\u0648\u06cc\u0627\u0646\u06cc",
+            "\u0641\u0644\u0648\u0631\u0627\u0646\u0633",
+            "Alirezaaa",
+            "Bersam",
+            "Saeidpourbabak",
+            "Koro\u011flu",
+            "Calak",
+            "Americophile",
+            "Hosseinblue",
+            "Huji",
+            "Arian Ar",
+            "Macofe",
+            "Mahdy Saffar",
+            "4nn1l2",
+            "Baloch Khan",
+            "Amjad Khan",
+            "Amirsara"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 \u067e\u06cc\u0627\u0645\u06cc \u0628\u0631 \u0631\u0648\u06cc \u0635\u0641\u062d\u0647\u0654 <strong>\u0628\u062d\u062b {{GENDER:$3|\u0634\u0645\u0627}}<\/strong> {{GENDER:$2|\u06af\u0630\u0627\u0634\u062a\u0647\u200c\u0627\u0633\u062a}}.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|\u0628\u0631\u0627\u06cc}} {{GENDER:$3|\u0634\u0645\u0627}} \u06cc\u06a9 \u067e\u06cc\u0627\u0645 \u06af\u0630\u0627\u0634\u062a.",
+    "long-header-user-interest-page-linked": "\u067e\u06cc\u0648\u0646\u062f\u06cc \u0627\u0632 <strong>$4<\/strong> \u0628\u0647 <strong>$3<\/strong> \u062f\u0627\u062f\u0647 \u0634\u062f\u0647\u200c\u0627\u0633\u062a.",
+    "short-header-user-interest-page-linked": "\u067e\u06cc\u0648\u0646\u062f \u062f\u0627\u062f\u0647 \u0634\u062f\u0647 \u0627\u0632 <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "\u062f\u0633\u062a\u0631\u0633\u06cc {{GENDER:$6|\u0634\u0645\u0627}} \u062a\u063a\u06cc\u06cc\u0631 {{GENDER:$1|\u06a9\u0631\u062f\u0647\u200c\u0627\u0633\u062a}}. \u0627\u0636\u0627\u0641\u0647 \u0634\u062f\u06cc\u062f \u0628\u0647: $2. \u062f\u06cc\u06af\u0631 \u062f\u0631 $4 \u0639\u0636\u0648 \u0646\u06cc\u0633\u062a\u06cc\u062f.",
+    "long-header-user-account-groups-changed": "\u062f\u0633\u062a\u0631\u0633\u06cc {{GENDER:$6|\u0634\u0645\u0627}} \u062a\u063a\u06cc\u06cc\u0631 {{GENDER:$1|\u06a9\u0631\u062f\u0647\u200c\u0627\u0633\u062a}}. \u0627\u0636\u0627\u0641\u0647 \u0634\u062f\u06cc\u062f \u0628\u0647: $2. \u062f\u06cc\u06af\u0631 \u062f\u0631 $4 \u0639\u0636\u0648 \u0646\u06cc\u0633\u062a\u06cc\u062f.",
+    "short-header-user-account-groups-expiration-change": "\u0627\u0646\u0642\u0636\u0627\u06cc \u0639\u0636\u0648\u06cc\u062a {{GENDER:$4|\u0634\u0645\u0627}} \u062f\u0631 \u0627\u06cc\u0646 {{PLURAL:$3|\u06af\u0631\u0648\u0647|\u06af\u0631\u0648\u0647\u200c\u0647\u0627}}  \u062a\u063a\u06cc\u06cc\u0631 {{GENDER:$1|\u06cc\u0627\u0641\u062a\u0647\u200c\u0627\u0633\u062a}}: $2",
+    "long-header-user-account-groups-expiration-change": "\u0627\u0646\u0642\u0636\u0627\u06cc \u0639\u0636\u0648\u06cc\u062a {{GENDER:$4|\u0634\u0645\u0627}} \u062f\u0631 \u0627\u06cc\u0646 {{PLURAL:$3|\u06af\u0631\u0648\u0647|\u06af\u0631\u0648\u0647\u200c\u0647\u0627}}  \u062a\u063a\u06cc\u06cc\u0631 {{GENDER:$1|\u06cc\u0627\u0641\u062a\u0647\u200c\u0627\u0633\u062a}}: $2",
+    "short-header-user-interest-welcome": "$1\u060c \u0628\u0647 {{SITENAME}} {{GENDER:$2|\u062e\u0648\u0634 \u0622\u0645\u062f\u06cc\u062f}}. \u062e\u0648\u0634\u062d\u0627\u0644\u06cc\u0645 \u06a9\u0647 {{GENDER:$2|\u0634\u0645\u0627}} \u0627\u06cc\u0646\u062c\u0627\u06cc\u06cc\u062f.",
+    "long-header-user-interest-welcome": "$1\u060c \u0628\u0647 {{SITENAME}} {{GENDER:$2|\u062e\u0648\u0634 \u0622\u0645\u062f\u06cc\u062f}}. \u062e\u0648\u0634\u062d\u0627\u0644\u06cc\u0645 \u06a9\u0647 {{GENDER:$2|\u0634\u0645\u0627}} \u0627\u06cc\u0646\u062c\u0627\u06cc\u06cc\u062f.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0634\u0645\u0627 \u0628\u0631 \u0631\u0648\u06cc <strong>$3<\/strong>|\u0648\u06cc\u0631\u0627\u06cc\u0634\u200c\u0647\u0627\u06cc \u0634\u0645\u0627 \u0628\u0631 \u0631\u0648\u06cc <strong>$3<\/strong>}}  {{GENDER:$2|\u0628\u0631\u06af\u0631\u062f\u0627\u0646\u062f\u0647 \u0634\u062f\u0647\u200c\u0627\u0633\u062a.}}",
+    "long-header-article-edit-revert": "{{PLURAL:$4|\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0634\u0645\u0627 \u0628\u0631 \u0631\u0648\u06cc <strong>$3<\/strong>|\u0648\u06cc\u0631\u0627\u06cc\u0634\u200c\u0647\u0627\u06cc \u0634\u0645\u0627 \u0628\u0631 \u0631\u0648\u06cc <strong>$3<\/strong>}}  {{GENDER:$2|\u0628\u0631\u06af\u0631\u062f\u0627\u0646\u062f\u0647 \u0634\u062f\u0647\u200c\u0627\u0633\u062a.}}"
+}
