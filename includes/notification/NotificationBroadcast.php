@@ -15,7 +15,6 @@ namespace Reverb\Notification;
 use CentralIdLookup;
 use Hydrawiki\Reverb\Client\V1\Resources\NotificationBroadcast as NotificationBroadcastResource;
 use MediaWiki\MediaWikiServices;
-use MWException;
 use User;
 
 class NotificationBroadcast {
@@ -29,20 +28,14 @@ class NotificationBroadcast {
 	 * @return void
 	 */
 	public function __construct(array $notifications = [], int $flags = 0, string $iterator = "ArrayIterator") {
-		foreach ($notifications as $notification) {
-			if (!($notification instanceof Notification)) {
-				throw new MWException('Invalid item was attempted to be added to bundle.');
-			}
-		}
-		parent::__construct($notifications, $flags, $iterator);
 	}
 
 	/**
-	 * Function Documentation
+	 * Get a new instance for a broadcast to a single target.
 	 *
 	 * @return null
 	 */
-	public static function newSingle(string $type, User $agent, User $target): null {
+	public static function newSingle(string $type, User $agent, User $target, string $canonicalUrl, array $parameters): ?self {
 		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
 
 		$lookup = CentralIdLookup::factory();
@@ -50,22 +43,17 @@ class NotificationBroadcast {
 		$targetGlobalId = $lookup->centralIdFromLocalUser($target);
 
 		if (!$agentGlobalId || !$targetGlobalId) {
-
+			return null;
 		}
-
-		$user1 = $client->users()->find('hydra:user:1');
 
 		$notification = new NotificationBroadcastResource(
 			[
-				'type'        => 'example',
-				'message'     => 'Hello, World!',
-				'created-at'  => '2018-01-01 00:00:00',
-				'url'         => 'https://www.example.com',
+				'type'        => $type,
+				'message'     => $parameters,
+				'url'         => $canonicalUrl
 			]
 		);
-
-		$notification->add('targets', $user1, $user2);
-
+		var_dump($notification);
 		$client->broadcasts()->create($notification);
 	}
 }
