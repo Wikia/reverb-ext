@@ -124,7 +124,7 @@ class SpecialNotifications extends SpecialPage {
 					<span class="reverb-pull-right"><i class="fa fa-sliders-h"></i></span>
 					Filter by Type
 				</div>
-				
+
 				<div class="reverb-filter-row">
 					<input type="checkbox" id="filter_all" class="reverb-filter-checkbox" checked="checked"> 
 					<label for="filter_all" class="reverb-filter-label"> All
@@ -152,7 +152,8 @@ class SpecialNotifications extends SpecialPage {
 				</div>
 				<div class="reverb-notification-page-row reverb-npn-row-global">
 						<div class="reverb-npnr-left">
-							<img src="/extensions/Reverb/resources/icons/global.svg" class="reverb-icon reverb-icon-global">
+							<img src="/extensions/Reverb/resources/icons/global.svg"
+								class="reverb-icon reverb-icon-global">
 						</div>
 						<div class="reverb-npnr-right">
 							<div class="reverb-npnr-header">
@@ -163,7 +164,9 @@ class SpecialNotifications extends SpecialPage {
 					</div>
 				<div class="reverb-notification-page-notifications">';
 
+
 		/*for ($x = 0; $x <= 10; $x++) {
+
 			$html .= $this->notificationRow([
 				'header' => "Header",
 				'body' => "Body",
@@ -177,9 +180,15 @@ class SpecialNotifications extends SpecialPage {
 		</div>';
 
 		$this->output->addHtml($html);
-		return;
 	}
 
+	/**
+	 * Builds HTML for a notification row.
+	 *
+	 * @param array $data
+	 *
+	 * @return string
+	 */
 	public function notificationRow($data) {
 		$header = $data['header'];
 		$body = $data['body'];
