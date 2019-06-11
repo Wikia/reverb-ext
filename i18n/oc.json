@@ -1,0 +1,12 @@
+{
+    "@metadata": {
+        "authors": [
+            "Cedric31",
+            "Nicolas Eynaud",
+            "Vriullop"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|a daissat}} un messatge sus <strong>{{GENDER:$3|v\u00f2stra}} pagina de discussion<\/strong>.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|V\u00f2stra modificacion sus <strong>$3<\/strong> es estada|V\u00f2stras modificacions sus <strong>$3<\/strong> son estadas}} {{GENDER:$2|anullada}}{{PLURAL:$4||s}}",
+    "long-header-article-edit-revert": "{{PLURAL:$4|V\u00f2stra modificacion sus <strong>$3<\/strong> es estada|V\u00f2stras modificacions sus <strong>$3<\/strong> son estadas}} {{GENDER:$2|anullada}}{{PLURAL:$4||s}}"
+}

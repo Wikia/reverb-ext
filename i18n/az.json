@@ -1,0 +1,17 @@
+{
+    "@metadata": {
+        "authors": [
+            "Interfase",
+            "Khan27",
+            "Wertuose",
+            "Da\u011fl\u013195",
+            "Serkanland",
+            "Zoranzoki21",
+            "Toghrul Rahimli"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 <strong>m\u00fczakir\u0259 {{GENDER:$3|s\u0259hif\u0259niz\u0259}}<\/strong> bir mesaj {{GENDER:$2|qoyub}}.",
+    "long-header-user-interest-page-linked": "<strong>$4<\/strong> s\u0259hif\u0259sind\u0259n <strong>$3<\/strong> s\u0259hif\u0259sin\u0259 ke\u00e7id verildi.",
+    "short-header-user-interest-welcome": "{{SITENAME}} sayt\u0131na {{GENDER:$2|xo\u015f g\u0259ldiniz}}, $1! Sizi burada g\u00f6rm\u0259yimiz\u0259 \u00e7ox \u015fad\u0131q!",
+    "long-header-user-interest-welcome": "{{SITENAME}} sayt\u0131na {{GENDER:$2|xo\u015f g\u0259ldiniz}}, $1! Sizi burada g\u00f6rm\u0259yimiz\u0259 \u00e7ox \u015fad\u0131q!"
+}

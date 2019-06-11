@@ -1,0 +1,22 @@
+{
+    "@metadata": {
+        "authors": [
+            "Eitvys200",
+            "Hugo.arg",
+            "Mantak111",
+            "Albertas",
+            "Zygimantus",
+            "Macofe",
+            "Homo",
+            "Manvydasz"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|paliko}} \u017einut\u0119 <strong>{{GENDER:$3|j\u016bs\u0173}} aptarimo puslapyje<\/strong>.",
+    "long-header-user-interest-page-linked": "Buvo sukurta nuoroda i\u0161 <strong>$4<\/strong> \u012f <strong>$3<\/strong>.",
+    "short-header-user-account-groups-changed": "{{GENDER:$6|J\u016bs\u0173}} vartotojo teis\u0117s buvo {{GENDER:$1|pakeistos}}. Buvote prid\u0117tas prie: $2. J\u016bs nebeesate \u0161i\u0173 grupi\u0173 narys: $4.",
+    "long-header-user-account-groups-changed": "{{GENDER:$6|J\u016bs\u0173}} vartotojo teis\u0117s buvo {{GENDER:$1|pakeistos}}. Buvote prid\u0117tas prie: $2. J\u016bs nebeesate \u0161i\u0173 grupi\u0173 narys: $4.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Sveiki atvyk\u0119}} \u012f {{SITENAME}}, $1! Mes d\u017eiaugiam\u0117s, kad {{GENDER:$2|j\u016bs esate}} \u010dia.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Sveiki atvyk\u0119}} \u012f {{SITENAME}}, $1! Mes d\u017eiaugiam\u0117s, kad {{GENDER:$2|j\u016bs esate}} \u010dia.",
+    "short-header-article-edit-revert": "J\u016bs\u0173 {{PLURAL:$4|keitimas <strong>$3<\/strong>|keitimai <strong>$3<\/strong>}} puslapyje buvo {{PLURAL:$4|atmestas|atmesti}}.",
+    "long-header-article-edit-revert": "J\u016bs\u0173 {{PLURAL:$4|keitimas <strong>$3<\/strong>|keitimai <strong>$3<\/strong>}} puslapyje buvo {{PLURAL:$4|atmestas|atmesti}}."
+}

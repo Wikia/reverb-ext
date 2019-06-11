@@ -1,0 +1,11 @@
+{
+    "@metadata": {
+        "authors": [
+            "Lloffiwr",
+            "Robin Owain",
+            "Diafol"
+        ]
+    },
+    "short-header-article-edit-revert": "{{GENDER:$2|Dadwneuthpwyd}} eich {{PLURAL:$4||golygiad ar $3|golygiadau ar $3}} gan $1.",
+    "long-header-article-edit-revert": "{{GENDER:$2|Dadwneuthpwyd}} eich {{PLURAL:$4||golygiad ar $3|golygiadau ar $3}} gan $1."
+}

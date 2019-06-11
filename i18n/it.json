@@ -1,0 +1,35 @@
+{
+    "@metadata": {
+        "authors": [
+            "Beta16",
+            "Darth Kule",
+            "Eleonora negri",
+            "Elitre",
+            "Nemo bis",
+            "Pietrodn",
+            "Raoli",
+            "Vituzzu",
+            "Horcrux92",
+            "Alexmar983",
+            "Fringio",
+            "Catrope",
+            "Macofe",
+            "Matteocng",
+            "Anto",
+            "Pequod76",
+            "Sakretsu"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|ha lasciato}} un messaggio sulla <strong>{{GENDER:$3|tua}} pagina di discussione<\/strong>.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$3|ti}} {{GENDER:$2|ha lasciato}} un messaggio.",
+    "long-header-user-interest-page-linked": "\u00c8 stato creato un collegamento da <strong>$4<\/strong> a <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Collegata da <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "I tuoi diritti utente sono stati {{GENDER:$1|modificati}}. Sei {{GENDER:$6|stato aggiunto|stata aggiunta}} a: $2. Non sei pi\u00f9 un membro di: $4.",
+    "long-header-user-account-groups-changed": "I tuoi diritti utente sono stati {{GENDER:$1|modificati}}. Sei {{GENDER:$6|stato aggiunto|stata aggiunta}} a: $2. Non sei pi\u00f9 un membro di: $4.",
+    "short-header-user-account-groups-expiration-change": "La scadenza della {{GENDER:$4|tua}} appartenenza {{PLURAL:$3|al seguente gruppo|ai seguenti gruppi}} \u00e8 stata {{GENDER:$1|modificata}}: $2.",
+    "long-header-user-account-groups-expiration-change": "La scadenza della {{GENDER:$4|tua}} appartenenza {{PLURAL:$3|al seguente gruppo|ai seguenti gruppi}} \u00e8 stata {{GENDER:$1|modificata}}: $2.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Benvenuto|Benvenuta|Benvenuto\/a}} su {{SITENAME}}, $1! Siamo lieti che {{GENDER:$2|tu sia}} qui.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Benvenuto|Benvenuta|Benvenuto\/a}} su {{SITENAME}}, $1! Siamo lieti che {{GENDER:$2|tu sia}} qui.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|La tua modifica|Le tue modifiche}} su <strong>$3<\/strong> {{PLURAL:$4|\u00e8 stata annullata|sono state annullate}}{{GENDER:$2|}}",
+    "long-header-article-edit-revert": "{{PLURAL:$4|La tua modifica|Le tue modifiche}} su <strong>$3<\/strong> {{PLURAL:$4|\u00e8 stata annullata|sono state annullate}}{{GENDER:$2|}}"
+}

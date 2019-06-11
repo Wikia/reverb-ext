@@ -1,0 +1,29 @@
+{
+    "@metadata": {
+        "authors": [
+            "Amire80",
+            "Farras",
+            "William Surya Permana",
+            "\u0db4\u0dc3\u0dd2\u0db3\u0dd4 \u0d9a\u0dcf\u0dc0\u0dd2\u0db1\u0dca\u0daf",
+            "Bennylin",
+            "WongKentir",
+            "Mbrt",
+            "Rachmat.Wahidi",
+            "Kenrick95",
+            "Gombang",
+            "Rachmat04"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|meninggalkan}} sebuah pesan di <strong>halaman pembicaraan {{GENDER:$3|Anda}}<\/strong>.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|meninggalkan}} {{GENDER:$3|Anda}} sebuah pesan.",
+    "long-header-user-interest-page-linked": "Sebuah pranala telah dibuat dari <strong>$4<\/strong> ke <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Dipautkan dari <strong>$1<\/strong>",
+    "short-header-user-account-groups-changed": "Kelompok pengguna {{GENDER:$6|Anda}} telah {{GENDER:$1|diubah}}. Anda telah ditambahkan ke: $2. Anda tidak lagi menjadi anggota dari: $4.",
+    "long-header-user-account-groups-changed": "Kelompok pengguna {{GENDER:$6|Anda}} telah {{GENDER:$1|diubah}}. Anda telah ditambahkan ke: $2. Anda tidak lagi menjadi anggota dari: $4.",
+    "short-header-user-account-groups-expiration-change": "Kedaluwarsa dari keanggotaan {{GENDER:$4|Anda}} dalam {{PLURAL:$3|kelompok|kelompok}} telah {{GENDER:$1|diubah}}: $2.",
+    "long-header-user-account-groups-expiration-change": "Kedaluwarsa dari keanggotaan {{GENDER:$4|Anda}} dalam {{PLURAL:$3|kelompok|kelompok}} telah {{GENDER:$1|diubah}}: $2.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Selamat datang}} di {{SITENAME}}, $1! Kami senang {{GENDER:$2|Anda}} bergabung.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Selamat datang}} di {{SITENAME}}, $1! Kami senang {{GENDER:$2|Anda}} bergabung.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|Suntingan Anda pada <strong>$3<\/strong> telah}} {{GENDER:$2|dibalikkan}}.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Suntingan Anda pada <strong>$3<\/strong> telah}} {{GENDER:$2|dibalikkan}}."
+}

@@ -1,0 +1,28 @@
+{
+    "@metadata": {
+        "authors": [
+            "B\u00e1thoryP\u00e9ter",
+            "Dj",
+            "Misibacsi",
+            "TK-999",
+            "Tgr",
+            "Tacsipacsi",
+            "Samat",
+            "Bin\u00e1ris",
+            "Macofe",
+            "R-Joe",
+            "BanKris",
+            "Bencemac"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 \u00fczenetet {{GENDER:$2|hagyott}} {{GENDER:$3|a <strong>vitalapodon<\/strong>}}.",
+    "short-header-user-interest-talk-page-edit": "$1 \u00fczenetet {{GENDER:$2|hagyott}} {{GENDER:$3|neked}}.",
+    "long-header-user-interest-page-linked": "A(z) <strong>$3<\/strong> lapra hivatkoztak a(z) <strong>$4<\/strong> lapr\u00f3l.",
+    "short-header-user-interest-page-linked": "Hivatkozva a(z) <strong>$1<\/strong> lapr\u00f3l.",
+    "short-header-user-account-groups-changed": "{{GENDER:$1|Megv\u00e1ltoztak}} a {{GENDER:$6|jogosults\u00e1gaid}}. Tagja lett\u00e9l {{PLURAL:$3|ennek a csoportnak|ezeknek a csoportoknak}}: $2. Kiker\u00fclt\u00e9l {{PLURAL:$5|ebb\u0151l a csoportb\u00f3l|ezekb\u0151l a csoportokb\u00f3l}}: $4.",
+    "long-header-user-account-groups-changed": "{{GENDER:$1|Megv\u00e1ltoztak}} a {{GENDER:$6|jogosults\u00e1gaid}}. Tagja lett\u00e9l {{PLURAL:$3|ennek a csoportnak|ezeknek a csoportoknak}}: $2. Kiker\u00fclt\u00e9l {{PLURAL:$5|ebb\u0151l a csoportb\u00f3l|ezekb\u0151l a csoportokb\u00f3l}}: $4.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|\u00dcdv\u00f6zl\u00fcnk}} a(z) {{SITENAME}} wikin, $1! \u00d6r\u00fcl\u00fcnk, hogy itt {{GENDER:$2|vagy}}.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|\u00dcdv\u00f6zl\u00fcnk}} a(z) {{SITENAME}} wikin, $1! \u00d6r\u00fcl\u00fcnk, hogy itt {{GENDER:$2|vagy}}.",
+    "short-header-article-edit-revert": "{{GENDER:$2|Visszavont\u00e1k}} a {{PLURAL:$4|szerkeszt\u00e9sedet|szerkeszt\u00e9seidet}} a(z) <strong>$3<\/strong> cikkben.",
+    "long-header-article-edit-revert": "{{GENDER:$2|Visszavont\u00e1k}} a {{PLURAL:$4|szerkeszt\u00e9sedet|szerkeszt\u00e9seidet}} a(z) <strong>$3<\/strong> cikkben."
+}

@@ -1,0 +1,18 @@
+{
+    "@metadata": {
+        "authors": [
+            "Milicevic01",
+            "Srdjan m",
+            "Macofe",
+            "\u0421\u0435\u0440\u0431\u0438\u0458\u0430\u043d\u0430",
+            "Obsuser",
+            "Prevodim"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 Vam je {{GENDER:$2|ostavio|ostavila}} poruku {{GENDER:$3|na}} <strong>Va\u0161oj stranici za razgovor<\/strong>.",
+    "long-header-user-interest-page-linked": "Stranica <strong>$3<\/strong> je povezana sa <strong>$4<\/strong>.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Dobro do\u0161li}} na {{SITENAME}}, $1! Drago nam {{GENDER:$2|je}} \u0161to ste ovde.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Dobro do\u0161li}} na {{SITENAME}}, $1! Drago nam {{GENDER:$2|je}} \u0161to ste ovde.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|Va\u0161a izmena na stranici <strong>$3<\/strong> je poni\u0161tena|Va\u0161e izmene na {{GENDER:$2|stranici}} <strong>$3<\/strong> su poni\u0161tene}}.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Va\u0161a izmena na stranici <strong>$3<\/strong> je poni\u0161tena|Va\u0161e izmene na {{GENDER:$2|stranici}} <strong>$3<\/strong> su poni\u0161tene}}."
+}

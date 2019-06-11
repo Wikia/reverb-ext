@@ -1,0 +1,39 @@
+{
+    "@metadata": {
+        "authors": [
+            "Cainamarques",
+            "Helder.wiki",
+            "HenriqueCrang",
+            "Luckas",
+            "Raylton P. Sousa",
+            "TheGabrielZaum",
+            "Rodrigo codignoli",
+            "Dianakc",
+            "He7d3r",
+            "Almondega",
+            "TheEduGobi",
+            "Macofe",
+            "Luk3",
+            "Anderson Costa",
+            "Peter Fernando",
+            "Cristofer Alves",
+            "Hamilton Abreu",
+            "Felipe L. Ewald",
+            "Chicocvenancio",
+            "Eduardo Addad de Oliveira",
+            "Opraco"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|deixou}} uma mensagem na '''{{GENDER:$3|sua}} p\u00e1gina de discuss\u00e3o'''.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|deixou}}{{GENDER:$3|-lhe}} uma mensagem.",
+    "long-header-user-interest-page-linked": "Uma liga\u00e7\u00e3o foi criada de <strong>$4<\/strong> para <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Vinculado de <strong>$1<\/strong>.",
+    "short-header-user-account-groups-changed": "Os {{GENDER:$6|seus}} privil\u00e9gios foram {{GENDER:$1|alterados}}. Foi {{GENDER:$6|adicionado|adicionada|adicionado(a)}} a: $2. N\u00e3o pertence mais a: $4.",
+    "long-header-user-account-groups-changed": "Os {{GENDER:$6|seus}} privil\u00e9gios foram {{GENDER:$1|alterados}}. Foi {{GENDER:$6|adicionado|adicionada|adicionado(a)}} a: $2. N\u00e3o pertence mais a: $4.",
+    "short-header-user-account-groups-expiration-change": "A expira\u00e7\u00e3o de {{GENDER:$4|sua}} associa\u00e7\u00e3o {{PLURAL:$3|no seguinte grupo|nos seguintes grupos}} foi {{GENDER:$1|modificado|modificada}}: $2.",
+    "long-header-user-account-groups-expiration-change": "A expira\u00e7\u00e3o de {{GENDER:$4|sua}} associa\u00e7\u00e3o {{PLURAL:$3|no seguinte grupo|nos seguintes grupos}} foi {{GENDER:$1|modificado|modificada}}: $2.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Bem-vindo|Bem-vinda}} ao site {{SITENAME}}, $1! Estamos contentes por ter {{GENDER:$2|voc\u00ea}} aqui.",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Bem-vindo|Bem-vinda}} ao site {{SITENAME}}, $1! Estamos contentes por ter {{GENDER:$2|voc\u00ea}} aqui.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|Sua edi\u00e7\u00e3o em <strong>$3<\/strong> foi {{GENDER:$2|revertida}}|Suas edi\u00e7\u00f5es em <strong>$3<\/strong> foram {{GENDER:$2|revertidas}}}}.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|Sua edi\u00e7\u00e3o em <strong>$3<\/strong> foi {{GENDER:$2|revertida}}|Suas edi\u00e7\u00f5es em <strong>$3<\/strong> foram {{GENDER:$2|revertidas}}}}."
+}

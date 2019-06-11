@@ -1,0 +1,13 @@
+{
+    "@metadata": {
+        "authors": [
+            "Amire80",
+            "Candalua"
+        ]
+    },
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|el|la}} te g\u00e0 lass\u00e0 un mesajo in te la <strong>{{GENDER:$3|to}} pagina de discusion<\/strong>.",
+    "long-header-user-interest-page-linked": "Xe st\u00e0 tac\u00e0 un ligame da <strong>$4<\/strong> a <strong>$3<\/strong>.",
+    "short-header-user-interest-page-linked": "Lig\u00e0 da <strong>$1<\/strong>.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|El to canbiamento|I to canbiamenti}} su <strong>$3<\/strong> {{PLURAL:$4|el xe st\u00e0 desf\u00e0|i xe st\u00e0 desf\u00e0i}}{{GENDER:$2|}}",
+    "long-header-article-edit-revert": "{{PLURAL:$4|El to canbiamento|I to canbiamenti}} su <strong>$3<\/strong> {{PLURAL:$4|el xe st\u00e0 desf\u00e0|i xe st\u00e0 desf\u00e0i}}{{GENDER:$2|}}"
+}

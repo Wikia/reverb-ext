@@ -1,0 +1,12 @@
+{
+    "@metadata": {
+        "authors": [
+            "Joetaras",
+            "C.R."
+        ]
+    },
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|T'ha}} {{GENDER:$3|lassate}} 'nu mess\u00e0gge.",
+    "short-header-user-interest-page-linked": "Collegate da <strong>$1<\/strong>.",
+    "short-header-article-edit-revert": "{{PLURAL:$4|'U cangiamende tune sus a $3 ave|Le cangiaminde tune sus a $3 onne}} state {{GENDER:$2|annullate}}.",
+    "long-header-article-edit-revert": "{{PLURAL:$4|'U cangiamende tune sus a $3 ave|Le cangiaminde tune sus a $3 onne}} state {{GENDER:$2|annullate}}."
+}
