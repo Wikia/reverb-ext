@@ -108,7 +108,7 @@ class NotificationBundle extends ArrayObject {
 						[
 							'target-id' => 'hydra:user:' . $globalId
 						]
-					);
+					)
 				)->all();
 			} catch (ApiResponseInvalid $e) {
 				// @TODO: Logging and error reporting.

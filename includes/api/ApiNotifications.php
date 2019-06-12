@@ -52,7 +52,7 @@ class ApiNotifications extends ApiBase {
 			'notifications' => []
 		];
 
-		$bundle = NotificationBundle::getBundleForUser($this->getUser());
+		$bundle = NotificationBundle::getBundleForUser($this->getUser(), [], $this->params['itemsPerPage'], $this->params['page']);
 
 		if ($bundle !== null) {
 			foreach ($bundle as $key => $notification) {
@@ -73,6 +73,16 @@ class ApiNotifications extends ApiBase {
 			'do' => [
 				ApiBase::PARAM_TYPE => 'string',
 				ApiBase::PARAM_REQUIRED => true
+			],
+			'page' => [
+				ApiBase::PARAM_TYPE => 'integer',
+				ApiBase::PARAM_REQUIRED => true,
+				ApiBase::PARAM_DFLT => 0
+			],
+			'itemsPerPage' => [
+				ApiBase::PARAM_TYPE => 'integer',
+				ApiBase::PARAM_REQUIRED => true,
+				ApiBase::PARAM_DFLT => 50
 			]
 		];
 	}
@@ -84,7 +94,7 @@ class ApiNotifications extends ApiBase {
 	 */
 	protected function getExamplesMessages() {
 		return [
-			'action=notifications&token=123ABC' => 'apihelp-notifications-example',
+			'action=notifications&page=0&itemsPerPage=50' => 'apihelp-notifications-example',
 		];
 	}
 
