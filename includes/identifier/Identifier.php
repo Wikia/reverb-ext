@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Reverb\Identifier;
 
+use DynamicSettings\Environment;
 use MediaWiki\MediaWikiServices;
 
 abstract class Identifier {
@@ -98,7 +99,6 @@ abstract class Identifier {
 	 * @return SiteIdentifier
 	 */
 	public static function newLocalSite(): SiteIdentifier {
-		$who = strval($who);
 		$siteKey = Environment::getSiteKey();
 		if (empty($siteKey)) {
 			throw new MWException('Site key could not be detected.');
