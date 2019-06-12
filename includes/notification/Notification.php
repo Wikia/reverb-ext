@@ -323,7 +323,7 @@ class Notification {
 	}
 
 	/**
-	 * Function Documentation
+	 * Get an array representation of this object suitable for APIs or otherwise.
 	 *
 	 * @return array
 	 */
