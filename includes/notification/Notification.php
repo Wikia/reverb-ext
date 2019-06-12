@@ -76,7 +76,8 @@ class Notification {
 	 * @return string Notification Type
 	 */
 	public function getType(): string {
-		// Note: This will return the 'type' key off the $attributes array member on the object and not the 'type' resource string member.
+		// This will return the 'type' key off the $attributes array member on the object
+		// and not the 'type' resource string member.
 		return $this->resource->type;
 	}
 
@@ -99,7 +100,9 @@ class Notification {
 	 * @return string Message
 	 */
 	public function getHeader(bool $long = false): Message {
-		return wfMessage(($long ? 'long' : 'short') . '-header-' . $this->getType())->params($this->getMessageParameters());
+		return wfMessage(
+			($long ? 'long' : 'short') . '-header-' . $this->getType()
+		)->params($this->getMessageParameters());
 	}
 
 	/**

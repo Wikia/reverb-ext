@@ -26,6 +26,8 @@ class NotificationTest extends TestCase {
 	/**
 	 * Make sure the ID accessed by Notification on the resource is the same.
 	 *
+	 * @covers Notification::getId
+	 *
 	 * @return void
 	 */
 	public function testIdMatches() {
@@ -40,6 +42,8 @@ class NotificationTest extends TestCase {
 	/**
 	 * Make sure the type accessed by Notification on the resource is the same.
 	 *
+	 * @covers Notification::getType
+	 *
 	 * @return void
 	 */
 	public function testTypeIsTestType() {
@@ -53,6 +57,9 @@ class NotificationTest extends TestCase {
 
 	/**
 	 * Make sure the type accessed by Notification on the resource is the same.
+	 *
+	 * @covers Notification::getType
+	 * @covers Notification::setType
 	 *
 	 * @return void
 	 */

@@ -26,7 +26,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Make sure type/what returned is 'site'.
 	 *
-	 * @coversNothing
+	 * @covers Identifier::whatAmI
 	 *
 	 * @return void
 	 */
@@ -39,7 +39,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Make sure type/what returned is 'user'.
 	 *
-	 * @coversNothing
+	 * @covers Identifier::whatAmI
 	 *
 	 * @return void
 	 */
@@ -52,7 +52,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Make sure that the unique returned from whoAmI() matches the input.
 	 *
-	 * @coversNothing
+	 * @covers Identifier::whatAmI
 	 *
 	 * @return void
 	 */
@@ -65,7 +65,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Make sure that the namespace returned from whereIsHome() matches the input.
 	 *
-	 * @coversNothing
+	 * @covers Identifier::whereIsHome
 	 *
 	 * @return void
 	 */
@@ -78,7 +78,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Test that the namespace is caught as being too long.
 	 *
-	 * @coversNothing
+	 * @covers Identifier::__construct
 	 *
 	 * @return void
 	 */
@@ -90,7 +90,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Test that the type is caught as being too long.
 	 *
-	 * @coversNothing
+	 * @covers Identifier::splitIdentifier
 	 *
 	 * @return void
 	 */
@@ -102,7 +102,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Test that the ID is caught as being too long.
 	 *
-	 * @coversNothing
+	 * @covers Identifier::splitIdentifier
 	 *
 	 * @return void
 	 */
@@ -114,7 +114,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Make sure a local identifier returns true from isLocal().
 	 *
-	 * @coversNothing
+	 * @covers Identifier::splitIdentifier
 	 *
 	 * @return void
 	 */
@@ -129,7 +129,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Make sure a foreign identifier returns false from isLocal().
 	 *
-	 * @coversNothing
+	 * @covers Identifier::isLocal
 	 *
 	 * @return void
 	 */
@@ -144,7 +144,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Make sure a local identifier returns true from isLocal().
 	 *
-	 * @coversNothing
+	 * @covers Identifier::isLocal
 	 *
 	 * @return void
 	 */
@@ -161,7 +161,7 @@ class IdentifierTest extends TestCase {
 	/**
 	 * Make sure a foreign identifier returns false from isLocal().
 	 *
-	 * @coversNothing
+	 * @covers Identifier::isLocal
 	 *
 	 * @return void
 	 */
