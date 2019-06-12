@@ -76,6 +76,7 @@ class HooksTest extends TestCase {
 
 		$mockUser->shouldReceive('newFromName')->andReturn($mockUser);
 		$mockUser->shouldReceive('getId')->andReturn(1);
+		$mockUser->shouldReceive('isLoggedIn')->andReturn(true);
 
 		$mockRevision->shouldReceive('isMinor')->andReturn(true);
 		$mockUser->shouldReceive('isAllowed')->with('nominornewtalk')->andReturn(false);
