@@ -15,6 +15,7 @@ namespace Reverb\Notification;
 use CentralIdLookup;
 use Hydrawiki\Reverb\Client\V1\Resources\NotificationBroadcast as NotificationBroadcastResource;
 use MediaWiki\MediaWikiServices;
+use Reverb\Identifier\Identifier;
 use User;
 
 class NotificationBroadcast {
@@ -58,14 +59,21 @@ class NotificationBroadcast {
 			return null;
 		}
 
+		$agentIdentifier = Identifier::newUser($agentGlobalId);
+		$targetIdentifier = Identifier::newUser($targetGlobalId);
+		$originIdentifier = Identifier::newLocalSite();
+
 		$notification = new NotificationBroadcastResource(
 			[
-				'type'        => $type,
-				'message'     => $parameters,
-				'url'         => $canonicalUrl
+				'type'       => $type,
+				'message'    => $parameters,
+				'url'        => $canonicalUrl,
+				'origin-id'  => (string)$originIdentifier,
+				'agent-id'   => (string)$agentIdentifier,
+				'target-ids' => [(string)$targetIdentifier]
 			]
 		);
 		var_dump($notification);
-		$client->broadcasts()->create($notification);
+		$client->notification_broadcasts()->create($notification);
 	}
 }
