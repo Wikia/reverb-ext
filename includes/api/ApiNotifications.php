@@ -52,7 +52,12 @@ class ApiNotifications extends ApiBase {
 			'notifications' => []
 		];
 
-		$bundle = NotificationBundle::getBundleForUser($this->getUser(), [], $this->params['itemsPerPage'], $this->params['page']);
+		$bundle = NotificationBundle::getBundleForUser(
+			$this->getUser(),
+			[],
+			$this->params['itemsPerPage'],
+			$this->params['page']
+		);
 
 		if ($bundle !== null) {
 			foreach ($bundle as $key => $notification) {

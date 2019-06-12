@@ -33,9 +33,21 @@ class NotificationBroadcast {
 	/**
 	 * Get a new instance for a broadcast to a single target.
 	 *
+	 * @param string $type         Notification Type
+	 * @param User   $agent        User that triggerred the creation of the notification.
+	 * @param User   $target       User that the notification is targetting.
+	 * @param string $canonicalUrl Definitive canonical URL for this notification.
+	 * @param array  $parameters   Mixed parameters for building language strings.
+	 *
 	 * @return null
 	 */
-	public static function newSingle(string $type, User $agent, User $target, string $canonicalUrl, array $parameters): ?self {
+	public static function newSingle(
+		string $type,
+		User $agent,
+		User $target,
+		string $canonicalUrl,
+		array $parameters
+	): ?self {
 		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
 
 		$lookup = CentralIdLookup::factory();

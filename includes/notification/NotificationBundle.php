@@ -73,7 +73,12 @@ class NotificationBundle extends ArrayObject {
 	 *
 	 * @return NotificationBundle|null Returns null if a bad user(No global account or robot account) is passed.
 	 */
-	public static function getBundleForUser(User $user, array $filters = [], int $itemsPerPage = 50, int $pageNumber = 0): ?NotificationBundle {
+	public static function getBundleForUser(
+		User $user,
+		array $filters = [],
+		int $itemsPerPage = 50,
+		int $pageNumber = 0
+	): ?NotificationBundle {
 		if ($user->isBot()) {
 			return null;
 		}
@@ -86,8 +91,9 @@ class NotificationBundle extends ArrayObject {
 		$lookup = CentralIdLookup::factory();
 		$globalId = $lookup->centralIdFromLocalUser($user);
 
-		// @TODO: The only filter right now is 'target-id'.  Later on we will need to implement this function to validate passed filters.
-		//$filters = self::validateFilters($filters);
+		// @TODO: The only filter right now is 'target-id'.
+		// Later on we will need to implement this function to validate passed filters.
+		// $filters = self::validateFilters($filters);
 
 		if (!empty($globalId)) {
 			$notifications = [];
@@ -102,7 +108,10 @@ class NotificationBundle extends ArrayObject {
 			);
 
 			try {
-				$notificationResources = $client->notifications()->page($itemsPerPage, $itemsPerPage * $pageNumber)->filter(
+				$notificationResources = $client->notifications()->page(
+					$itemsPerPage,
+					$itemsPerPage * $pageNumber
+				)->filter(
 					array_merge(
 						$filters,
 						[
