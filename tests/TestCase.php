@@ -49,6 +49,7 @@ abstract class TestCase extends BaseTestCase {
 			->shouldReceive('getService')
 			->with('ReverbApiClient')
 			->andReturn($this->mockReverbApiClient);
+		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
 		$this->mockMWService->shouldReceive('getInstance')->andReturn($this->mockMWService);
 	}
 

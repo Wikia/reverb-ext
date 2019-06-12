@@ -69,6 +69,9 @@ class HooksTest extends TestCase {
 		extract($this->getMocks());
 		$flag = 1;
 
+		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbNamespace')->andReturn('hydra');
+		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbApiEndPoint')->andReturn('http://127.0.0.1:8101/v1');
+
 		$mockCentralIdLookup->shouldReceive('factory')->andReturn($mockCentralIdLookup);
 		$mockCentralIdLookup->shouldReceive('centralIdFromLocalUser')->andReturn(1);
 

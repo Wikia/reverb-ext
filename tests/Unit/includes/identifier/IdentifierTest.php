@@ -119,8 +119,7 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testIdentifierIsLocal() {
-		$this->mockGlobalConfig->shouldReceive('get')->andReturn('hydra');
-		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
+		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbNamespace')->andReturn('hydra');
 		$identifier = Identifier::factory('hydra:user:124234532');
 
 		$this->assertTrue($identifier->isLocal());
@@ -134,8 +133,7 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testIdentifierIsForeign() {
-		$this->mockGlobalConfig->shouldReceive('get')->andReturn('hydra');
-		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
+		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbNamespace')->andReturn('hydra');
 		$identifier = Identifier::factory('fandom:user:124234532');
 
 		$this->assertFalse($identifier->isLocal());
@@ -149,8 +147,7 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testSiteIdentifierIsLocal() {
-		$this->mockGlobalConfig->shouldReceive('get')->andReturn('hydra');
-		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
+		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbNamespace')->andReturn('hydra');
 		$mockWfWikiID = $this->getPHPMock('Reverb\Identifier', 'wfWikiID');
 		$mockWfWikiID->andReturn('lol_gamepedia_en');
 		$identifier = Identifier::factory('hydra:site:lol_gamepedia_en');
@@ -166,7 +163,7 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testSiteIdentifierIsForeign() {
-		$this->mockGlobalConfig->shouldReceive('get')->andReturn('hydra');
+		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbNamespace')->andReturn('hydra');
 		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
 		$mockWfWikiID = $this->getPHPMock('Reverb\Identifier', 'wfWikiID');
 		$mockWfWikiID->andReturn('lol_gamepedia_en');
