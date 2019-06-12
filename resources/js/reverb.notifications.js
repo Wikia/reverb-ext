@@ -13,7 +13,6 @@
     window.log = function(...args){
         mw.log('[REVERB]', ...args);
     }
-
     log('Display Logic Loaded.');
 
     /**
@@ -65,9 +64,8 @@
     </div>`;
 
     // clear it. We dont have support for this yet.
-    globalNotifications = '';
+    globalNotifications = "";
     
-
     var notificationPanel = $(`
         <div class="reverb-np">
             <div class="reverb-np-header">
@@ -82,49 +80,46 @@
         </div>
     `);
     
-    notificationPanel.appendTo('body');
-    notificationButton.insertBefore(userBox);
-    
-    notificationButton.on('click', function(){
-        notificationPanel.toggle();
-    });    
-
     /**
      * Setup "control functions"
      */
-
     var updateUnread = function(totalUnread) {
         $(".reverb-total-notifications").html(totalUnread);
     };
 
-    var buildNotification = function(data) {
-        var header = data.header;
-        var body = data.body;
-        var created = moment(data.created).fromNow();
-        var read = data.read ? "read" : "unread";
-        var icon = data.icon;
-
+    var buildNotification = function(d) {
+        d.read = d.read ? "read" : "unread";
+        d.created = moment(d.created).fromNow();
         return $(`
             <div class="reverb-npn-row">
                 <div class="reverb-npnr-left">
-                    <img src="/extensions/Reverb/resources/icons/${icon}" class="reverb-icon" />
+                    <img src="/extensions/Reverb/resources/icons/${d.icon}" class="reverb-icon" />
                 </div>
                 <div class="reverb-npnr-right">
-                    <div class="reverb-npnr-header">${header}</div>
-                    <div class="reverb-npnr-body">${body}</div>
+                    <div class="reverb-npnr-header">${d.header}</div>
+                    <div class="reverb-npnr-body">${d.body}</div>
                     <div class="reverb-npnr-bottom">
-                        <span class="reverb-npnr-${read}"></span>
-                        ${created}
+                        <span class="reverb-npnr-${d.read}"></span>
+                        ${d.created}
                     </div>
                 </div>
             </div>
         `);
     }
 
-    var addNotification = function(notification) {
+    var addNotification = function(notification, target) {
         // hide if we are adding a notification
+        switch (target) {
+            case "dropdown":
+            default: 
+                selector = '.reverb-npn';
+            break;
+            case "specialpage":
+                selector = '.reverb-notification-page-notifications';
+            break;
+        }
         $('.reverb-np-no-unread').hide();
-        notification.appendTo('.reverb-npn');
+        notification.appendTo(selector);
     }
 
     /**
@@ -135,15 +130,26 @@
     api.get({action:'notifications', do:'getNotificationsForUser', format:'json'})
     .done(function(data) {
         if (data.notifications && data.notifications.length) {
+
+            // If we have data, lets injust the notification panel
+            // Dont show notification panel at all on API failure. 
+            notificationPanel.appendTo('body');
+            notificationButton.insertBefore(userBox);
+            notificationButton.on('click', function(){
+                notificationPanel.toggle();
+            });    
+        
+            // build content for panel
             var unread = 0;
             for (var x in data.notifications) {
                 var n = data.notifications[x];
 
                 // Setup header
-                var header = n.header ? n.header : false;
+                var header = n.header_short ? n.header_short : false;
+                var longheader = n.header_long ? n.header_long : (n.header_short ? n.header_short : false);
 
                 // Setup message body 
-                var message = n.message ? n.message : false;
+                var message = n.user_note ? n.user_note : "";
 
                 // Try Notification, then Subcategory, then Category...
                 var icon = n.icons.notification ? n.icons.notification : (n.icons.subcategory ? n.icons.subcategory : (n.icons.category ? n.icons.category : false));
@@ -152,22 +158,30 @@
                 // Convert for javascript
                 var created = n.created_at * 1000;
 
-                // Lets not display broken notifications to end users
-                if (header && message) {
+                // Handle Read Count -- Not available from API yet
+                var read = n.dismissed_at ? true : false;
+                if (!read) { unread++; } 
+                
+                var notification = buildNotification({
+                    header: header,
+                    body: message,
+                    read: read,
+                    icon: icon,
+                    created: created
+                });
+                addNotification(notification);
 
-                    // Handle Read Count -- Not available from API yet
-                    var read = n.dismissed_at ? true : false;
-                    if (!read) { unread++; } 
-                    
-                    var notification = buildNotification({
-                        header: header,
+                if (notificationPage) {
+                    var notification2 = buildNotification({
+                        header: longheader,
                         body: message,
                         read: read,
                         icon: icon,
                         created: created
                     });
-                    addNotification(notification);
+                    addNotification(notification2,'specialpage');
                 }
+                
             }
             updateUnread(unread);
         }
@@ -185,6 +199,10 @@
             pile of crap and doesn't 
             support any modern JavaScript
             so you just need to use jQuery.
+
+        ResourceLoader:
+            Don't even think about using
+            ES6 stuff either! 
 
         Developer:
         ⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⣠⣤⣶⣶
