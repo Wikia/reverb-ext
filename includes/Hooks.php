@@ -18,6 +18,7 @@ use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
+use Reverb\Notification\NotificationBroadcast;
 use Revision;
 use SkinTemplate;
 use SpecialPage;
@@ -61,8 +62,8 @@ class Hooks {
 		Content $content,
 		string $summary,
 		bool $isMinor,
-		bool $isWatch,
-		string $section,
+		?bool $isWatch,
+		?string $section,
 		int &$flags,
 		$revision,
 		Status &$status,
@@ -85,13 +86,20 @@ class Hooks {
 			$notifyUser = User::newFromName($title->getText());
 			// If the recipient is a valid non-anonymous user and hasn't turned off their
 			// notifications, generate a talk page post Echo notification.
-			if ($notifyUser && $notifyUser->getId()) {
+			if ($notifyUser && $notifyUser->isLoggedIn()) {
 				// If this is a minor edit, only notify if the agent doesn't have talk page
 				// minor edit notification blocked.
-				if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
+				// if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
 					// @TODO: Create 'user-interest-talk-page-edit' Notification
-					/*NotificationBroadcast::new(
-						[
+					var_dump(NotificationBroadcast::newSingle(
+						'user-interest-talk-page-edit',
+						$user,
+						$notifyUser,
+						'',
+						[]
+					));
+					exit;
+					/*	[
 							'type' => 'user-interest-talk-page-edit',
 							'title' => $title,
 							'extra' => [
@@ -104,7 +112,7 @@ class Hooks {
 							'agent' => $user,
 						]
 					);*/
-				}
+				// }
 			}
 		}
 

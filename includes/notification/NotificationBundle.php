@@ -1,7 +1,7 @@
 <?php
 /**
  * Reverb
- * Notification
+ * NotificationBundle
  *
  * @package Reverb
  * @author  Alexia E. Smith
@@ -25,6 +25,27 @@ class NotificationBundle extends ArrayObject {
 	use \Reverb\Traits\UserContextTrait;
 
 	/**
+	 * Filters used to build this instance.
+	 *
+	 * @var array
+	 */
+	protected $filters = [];
+
+	/**
+	 * Items per page.
+	 *
+	 * @var integer
+	 */
+	protected $itemsPerPage = 50;
+
+	/**
+	 * Current page number.
+	 *
+	 * @var integer
+	 */
+	protected $pageNumber = 0;
+
+	/**
 	 * Main Constructor
 	 *
 	 * @param array   $notifications Array of Reverb\Notification\Notification objects.
@@ -45,35 +66,58 @@ class NotificationBundle extends ArrayObject {
 	/**
 	 * Get a bundle of notifications for an user with optional filters.
 	 *
-	 * @param User  $user    User object to use for look up.
-	 * @param array $filters [Optional] Filters for notifications.
+	 * @param User  $user         User object to use for look up.
+	 * @param array $filters      [Optional] Filters for notifications.
+	 * @param array $itemsPerPage [Optional] Number of items per page.
+	 * @param array $pageNumber   [Optional] Page number to read.
 	 *
 	 * @return NotificationBundle|null Returns null if a bad user(No global account or robot account) is passed.
 	 */
-	public static function getBundleForUser(User $user, array $filters = []): ?NotificationBundle {
+	public static function getBundleForUser(
+		User $user,
+		array $filters = [],
+		int $itemsPerPage = 50,
+		int $pageNumber = 0
+	): ?NotificationBundle {
 		if ($user->isBot()) {
 			return null;
 		}
 
+		// Make sure this is from 1 to 100.
+		$itemsPerPage = max(min($itemsPerPage, 100), 1);
+		// Make sure the page number is >= 0.
+		$pageNumber = max(0, $pageNumber);
+
 		$lookup = CentralIdLookup::factory();
 		$globalId = $lookup->centralIdFromLocalUser($user);
 
-		if (!empty($globalId)) {
-			// @TODO: Call out to the service with $globalId and optional filters.
+		// @TODO: The only filter right now is 'target-id'.
+		// Later on we will need to implement this function to validate passed filters.
+		// $filters = self::validateFilters($filters);
 
-			// @TODO: Collect notifications into an array and construct NotificationBundle.
+		if (!empty($globalId)) {
 			$notifications = [];
 
 			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-			$userIdentifier = Identifier::factory(['namespace' => 'hydra', 'what' => 'user', 'id' => $globalId]);
+			$userIdentifier = Identifier::factory(
+				[
+					'namespace' => 'hydra',
+					'what' => 'user',
+					'id' => $globalId
+				]
+			);
 
 			try {
-				// $userResource = $client->users()->find((string)$userIdentifier);
-				// ->filter(['target-id' => 'hydra:user:'.$globalId])
-				$notificationResources = $client->notifications()->page(100, 0)->filter(
-					[
-						'target-id' => 'hydra:user:' . $globalId
-					]
+				$notificationResources = $client->notifications()->page(
+					$itemsPerPage,
+					$itemsPerPage * $pageNumber
+				)->filter(
+					array_merge(
+						$filters,
+						[
+							'target-id' => 'hydra:user:' . $globalId
+						]
+					)
 				)->all();
 			} catch (ApiResponseInvalid $e) {
 				// @TODO: Logging and error reporting.
@@ -89,6 +133,10 @@ class NotificationBundle extends ArrayObject {
 
 			$bundle = new NotificationBundle($notifications);
 
+			$bundle->filters = $filters;
+			$bundle->itemsPerPage = $itemsPerPage;
+			$bundle->pageNumber = $pageNumber;
+
 			// Set user context on NotificationBundle.
 			$bundle->setUser($user);
 			return $bundle;
@@ -102,6 +150,24 @@ class NotificationBundle extends ArrayObject {
 	 * @return NotificationBundle|null
 	 */
 	public function nextPage(): ?NotificationBundle {
+		return self::getBundleForUser($this->getUser(), $this->filters, $this->itemsPerPage, $this->pageNumber + 1);
+	}
+
+	/**
+	 * Get a set of JSON:API compatible links for consumers.
+	 *
+	 * @return array ['first' => '', 'prev' => '', 'next' => '', 'last' => '']
+	 */
+	public function getApiLinks(): array {
+		// code...
+	}
+
+	/**
+	 * Return the total notifications returned by the meta data in the response.
+	 *
+	 * @return integer
+	 */
+	public function getTotal(): int {
 		// code...
 	}
 }

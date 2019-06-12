@@ -30,16 +30,17 @@ class HooksTest extends TestCase {
 	 */
 	protected function getMocks() {
 		return [
-			'mockWikiPage' => $this->getMock('WikiPage'),
-			'mockUser' => $this->getOverloadMock('User'),
+			'mockCentralIdLookup' => $this->getOverloadMock('CentralIdLookup'),
 			'mockContent' => $this->getMock('Content'),
-			'mockRevision' => $this->getOverloadMock('Revision'),
-			'mockStatus' => $this->getMock('Status'),
-			'mockTitle' => $this->getMock('Title'),
 			'mockLinksUpdate' => $this->getMock('LinksUpdate'),
 			'mockMWNamespace' => $this->getOverloadMock('MWNamespace'),
 			'mockOutputPage' => $this->getMock('OutputPage'),
-			'mockSkinTemplate' => $this->getMock('SkinTemplate')
+			'mockRevision' => $this->getOverloadMock('Revision'),
+			'mockSkinTemplate' => $this->getMock('SkinTemplate'),
+			'mockStatus' => $this->getMock('Status'),
+			'mockTitle' => $this->getMock('Title'),
+			'mockUser' => $this->getOverloadMock('User'),
+			'mockWikiPage' => $this->getMock('WikiPage')
 		];
 	}
 
@@ -68,6 +69,9 @@ class HooksTest extends TestCase {
 		extract($this->getMocks());
 		$flag = 1;
 
+		$mockCentralIdLookup->shouldReceive('factory')->andReturn($mockCentralIdLookup);
+		$mockCentralIdLookup->shouldReceive('centralIdFromLocalUser')->andReturn(1);
+
 		$mockStatus->shouldReceive('isGood')->andReturn(true);
 		$mockWikiPage->shouldReceive('getTitle')->andReturn($mockTitle);
 
@@ -76,6 +80,7 @@ class HooksTest extends TestCase {
 
 		$mockUser->shouldReceive('newFromName')->andReturn($mockUser);
 		$mockUser->shouldReceive('getId')->andReturn(1);
+		$mockUser->shouldReceive('isLoggedIn')->andReturn(true);
 
 		$mockRevision->shouldReceive('isMinor')->andReturn(true);
 		$mockUser->shouldReceive('isAllowed')->with('nominornewtalk')->andReturn(false);

@@ -63,10 +63,11 @@ class Notification {
 	/**
 	 * Get the unique ID for this notification used by the service.
 	 *
-	 * @return string ID
+	 * @return integer ID
 	 */
-	public function getId(): string {
-		return $this->resource->id();
+	public function getId(): int {
+		// The resource can return null if nothing is initialized.
+		return intval($this->resource->id());
 	}
 
 	/**
@@ -75,18 +76,20 @@ class Notification {
 	 * @return string Notification Type
 	 */
 	public function getType(): string {
+		// This will return the 'type' key off the $attributes array member on the object
+		// and not the 'type' resource string member.
 		return $this->resource->type;
 	}
 
 	/**
-	 * Get the type for this notification.
+	 * Set the type for this notification.
 	 *
 	 * @param string $type Notification Type
 	 *
 	 * @return void
 	 */
 	public function setType(string $type) {
-		$this->resource->setId($type);
+		$this->resource->setAttributes(['type' => $type]);
 	}
 
 	/**
@@ -97,7 +100,9 @@ class Notification {
 	 * @return string Message
 	 */
 	public function getHeader(bool $long = false): Message {
-		return wfMessage(($long ? 'long' : 'short') . '-header-' . $this->getType())->params($this->getMessageParameters());
+		return wfMessage(
+			($long ? 'long' : 'short') . '-header-' . $this->getType()
+		)->params($this->getMessageParameters());
 	}
 
 	/**
@@ -140,7 +145,7 @@ class Notification {
 	 * @return boolean Is dismissed
 	 */
 	public function isDismissed(): bool {
-		return bool_val($this->resource->dismissed_at);
+		return boolval($this->resource->dismissed_at);
 	}
 
 	/**
@@ -318,7 +323,7 @@ class Notification {
 	}
 
 	/**
-	 * Function Documentation
+	 * Get an array representation of this object suitable for APIs or otherwise.
 	 *
 	 * @return array
 	 */
