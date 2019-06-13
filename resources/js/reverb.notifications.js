@@ -152,7 +152,7 @@
                 var message = n.user_note ? n.user_note : "";
 
                 // Try Notification, then Subcategory, then Category...
-                var icon = n.icons.notification ? n.icons.notification : (n.icons.subcategory ? n.icons.subcategory : (n.icons.category ? n.icons.category : false));
+                var icon = (n.icons.notification && n.icons.notificaton !== ".svg") ? n.icons.notification : ( (n.icons.subcategory && n.icons.subcategory !== ".svg" ) ? n.icons.subcategory : ((n.icons.category && n.icons.category !== ".svg") ? n.icons.category : false));
                 icon = icon ? icon : "feedback.svg"; // set a default fallback icon
 
                 // Convert for javascript

@@ -12,8 +12,8 @@
 
         {% for id, type in types %}
             <div class="reverb-filter-row">
-                <input type="checkbox" name="filter_{{ id }}" class="revberb-filter-checkbox">
-                <label for="filter_{{ id }}"> {{ type.title }}
+                <input type="checkbox" id="filter_{{ id }}" class="reverb-filter-checkbox">
+                <label for="filter_{{ id }}" class="reverb-filter-label"> {{ type.title }}
             </div>
         {% endfor %}
 
