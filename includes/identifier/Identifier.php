@@ -145,7 +145,7 @@ abstract class Identifier {
 	 * @return string
 	 */
 	public function __toString(): string {
-		return $this->whereIsHome() . "/" . $this->whatAmI() . ':' . $this->whoAmI();
+		return $this->whereIsHome() . ":" . $this->whatAmI() . ':' . $this->whoAmI();
 	}
 
 	/**

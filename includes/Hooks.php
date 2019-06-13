@@ -89,30 +89,28 @@ class Hooks {
 			if ($notifyUser && $notifyUser->isLoggedIn()) {
 				// If this is a minor edit, only notify if the agent doesn't have talk page
 				// minor edit notification blocked.
-				// if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
-					// @TODO: Create 'user-interest-talk-page-edit' Notification
-					var_dump(NotificationBroadcast::newSingle(
+				if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
+					// @TODO: Fix user note.
+					$broadcast = NotificationBroadcast::newSingle(
 						'user-interest-talk-page-edit',
 						$user,
 						$notifyUser,
-						'',
-						[]
-					));
-					exit;
-					/*	[
-							'type' => 'user-interest-talk-page-edit',
-							'title' => $title,
-							'extra' => [
-								'revid' => $revision->getId(),
-								'minoredit' => $revision->isMinor(),
-								'section-title' => $section['section-title'],
-								'section-text' => $section['section-text'],
-								'target-page' => $title->getArticleID(),
-							],
-							'agent' => $user,
+						[
+							'url' => $title->getFullURL(),
+							'message' => [
+								[
+									'user_note',
+									''
+								],
+								[
+									1,
+									$user->getName()
+								]
+							]
 						]
-					);*/
-				// }
+					);
+					$broadcast->transmit();
+				}
 			}
 		}
 
