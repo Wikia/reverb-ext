@@ -80,13 +80,11 @@ class Hooks {
 
 		$title = $wikiPage->getTitle();
 
-		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-
 		if ($title->getNamespace() == NS_USER_TALK) {
 			$notifyUser = User::newFromName($title->getText());
 			// If the recipient is a valid non-anonymous user and hasn't turned off their
 			// notifications, generate a talk page post Echo notification.
-			if ($notifyUser && $notifyUser->isLoggedIn()) {
+			if ($notifyUser && $notifyUser->getId()) {
 				// If this is a minor edit, only notify if the agent doesn't have talk page
 				// minor edit notification blocked.
 				if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
@@ -118,9 +116,36 @@ class Hooks {
 		if ($undidRevId > 0) {
 			$undidRevision = Revision::newFromId($undidRevId);
 			if ($undidRevision && $undidRevision->getTitle()->equals($title)) {
-				$victimId = $undidRevision->getUser();
-				if ($victimId) {
-					// @TODO: Create 'article-edit-revert' Notification
+				$notifyUser = $undidRevision->getRevisionRecord()->getUser();
+				if ($notifyUser && $notifyUser->getId()) {
+					// @TODO: Fix user note.
+					$broadcast = NotificationBroadcast::newSingle(
+						'article-edit-revert',
+						$user,
+						$notifyUser,
+						[
+							'url' => $title->getFullURL(),
+							'message' => [
+								[
+									'user_note',
+									''
+								],
+								[
+									2,
+									$user->getName()
+								],
+								[
+									3,
+									$title->getFullText()
+								],
+								[
+									4,
+									1
+								]
+							]
+						]
+					);
+					$broadcast->transmit();
 				}
 			}
 		}
@@ -141,7 +166,30 @@ class Hooks {
 	public static function onLocalUserCreated(User $user, bool $autocreated): bool {
 		if (!$autocreated) {
 			// @TODO: Create 'user-interest-welcome' Notification
-			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
+
+			$broadcast = NotificationBroadcast::newSingle(
+				'user-interest-welcome',
+				$user,
+				$notifyUser,
+				[
+					'url' => $title->getFullURL(),
+					'message' => [
+						[
+							'user_note',
+							''
+						],
+						[
+							1,
+							$user->getName()
+						],
+						[
+							2,
+							$user->getName()
+						]
+					]
+				]
+			);
+			$broadcast->transmit();
 		}
 
 		return true;
@@ -185,8 +233,6 @@ class Hooks {
 			// Don't notify for self changes.
 			return true;
 		}
-
-		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
 
 		// If any old groups are in $add, those groups are having their expiry
 		// changed, not actually being added

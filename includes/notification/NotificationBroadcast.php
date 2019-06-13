@@ -79,6 +79,68 @@ class NotificationBroadcast {
 	}
 
 	/**
+	 * Get a new instance for a broadcast to a single target.
+	 *
+	 * @param string $type   Notification Type
+	 * @param User   $agent  User that triggerred the creation of the notification.
+	 * @param User   $target User that the notification is targetting.
+	 * @param array  $meta   Meta data attributes such as 'url' and 'message' parameters for building language strings.
+	 *
+	 * @return null
+	 */
+	public static function newSingle(
+		string $type,
+		User $agent,
+		User $target,
+		array $meta
+	): ?self {
+		if (!self::isTypeConfigured($type)) {
+			throw new MWException('The notification type passed is not defined.');
+		}
+
+		$broadcast = new self();
+
+		$lookup = CentralIdLookup::factory();
+		$agentGlobalId = $lookup->centralIdFromLocalUser($agent);
+		$targetGlobalId = $lookup->centralIdFromLocalUser($target);
+
+		if (!$agentGlobalId || !$targetGlobalId) {
+			return null;
+		}
+
+		if (empty($type) || !isset($meta['url']) || empty($meta['url'])) {
+			throw new MWException('No type or canonical URL passed for broadcast.');
+		}
+
+		$broadcast->setAgent(Identifier::newUser($agentGlobalId));
+		$broadcast->addTarget(Identifier::newUser($targetGlobalId));
+		$broadcast->setOrigin(Identifier::newLocalSite());
+
+		$broadcast->setAttributes(
+			[
+				'type' => $type,
+				'url' => $meta['url'],
+				'message' => json_encode($meta['message'])
+			]
+		);
+
+		return $broadcast;
+	}
+
+	/**
+	 * Is this a valid configured notification type?
+	 *
+	 * @param string $type Notification Type
+	 *
+	 * @return boolean
+	 */
+	private static function isTypeConfigured(string $type): bool {
+		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
+		$types = $mainConfig->get('ReverbNotifications');
+		return isset($types[$type]);
+	}
+
+	/**
 	 * Set the identifier for the origin(namespace) that originated this notification.
 	 *
 	 * @param SiteIdentifier $origin Origin Namespace
@@ -172,50 +234,5 @@ class NotificationBroadcast {
 	 */
 	public function getLastError(): ?string {
 		return $this->lastError;
-	}
-
-	/**
-	 * Get a new instance for a broadcast to a single target.
-	 *
-	 * @param string $type   Notification Type
-	 * @param User   $agent  User that triggerred the creation of the notification.
-	 * @param User   $target User that the notification is targetting.
-	 * @param array  $meta   Meta data attributes such as 'url' and 'message' parameters for building language strings.
-	 *
-	 * @return null
-	 */
-	public static function newSingle(
-		string $type,
-		User $agent,
-		User $target,
-		array $meta
-	): ?self {
-		$broadcast = new self();
-
-		$lookup = CentralIdLookup::factory();
-		$agentGlobalId = $lookup->centralIdFromLocalUser($agent);
-		$targetGlobalId = $lookup->centralIdFromLocalUser($target);
-
-		if (!$agentGlobalId || !$targetGlobalId) {
-			return null;
-		}
-
-		if (empty($type) || !isset($meta['url']) || empty($meta['url'])) {
-			throw new MWException('No type or canonical URL passed for broadcast.');
-		}
-
-		$broadcast->setAgent(Identifier::newUser($agentGlobalId));
-		$broadcast->addTarget(Identifier::newUser($targetGlobalId));
-		$broadcast->setOrigin(Identifier::newLocalSite());
-
-		$broadcast->setAttributes(
-			[
-				'type' => $type,
-				'url' => $meta['url'],
-				'message' => json_encode($meta['message'])
-			]
-		);
-
-		return $broadcast;
 	}
 }

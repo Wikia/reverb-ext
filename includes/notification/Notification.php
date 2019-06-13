@@ -102,9 +102,20 @@ class Notification {
 	public function getHeader(bool $long = false): Message {
 		$parameters = $this->getMessageParameters();
 		unset($parameters['user_note']);
+
+		// Pad parameters that start at not 1.  This fixes issues with legacy Echo language strings missing parameters at the beginning of the string.
+		if (count($parameters) > 0) {
+			for ($i = 1; $i < max(array_keys($parameters)); $i++) {
+				if (!isset($parameters[$i])) {
+					$parameters[$i] = null;
+				}
+			}
+			ksort($parameters);
+		}
+
 		return wfMessage(
 			($long ? 'long' : 'short') . '-header-' . $this->getType()
-		)->params($this->getMessageParameters());
+		)->params($parameters);
 	}
 
 	/**
