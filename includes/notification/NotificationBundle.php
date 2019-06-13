@@ -99,13 +99,7 @@ class NotificationBundle extends ArrayObject {
 			$notifications = [];
 
 			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-			$userIdentifier = Identifier::factory(
-				[
-					'namespace' => 'hydra',
-					'what' => 'user',
-					'id' => $globalId
-				]
-			);
+			$userIdentifier = Identifier::newUser($globalId);
 
 			try {
 				$notificationResources = $client->notifications()->page(
