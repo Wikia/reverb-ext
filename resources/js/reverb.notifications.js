@@ -83,7 +83,10 @@
     /**
      * Setup "control functions"
      */
-    var updateUnread = function(totalUnread) {
+    var updateCounts = function(total, totalUnread, totalRead) {
+        $("#reverb-ru-all").html( mw.msg('special-button-all',total) );
+        $("#reverb-ru-read").html( mw.msg('special-button-read',totalRead) );
+        $("#reverb-ru-unread").html( mw.msg('special-button-unread',totalUnread) );
         $(".reverb-total-notifications").html(totalUnread);
     };
 
@@ -141,6 +144,8 @@
         
             // build content for panel
             var unread = 0;
+            var total = data.notifications.length;
+     
             for (var x in data.notifications) {
                 var n = data.notifications[x];
 
@@ -183,7 +188,7 @@
                 }
                 
             }
-            updateUnread(unread);
+            updateCounts(total, unread, (total - unread));
         }
     });
 

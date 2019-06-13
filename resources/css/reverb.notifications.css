@@ -2,6 +2,11 @@
    /* Style this differnetly? */
 }
 
+.reverb-filter-notice {
+    width:100%;
+    text-align: center;
+}
+
 .reverb-icon {
     width: 24px;
     height: 24px;

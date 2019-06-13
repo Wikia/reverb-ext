@@ -63,7 +63,12 @@
 				"resources/js/reverb.moment.js",
 				"resources/js/reverb.notifications.js"
 			],
-			"position": "bottom"
+			"position": "bottom",
+			"messages": [
+				"special-button-all",
+				"special-button-read",
+				"special-button-unread"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {

@@ -25,89 +25,6 @@ class SpecialNotifications extends SpecialPage {
 		parent::__construct('Notifications');
 
 		$this->output = $this->getOutput();
-
-		$this->icons = [
-			"articleCheck.svg",
-			"bell.svg",
-			"edit.svg",
-			"feedback.svg",
-			"help.svg",
-			"mention-failure.svg",
-			"mention-success.svg",
-			"message.svg",
-			"revert.svg",
-			"tray.svg",
-			"user-speech-bubble.svg",
-			"changes.svg",
-			"edit-user-talk.svg",
-			"global.svg",
-			"link.svg",
-			"mention-status-bundle.svg",
-			"mention.svg",
-			"notice.svg",
-			"speechBubbles.svg",
-			"user-rights.svg",
-			"userTalk.svg"
-		];
-
-		$this->types = [
-			"wiki_edit" => [
-				"title" => "Wiki Edits",
-				"icon"	=> ""
-			],
-			"edit_revert" => [
-				"title" => "Edit Revert",
-				"icon"	=> ""
-			],
-			"talk_page_message" => [
-				"title" => "Talk Page Message",
-				"icon"	=> ""
-			],
-			"profile_comments" => [
-				"title" => "Profile Comments",
-				"icon"	=> ""
-			],
-			"friendship_request" => [
-				"title" => "Friendship Request",
-				"icon"	=> ""
-			],
-			"new_wiki_claims" => [
-				"title" => "New Wiki Claims",
-				"icon"	=> ""
-			],
-			"wiki_tool_queues" => [
-				"title" => "Wiki Tool Queues",
-				"icon"	=> ""
-			],
-			"comment_reports" => [
-				"title" => "Comment Reports",
-				"icon"	=> ""
-			],
-			"page_link" => [
-				"title" => "Page Link",
-				"icon"	=> ""
-			],
-			"thanks" => [
-				"title" => "Thanks",
-				"icon"	=> ""
-			],
-			"achievements" => [
-				"title" => "Achievements",
-				"icon"	=> ""
-			],
-			"mention" => [
-				"title" => "Mention",
-				"icon"	=> ""
-			],
-			"email_from_another_user" => [
-				"title" => "Email From Another User",
-				"icon"	=> ""
-			],
-			"user_rights_change" => [
-				"title" => "User Rights Change",
-				"icon"	=> ""
-			]
-		];
 	}
 
 	/**
@@ -120,38 +37,11 @@ class SpecialNotifications extends SpecialPage {
 	public function execute($subpage) {
 		$twig = MediaWikiServices::getInstance()->getService( 'TwiggyService' );
 		$template = $twig->load('@Reverb/notifications.twig');
-		$this->output->addHtml($template->render(['types' => $this->types]));
-	}
 
-	/**
-	 * Builds HTML for a notification row.
-	 *
-	 * @param array $data
-	 *
-	 * @return string
-	 */
-	public function notificationRow($data) {
-		$header = $data['header'];
-		$body = $data['body'];
-		$lastread = "1 day ago";
-		$read = $data['read'] ? "read" : "unread";
-		$icon = $data['icon'];
+		$config = MediaWikiServices::getInstance()->getMainConfig();
+		$types = $config->get("ReverbNotifications");
 
-		return "
-            <div class=\"reverb-npn-row\">
-                <div class=\"reverb-npnr-left\">
-                    <img src=\"/extensions/Reverb/resources/icons/${icon}\" class=\"reverb-icon\" />
-                </div>
-                <div class=\"reverb-npnr-right\">
-                    <div class=\"reverb-npnr-header\">${header}</div>
-                    <div class=\"reverb-npnr-body\">${body}</div>
-                    <div class=\"reverb-npnr-bottom\">
-                        <span class=\"reverb-npnr-${read}\"></span>
-                        ${lastread}
-                    </div>
-                </div>
-            </div>
-        ";
+		$this->output->addHtml($template->render(['types' => $types]));
 	}
 
 	/**

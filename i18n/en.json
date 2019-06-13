@@ -48,7 +48,15 @@
     "long-header-user-interest-welcome": "{{GENDER:$2|Welcome}} to {{SITENAME}}, $1! We're glad {{GENDER:$2|you're}} here.",
     "short-header-article-edit-revert": "Your {{PLURAL:$4|edit on <strong>$3<\/strong> was|edits on <strong>$3<\/strong> were}} {{GENDER:$2|reverted}}.",
 	"long-header-article-edit-revert": "Your {{PLURAL:$4|edit on <strong>$3<\/strong> was|edits on <strong>$3<\/strong> were}} {{GENDER:$2|reverted}}.",
-	"reverb_all": "All ($1)",
-	"reverb_read": "Read ($1)",
-	"reverb_unread": "Unread ($1)"
+	"special-button-all": "All ($1)",
+	"special-button-read": "Read ($1)",
+	"special-button-unread": "Unread ($1)",
+	"special-button-mark-all-read": "Mark All As Read",
+	"special-sidebar-user-interest-welcome": "Welcome",
+	"special-sidebar-user-interest-talk-page-edit": "Talk Page Edits",
+	"special-sidebar-user-interest-page-linked": "Page Linked",
+	"special-sidebar-article-edit-revert": "Edit Reverts",
+	"special-sidebar-article-edit-thanks": "Edit Thanks",
+	"special-sidebar-user-account-groups-expiration-change": "Group Expiration Change",
+	"special-sidebar-user-account-groups-changed": "User Rights Changed"
 }

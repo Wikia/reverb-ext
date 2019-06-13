@@ -9,36 +9,40 @@
             <input type="checkbox" id="filter_all" class="reverb-filter-checkbox" checked="checked"> 
             <label for="filter_all" class="reverb-filter-label"> All
         </div>
-
+        <!--
         {% for id, type in types %}
             <div class="reverb-filter-row">
                 <input type="checkbox" id="filter_{{ id }}" class="reverb-filter-checkbox">
-                <label for="filter_{{ id }}" class="reverb-filter-label"> {{ type.title }}
+                <label for="filter_{{ id }}" class="reverb-filter-label"> {{ wfMessage('special-sidebar-' ~ id, 'plain', '50') }}
             </div>
         {% endfor %}
+        -->
+        <div class="reverb-filter-notice"><small>Filtering of notifications is not yet available. Sorry.</small></div>
 
         </div>
     <div class="reverb-notification-page-right">
         <div class="reverb-button-bar">
             <span class="reverb-pull-right">
-                <button>Mark All As Read</button>
+                <button id="reverb-mark-all-read">{{ wfMessage('special-button-mark-all-read', 'plain') }}</button>
             </span>
-            <button>{{ wfMessage('reverb_all', 'plain', '50') }}</button>
-            <button>{{ wfMessage('reverb_read', 'plain', '48') }}</button>
-            <button>{{ wfMessage('reverb_unread', 'plain', '4') }}</button>
+            <button id="reverb-ru-all">{{ wfMessage('special-button-all', 'plain', '0') }}</button>
+            <button id="reverb-ru-read">{{ wfMessage('special-button-read', 'plain', '0') }}</button>
+            <button id="reverb-ru-unread">{{ wfMessage('special-button-unread', 'plain', '0') }}</button>
         </div>
+        <!--
         <div class="reverb-notification-page-row reverb-npn-row-global">
-                <div class="reverb-npnr-left">
-                    <img src="/extensions/Reverb/resources/icons/global.svg"
-                        class="reverb-icon reverb-icon-global">
-                </div>
-                <div class="reverb-npnr-right">
-                    <div class="reverb-npnr-header">
-                        3 unread notifications from other wikis. <i class="fa fa-chevron-down"></i>
-                        <span class="reverb-npnr-unread reverb-npnr-unread-global"></span>
-                    </div>
+            <div class="reverb-npnr-left">
+                <img src="/extensions/Reverb/resources/icons/global.svg"
+                    class="reverb-icon reverb-icon-global">
+            </div>
+            <div class="reverb-npnr-right">
+                <div class="reverb-npnr-header">
+                    3 unread notifications from other wikis. <i class="fa fa-chevron-down"></i>
+                    <span class="reverb-npnr-unread reverb-npnr-unread-global"></span>
                 </div>
             </div>
+        </div>
+        -->
         <div class="reverb-notification-page-notifications">
 
             <!-- Notifications will be filled here by glorius JAVASCRIPT -->
