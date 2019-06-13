@@ -94,7 +94,7 @@
         d.read = d.read ? "read" : "unread";
         d.created = moment(d.created).fromNow();
         return $(`
-            <div class="reverb-npn-row">
+            <div class="reverb-npn-row" data-id="${d.id}">
                 <div class="reverb-npnr-left">
                     <img src="/extensions/Reverb/resources/icons/${d.icon}" class="reverb-icon" />
                 </div>
@@ -166,31 +166,61 @@
                 // Handle Read Count -- Not available from API yet
                 var read = n.dismissed_at ? true : false;
                 if (!read) { unread++; } 
-                
-                var notification = buildNotification({
+
+                var notificationData = {
+                    id: n.id,
                     header: header,
                     body: message,
                     read: read,
                     icon: icon,
                     created: created
-                });
-                addNotification(notification);
-
+                };
+                
+                // If we are on a notification page, duplicate the data and change to long header
                 if (notificationPage) {
-                    var notification2 = buildNotification({
-                        header: longheader,
-                        body: message,
-                        read: read,
-                        icon: icon,
-                        created: created
-                    });
-                    addNotification(notification2,'specialpage');
+                    var nd2 = notificationData;
+                    nd2.header = longheader;
+                    addNotification(buildNotification(nd2),'specialpage');
                 }
+
+                addNotification(buildNotification(notificationData));
                 
             }
             updateCounts(total, unread, (total - unread));
         }
     });
+
+    var markRead = function(id){
+        alert("Eventually, this will mark id "+id+" as read.");
+    }
+
+    /***
+     *    ███████╗██████╗ ███████╗ ██████╗██╗ █████╗ ██╗         ██████╗  █████╗  ██████╗ ███████╗
+     *    ██╔════╝██╔══██╗██╔════╝██╔════╝██║██╔══██╗██║         ██╔══██╗██╔══██╗██╔════╝ ██╔════╝
+     *    ███████╗██████╔╝█████╗  ██║     ██║███████║██║         ██████╔╝███████║██║  ███╗█████╗  
+     *    ╚════██║██╔═══╝ ██╔══╝  ██║     ██║██╔══██║██║         ██╔═══╝ ██╔══██║██║   ██║██╔══╝  
+     *    ███████║██║     ███████╗╚██████╗██║██║  ██║███████╗    ██║     ██║  ██║╚██████╔╝███████╗
+     *    ╚══════╝╚═╝     ╚══════╝ ╚═════╝╚═╝╚═╝  ╚═╝╚══════╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+     *    The below code is only focused on the special pages, and will only get executed if it is 
+     *    detected that we are on a special page.
+     * 
+     *    This is not the *only* code that effects special pages -- its just code that only effects special pages.                                                                                        
+     */
+    if (notificationPage) {
+
+        // Mark All as Read button
+        $("#reverb-mark-all-read").click(function(){
+            alert("Not implamented yet.");
+        });
+
+
+        $(document).on('click', ".reverb-npnr-unread", function(){
+            var nId = $(this).closest(".reverb-npn-row").data("id");
+            markRead(nId);
+        })
+
+
+    }
 
     /*
         Developer: 
