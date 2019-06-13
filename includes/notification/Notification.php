@@ -100,6 +100,8 @@ class Notification {
 	 * @return string Message
 	 */
 	public function getHeader(bool $long = false): Message {
+		$parameters = $this->getMessageParameters();
+		unset($parameters['user_note']);
 		return wfMessage(
 			($long ? 'long' : 'short') . '-header-' . $this->getType()
 		)->params($this->getMessageParameters());
@@ -127,6 +129,8 @@ class Notification {
 		foreach ($json as $parameter) {
 			$parameters[$parameter[0]] = $parameter[1];
 		}
+		ksort($parameters, SORT_NATURAL);
+
 		return $parameters;
 	}
 
@@ -155,6 +159,15 @@ class Notification {
 	 */
 	public function getDismissedAt(): int {
 		return $this->resource->dismissed_at;
+	}
+
+	/**
+	 * Get the canonical URL destination for this notification.
+	 *
+	 * @return string URL(May be empty)
+	 */
+	public function getCanonicalUrl(): string {
+		return (string)$this->resource->url;
 	}
 
 	/**
@@ -344,7 +357,8 @@ class Notification {
 			'created_at' => $this->getCreatedAt(),
 			'dismissed_at' => $this->getDismissedAt(),
 			'origin_url' => $this->getOriginUrl(),
-			'agent_url' => $this->getAgentUrl()
+			'agent_url' => $this->getAgentUrl(),
+			'canonical_url' => $this->getCanonicalUrl()
 		];
 	}
 }
