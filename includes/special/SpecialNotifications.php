@@ -36,7 +36,7 @@ class SpecialNotifications extends SpecialPage {
 	 */
 	public function execute($subpage) {
 		$twig = MediaWikiServices::getInstance()->getService( 'TwiggyService' );
-		$template = $twig->load('@Reverb/notifications.twig');
+		$template = $twig->load('@Reverb/special_notifications.twig');
 
 		$config = MediaWikiServices::getInstance()->getMainConfig();
 		$types = $config->get("ReverbNotifications");

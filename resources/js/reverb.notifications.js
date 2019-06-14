@@ -1,5 +1,5 @@
-(function(){
 
+(function(){ $.when( mw.loader.using(['mediawiki.api', 'mediawiki.jqueryMsg']), $.ready).then(function() {
     /***
      *    ██████╗ ███████╗██╗   ██╗███████╗██████╗ ██████╗ 
      *    ██╔══██╗██╔════╝██║   ██║██╔════╝██╔══██╗██╔══██╗
@@ -10,10 +10,13 @@
      *           We out here using jQuery in 2019.                              
      */
 
+    var api = new mw.Api();
+    
     window.log = function(...args){
         mw.log('[REVERB]', ...args);
     }
     log('Display Logic Loaded.');
+
 
     /**
      *  Identify user box to place notifications directly next to it.
@@ -39,47 +42,7 @@
         window.location.pathname == "/index.php" && window.location.search.indexOf('title=Special:Notifications') !== -1) {
         notificationPage = true;
     }
-
-    /**
-     *  Inject the new Reverb notifications HTML.
-     */
-    log('Injecting HTML.');
    
-    var notificationButton = $(`
-        <div class="netbar-box right reverb-notifications">
-            <i class="fa fa-envelope"></i> <span class="reverb-total-notifications"></span>
-        </div>
-    `);
-
-    var globalNotifications = `<div class="reverb-npn-row reverb-npn-row-global">
-        <div class="reverb-npnr-left">
-            <img src="/extensions/Reverb/resources/icons/global.svg" class="reverb-icon reverb-icon-global">
-        </div>
-        <div class="reverb-npnr-right">
-            <div class="reverb-npnr-header">
-                3 unread notifications from other wikis. <i class="fa fa-chevron-down"></i>
-                <span class="reverb-npnr-unread reverb-npnr-unread-global"></span>
-            </div>
-        </div>
-    </div>`;
-
-    // clear it. We dont have support for this yet.
-    globalNotifications = "";
-    
-    var notificationPanel = $(`
-        <div class="reverb-np">
-            <div class="reverb-np-header">
-                <span class="reverb-nph-right"><a href="/Special:Notifications">View All <i class="fa fa-arrow-right"></i></a></span>
-                <span class="reverb-nph-notifications">Notifications (<span class="reverb-total-notifications">0</span>)</span>
-                <span class="reverb-nph-preferences"><i class="fa fa-cog"></i></span>
-            </div>
-            ${globalNotifications}
-            <div class="reverb-npn">
-                <div class="reverb-np-no-unread">No Unread Notifications</div>
-            </div>
-        </div>
-    `);
-    
     /**
      * Setup "control functions"
      */
@@ -89,26 +52,6 @@
         $("#reverb-ru-unread").html( mw.msg('special-button-unread',totalUnread) );
         $(".reverb-total-notifications").html(totalUnread);
     };
-
-    var buildNotification = function(d) {
-        d.read = d.read ? "read" : "unread";
-        d.created = moment(d.created).fromNow();
-        return $(`
-            <div class="reverb-npn-row" data-id="${d.id}">
-                <div class="reverb-npnr-left">
-                    <img src="/extensions/Reverb/resources/icons/${d.icon}" class="reverb-icon" />
-                </div>
-                <div class="reverb-npnr-right">
-                    <div class="reverb-npnr-header">${d.header}</div>
-                    <div class="reverb-npnr-body">${d.body}</div>
-                    <div class="reverb-npnr-bottom">
-                        <span class="reverb-npnr-${d.read}"></span>
-                        ${d.created}
-                    </div>
-                </div>
-            </div>
-        `);
-    }
 
     var addNotification = function(notification, target) {
         // hide if we are adding a notification
@@ -129,70 +72,105 @@
      * Inject fake notification data until we have real data.
      */
 
-    var api = new mw.Api();
-    api.get({action:'notifications', do:'getNotificationsForUser', format:'json'})
-    .done(function(data) {
-        if (data.notifications && data.notifications.length) {
-
-            // If we have data, lets injust the notification panel
-            // Dont show notification panel at all on API failure. 
-            notificationPanel.appendTo('body');
-            notificationButton.insertBefore(userBox);
-            notificationButton.on('click', function(){
-                notificationPanel.toggle();
-            });    
+    var initPanel = function() {
+        log('Injecting HTML.');
+        var notificationButton = buildNotificationButton();
+        var notificationPanel = buildNotificationPanel({globalNotifications: false});
+        notificationPanel.appendTo('body');
+        notificationButton.insertBefore(userBox);
+        notificationButton.on('click', function(){
+            notificationPanel.toggle();
+        });     
         
-            // build content for panel
-            var unread = 0;
-            var total = data.notifications.length;
-     
-            for (var x in data.notifications) {
-                var n = data.notifications[x];
-
-                // Setup header
-                var header = n.header_short ? n.header_short : false;
-                var longheader = n.header_long ? n.header_long : (n.header_short ? n.header_short : false);
-
-                // Setup message body 
-                var message = n.user_note ? n.user_note : "";
-
-                // Try Notification, then Subcategory, then Category...
-                var icon = (n.icons.notification && n.icons.notificaton !== ".svg") ? n.icons.notification : ( (n.icons.subcategory && n.icons.subcategory !== ".svg" ) ? n.icons.subcategory : ((n.icons.category && n.icons.category !== ".svg") ? n.icons.category : false));
-                icon = icon ? icon : "feedback.svg"; // set a default fallback icon
-
-                // Convert for javascript
-                var created = n.created_at * 1000;
-
-                // Handle Read Count -- Not available from API yet
-                var read = n.dismissed_at ? true : false;
-                if (!read) { unread++; } 
-
-                var notificationData = {
-                    id: n.id,
-                    header: header,
-                    body: message,
-                    read: read,
-                    icon: icon,
-                    created: created
-                };
-                
-                // If we are on a notification page, duplicate the data and change to long header
-                if (notificationPage) {
-                    var nd2 = notificationData;
-                    nd2.header = longheader;
-                    addNotification(buildNotification(nd2),'specialpage');
+        
+        loadNotifications(0,50,function(data){
+            if (data.notifications && data.notifications.length) {
+                var notifications = buildNotificationsFromData(data,true);
+                for (var x in notifications) {
+                    addNotification(notifications[x]);
                 }
-
-                addNotification(buildNotification(notificationData));
-                
             }
-            updateCounts(total, unread, (total - unread));
-        }
-    });
+        });
+    }
 
+    var loadNotifications = function(page, perpage, cb) {
+        if (!page) page = 0;
+        if (!perpage) perpage = 50;
+
+        api.get({action:'notifications', do:'getNotificationsForUser', page: page, itemsPerPage: perpage, format:'json'})
+        .done(function(data) {
+            if (data.notifications && data.notifications.length) {
+                cb(data)
+            }
+        });
+    }
+
+
+    var buildNotificationsFromData = function(data, compact) {
+        // build content for panel
+        var unread = 0;
+        var total = data.notifications.length;
+        var notifications = [];
+        for (var x in data.notifications) {
+            var n = data.notifications[x];
+
+            // Setup header
+            var header = n.header_short ? n.header_short : false;
+            var longheader = n.header_long ? n.header_long : (n.header_short ? n.header_short : false);
+
+            // Setup message body 
+            var message = n.user_note ? n.user_note : "";
+
+            // Try Notification, then Subcategory, then Category...
+            var icon = (n.icons.notification && n.icons.notificaton !== ".svg") ? n.icons.notification : ( (n.icons.subcategory && n.icons.subcategory !== ".svg" ) ? n.icons.subcategory : ((n.icons.category && n.icons.category !== ".svg") ? n.icons.category : false));
+            icon = icon ? icon : "feedback.svg"; // set a default fallback icon
+
+            // Convert for javascript
+            var created_at = n.created_at * 1000;
+            var created = moment(created_at).fromNow();
+            
+            // Handle Read Count -- Not available from API yet
+            var wasRead = n.dismissed_at ? true : false;
+            if (!wasRead) { unread++; } 
+            var read = wasRead ? "read" : "unread";
+
+            var notificationData = {
+                id: n.id,
+                header: compact ? header : longheader,
+                body: message,
+                read: read,
+                icon: icon,
+                created: created
+            };
+
+            notifications.push(buildNotification(notificationData));
+        }
+        // @TODO maybe move this somewhere else?
+        updateCounts(total, unread, (total - unread));
+        return notifications;
+    }
+
+   
+    /***
+     *    ███████╗██╗   ██╗███████╗███╗   ██╗████████╗    ██╗  ██╗ █████╗ ███╗   ██╗██████╗ ██╗     ██╗███╗   ██╗ ██████╗ 
+     *    ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝    ██║  ██║██╔══██╗████╗  ██║██╔══██╗██║     ██║████╗  ██║██╔════╝ 
+     *    █████╗  ██║   ██║█████╗  ██╔██╗ ██║   ██║       ███████║███████║██╔██╗ ██║██║  ██║██║     ██║██╔██╗ ██║██║  ███╗
+     *    ██╔══╝  ╚██╗ ██╔╝██╔══╝  ██║╚██╗██║   ██║       ██╔══██║██╔══██║██║╚██╗██║██║  ██║██║     ██║██║╚██╗██║██║   ██║
+     *    ███████╗ ╚████╔╝ ███████╗██║ ╚████║   ██║       ██║  ██║██║  ██║██║ ╚████║██████╔╝███████╗██║██║ ╚████║╚██████╔╝
+     *    ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝       ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ 
+     *    Like we could actually handle anything. What a joke.
+     *                                                                                                                    
+     */
+
+    // Handle marking events as read!
     var markRead = function(id){
         alert("Eventually, this will mark id "+id+" as read.");
     }
+
+    $(document).on('click', ".reverb-npnr-unread", function(){
+        var nId = $(this).closest(".reverb-npn-row").data("id");
+        markRead(nId);
+    })
 
     /***
      *    ███████╗██████╗ ███████╗ ██████╗██╗ █████╗ ██╗         ██████╗  █████╗  ██████╗ ███████╗
@@ -214,14 +192,80 @@
         });
 
 
-        $(document).on('click', ".reverb-npnr-unread", function(){
-            var nId = $(this).closest(".reverb-npn-row").data("id");
-            markRead(nId);
-        })
-
+        loadNotifications(0,5,function(data){
+            if (data.notifications && data.notifications.length) {
+                console.log(data.notifications);
+                var notifications = buildNotificationsFromData(data,false);
+                for (var x in notifications) {
+                    addNotification(notifications[x],'specialpage');
+                }
+            }
+        });
 
     }
 
+    /***
+     *    ████████╗███████╗███╗   ███╗██████╗ ██╗      █████╗ ████████╗███████╗███████╗
+     *    ╚══██╔══╝██╔════╝████╗ ████║██╔══██╗██║     ██╔══██╗╚══██╔══╝██╔════╝██╔════╝
+     *       ██║   █████╗  ██╔████╔██║██████╔╝██║     ███████║   ██║   █████╗  ███████╗
+     *       ██║   ██╔══╝  ██║╚██╔╝██║██╔═══╝ ██║     ██╔══██║   ██║   ██╔══╝  ╚════██║
+     *       ██║   ███████╗██║ ╚═╝ ██║██║     ███████╗██║  ██║   ██║   ███████╗███████║
+     *       ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝
+     *  Imagine we are using template engines instead of just writing html into javascript. 
+     *                                                                                 
+     */
+    var buildNotification = function(d) {
+        var html = ''
+        + '<div class="reverb-npn-row" data-id="'+d.id+'">'
+        + '    <div class="reverb-npnr-left">'
+        + '        <img src="/extensions/Reverb/resources/icons/'+d.icon+'" class="reverb-icon" />'
+        + '    </div>'
+        + '    <div class="reverb-npnr-right">'
+        + '        <div class="reverb-npnr-header">'+d.header+'</div>'
+        + '        <div class="reverb-npnr-body">'+d.body+'</div>'
+        + '        <div class="reverb-npnr-bottom">'
+        + '            <span class="reverb-npnr-'+d.read+'"></span>'
+        + '            ' + d.created
+        + '        </div>'
+        + '    </div>'
+        + '</div>';
+        return $(html);
+    }
+
+    var buildNotificationPanel = function(data) {
+        // lots of i18n stuff to add in here...
+        var html = '<div class="reverb-np">'
+                 + '    <div class="reverb-np-header">'
+                 + '        <span class="reverb-nph-right"><a href="/Special:Notifications">View All <i class="fa fa-arrow-right"></i></a></span>'
+                 + '        <span class="reverb-nph-notifications">Notifications (<span class="reverb-total-notifications">0</span>)</span>'
+                 + '        <span class="reverb-nph-preferences"><i class="fa fa-cog"></i></span>'
+                 + '    </div>';
+            if (data.globalNotifications) {
+                html += '<div class="reverb-npn-row reverb-npn-row-global">'
+                      + '   <div class="reverb-npnr-left">'
+                      + '       <img src="/extensions/Reverb/resources/icons/global.svg" class="reverb-icon reverb-icon-global">'
+                      + '   </div>'
+                      + '   <div class="reverb-npnr-right">'
+                      + '       <div class="reverb-npnr-header">'
+                      + '           3 unread notifications from other wikis. <i class="fa fa-chevron-down"></i>'
+                      + '           <span class="reverb-npnr-unread reverb-npnr-unread-global"></span>'
+                      + '       </div>'
+                      + '   </div>'
+                      + '</div>';
+            }
+            html +='    <div class="reverb-npn">'
+                 + '        <div class="reverb-np-no-unread">No Unread Notifications</div>'
+                 + '    </div>'
+                 + '</div>'
+        return $(html);
+    }
+
+    var buildNotificationButton = function(data) {
+        var html = '<div class="netbar-box right reverb-notifications">'
+                 + '    <i class="fa fa-envelope"></i> <span class="reverb-total-notifications"></span>'
+                 + '</div>'
+        return $(html);
+    }
     /*
         Developer: 
             Let's replace echo with a nice
@@ -255,4 +299,7 @@
         ⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
         ⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿
     */
-})();
+
+   initPanel();
+
+}); })();

@@ -53,7 +53,8 @@
 		},
 		"ext.reverb.notifications.scripts": {
 			"dependencies": [
-				"mediawiki.api"
+				"mediawiki.api",
+				"ext.twiggy"
 			],
 			"targets": [
 				"desktop",
