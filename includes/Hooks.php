@@ -194,7 +194,7 @@ class Hooks {
 	/**
 	 * Handler for UserGroupsChanged hook.
 	 *
-	 * @param User        $user      user that was changed
+	 * @param User        $target    user that was changed
 	 * @param array       $add       strings corresponding to groups added
 	 * @param array       $remove    strings corresponding to groups removed
 	 * @param User|bool   $performer
@@ -284,8 +284,15 @@ class Hooks {
 					'message' => [
 						[
 							'user_note',
-							(count($reallyAdded) ? wfMessage('user-note-user-account-groups-changed-added', implode(', ', $reallyAdded))->parse() . (count($remove) ? "\n" : '') : '') .
-							(count($remove) ? wfMessage('user-note-user-account-groups-changed-removed', implode(', ', $remove))->parse() : '')
+							(count($reallyAdded) ? wfMessage(
+								'user-note-user-account-groups-changed-added',
+								implode(', ', $reallyAdded)
+							)->parse() .
+							(count($remove) ? "\n" : '') : '') .
+							(count($remove) ? wfMessage(
+								'user-note-user-account-groups-changed-removed',
+								implode(', ', $remove)
+							)->parse() : '')
 						],
 						[
 							1,
@@ -346,6 +353,7 @@ class Hooks {
 					continue;
 				}
 
+				// @TODO: Fix note, but do we desire this note system?  This breaks localization.
 				$broadcast = NotificationBroadcast::newSingle(
 					'user-interest-page-linked',
 					$agent,
@@ -355,7 +363,12 @@ class Hooks {
 						'message' => [
 							[
 								'user_note',
-								wfMessage('user-note-user-interest-page-linked', $linksUpdate->getTitle()->getFullText(), $title->getFullText(), $agent->getName())->parse()
+								wfMessage(
+									'user-note-user-interest-page-linked',
+									$linksUpdate->getTitle()->getFullText(),
+									$title->getFullText(),
+									$agent->getName()
+								)->parse()
 							],
 							[
 								1,
@@ -399,7 +412,7 @@ class Hooks {
 
 		// Skip anonymous users and null edits.
 		if ($notifyUser && $notifyUser->getId() && !$oldRevision->getContent()->equals($newRevision->getContent())) {
-			// @TODO: Fix user note and count reverted revisions.
+			// @TODO: Fix user note and count reverted revisions.  Echo defaulted to plural/2 for rollback.
 			$title = $wikiPage->getTitle();
 			$broadcast = NotificationBroadcast::newSingle(
 				'article-edit-revert',
@@ -422,7 +435,7 @@ class Hooks {
 						],
 						[
 							3,
-							1
+							2
 						],
 						[
 							4,

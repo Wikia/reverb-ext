@@ -103,9 +103,11 @@ class Notification {
 		$parameters = $this->getMessageParameters();
 		unset($parameters['user_note']);
 
-		// Pad parameters that start at not 1.  This fixes issues with legacy Echo language strings missing parameters at the beginning of the string.
+		// Pad parameters that start at not 1.
+		// This fixes issues with legacy Echo language strings missing parameters at the beginning of the string.
 		if (count($parameters) > 0) {
-			for ($i = 1; $i < max(array_keys($parameters)); $i++) {
+			$max = max(array_keys($parameters));
+			for ($i = 1; $i < $max; $i++) {
 				if (!isset($parameters[$i])) {
 					$parameters[$i] = null;
 				}
