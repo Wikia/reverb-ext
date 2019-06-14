@@ -414,7 +414,7 @@ class Hooks {
 						],
 						[
 							1,
-							$user->getName()
+							$notifyUser->getName()
 						],
 						[
 							2,
@@ -423,6 +423,10 @@ class Hooks {
 						[
 							3,
 							1
+						],
+						[
+							4,
+							$agent->getName()
 						]
 					]
 				]

@@ -50,5 +50,6 @@
     "short-header-user-interest-welcome": "{{GENDER:$2|Welcome}} to {{SITENAME}}, $1!",
     "long-header-user-interest-welcome": "{{GENDER:$2|Welcome}} to {{SITENAME}}, $1! We're glad {{GENDER:$2|you're}} here.",
     "short-header-article-edit-revert": "Your {{PLURAL:$3|edit on <strong>$2<\/strong> was|edits on <strong>$2<\/strong> were}} {{GENDER:$1|reverted}}.",
-    "long-header-article-edit-revert": "Your {{PLURAL:$3|edit on <strong>$2<\/strong> was|edits on <strong>$2<\/strong> were}} {{GENDER:$1|reverted}}."
+    "long-header-article-edit-revert": "Your {{PLURAL:$3|edit on <strong>$2<\/strong> was|edits on <strong>$2<\/strong> were}} {{GENDER:$1|reverted}}.",
+    "user-note-article-edit-revert": "$4 removed {{PLURAL:$3|edit|edits}} on the article <strong>$2<\/strong>."
 }
