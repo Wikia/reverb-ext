@@ -119,7 +119,7 @@ class Hooks {
 			if ($undidRevision && $undidRevision->getTitle()->equals($title)) {
 				$notifyUser = $undidRevision->getRevisionRecord()->getUser();
 				if ($notifyUser && $notifyUser->getId()) {
-					// @TODO: Fix user note.
+					// @TODO: Fix user note and count reverted revisions.
 					$broadcast = NotificationBroadcast::newSingle(
 						'article-edit-revert',
 						$user,
@@ -275,7 +275,6 @@ class Hooks {
 		}
 
 		if ($reallyAdded || $remove) {
-			// @TODO: Create 'user-account-groups-changed' Notification
 			$broadcast = NotificationBroadcast::newSingle(
 				'user-account-groups-changed',
 				$performer,
@@ -329,16 +328,14 @@ class Hooks {
 		// 3. non-transcluding pages &&
 		// 4. non-redirect pages
 		if ($table !== 'pagelinks'
-		|| !MWNamespace::isContent($linksUpdate->getTitle()->getNamespace())
-		|| !$linksUpdate->mRecursive
-		|| $linksUpdate->getTitle()->isRedirect()
+			|| !MWNamespace::isContent($linksUpdate->getTitle()->getNamespace())
+			|| !$linksUpdate->mRecursive
+			|| $linksUpdate->getTitle()->isRedirect()
 		) {
 			return true;
 		}
 
-		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-
-		$user = $linksUpdate->getTriggeringUser();
+		$agent = $linksUpdate->getTriggeringUser();
 
 		$revid = $linksUpdate->getRevision() ? $linksUpdate->getRevision()->getId() : null;
 
@@ -349,8 +346,30 @@ class Hooks {
 					continue;
 				}
 
-				$linkFromPageId = $linksUpdate->getTitle()->getArticleId();
 				// @TODO: Create 'user-interest-page-linked' Notification
+				$broadcast = NotificationBroadcast::newSingle(
+					'user-interest-page-linked',
+					$agent,
+					$notifyUser,
+					[
+						'url' => $title->getFullURL(),
+						'message' => [
+							[
+								'user_note',
+								wfMessage('user-note-user-interest-page-linked', $linksUpdate->getTitle()->getFullText(), $title->getFullText(), $agent->getName())->parse()
+							],
+							[
+								1,
+								$linksUpdate->getTitle()->getFullText() // From
+							],
+							[
+								2,
+								$title->getFullText() // To
+							]
+						]
+					]
+				);
+				$broadcast->transmit();
 			}
 		}
 
@@ -375,14 +394,41 @@ class Hooks {
 		Revision $newRevision,
 		Revision $oldRevision
 	): bool {
-		$victimId = $oldRevision->getUser();
+		$notifyUser = $oldRevision->getRevisionRecord()->getUser();
 		$latestRevision = $wikiPage->getRevision();
 		self::$lastRevertedRevision = $latestRevision;
 
 		// Skip anonymous users and null edits.
-		if ($victimId && !$oldRevision->getContent()->equals($newRevision->getContent())) {
-			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-			// @TODO: Create 'article-edit-revert' Notification
+		if ($notifyUser && $notifyUser->getId() && !$oldRevision->getContent()->equals($newRevision->getContent())) {
+			// @TODO: Fix user note and count reverted revisions.
+			$title = $wikiPage->getTitle();
+			$broadcast = NotificationBroadcast::newSingle(
+				'article-edit-revert',
+				$agent,
+				$notifyUser,
+				[
+					'url' => $title->getFullURL(),
+					'message' => [
+						[
+							'user_note',
+							''
+						],
+						[
+							1,
+							$user->getName()
+						],
+						[
+							2,
+							$title->getFullText()
+						],
+						[
+							3,
+							1
+						]
+					]
+				]
+			);
+			$broadcast->transmit();
 		}
 
 		return true;
