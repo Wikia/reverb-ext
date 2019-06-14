@@ -267,7 +267,7 @@ class Hooks {
 						[
 							3,
 							count($expiryChanged)
-								]
+						]
 					]
 				]
 			);
@@ -284,7 +284,7 @@ class Hooks {
 					'message' => [
 						[
 							'user_note',
-							(count($reallyAdded) ? wfMessage('user-note-user-account-groups-changed-added', implode(', ', $reallyAdded))->parse().(count($remove) ? "\n" : '') : '').
+							(count($reallyAdded) ? wfMessage('user-note-user-account-groups-changed-added', implode(', ', $reallyAdded))->parse() . (count($remove) ? "\n" : '') : '') .
 							(count($remove) ? wfMessage('user-note-user-account-groups-changed-removed', implode(', ', $remove))->parse() : '')
 						],
 						[
@@ -346,7 +346,6 @@ class Hooks {
 					continue;
 				}
 
-				// @TODO: Create 'user-interest-page-linked' Notification
 				$broadcast = NotificationBroadcast::newSingle(
 					'user-interest-page-linked',
 					$agent,
