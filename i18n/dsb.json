@@ -1,9 +1,0 @@
-{
-    "@metadata": {
-        "authors": [
-            "Michawiki"
-        ]
-    },
-    "short-header-article-edit-revert": "$1 jo {{PLURAL:$4|zm\u011bnu na $3|zm\u011bnje na $3|zm\u011bny na $3}} {{GENDER:$2|anul\u011browa\u0142|anul\u011browa\u0142a}}.",
-    "long-header-article-edit-revert": "$1 jo {{PLURAL:$4|zm\u011bnu na $3|zm\u011bnje na $3|zm\u011bny na $3}} {{GENDER:$2|anul\u011browa\u0142|anul\u011browa\u0142a}}."
-}

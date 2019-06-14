@@ -1,9 +1,0 @@
-{
-    "@metadata": {
-        "authors": [
-            "Lam-ang"
-        ]
-    },
-    "short-header-article-edit-revert": "{{PLURAL:$4|Ti inurnosmo iti <strong>$3<\/strong> ket|Dagiti inurnosmo iti <strong>$3<\/strong> ket}} {{GENDER:$2|naisubli}}.",
-    "long-header-article-edit-revert": "{{PLURAL:$4|Ti inurnosmo iti <strong>$3<\/strong> ket|Dagiti inurnosmo iti <strong>$3<\/strong> ket}} {{GENDER:$2|naisubli}}."
-}

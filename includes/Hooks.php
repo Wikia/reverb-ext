@@ -23,6 +23,7 @@ use Revision;
 use SkinTemplate;
 use SpecialPage;
 use Status;
+use Title;
 use User;
 use WikiPage;
 
@@ -131,15 +132,15 @@ class Hooks {
 									''
 								],
 								[
-									2,
+									1,
 									$user->getName()
 								],
 								[
-									3,
+									2,
 									$title->getFullText()
 								],
 								[
-									4,
+									3,
 									1
 								]
 							]
@@ -165,8 +166,7 @@ class Hooks {
 	 */
 	public static function onLocalUserCreated(User $user, bool $autocreated): bool {
 		if (!$autocreated) {
-			// @TODO: Create 'user-interest-welcome' Notification
-
+			// @TODO: Fix user note.
 			$broadcast = NotificationBroadcast::newSingle(
 				'user-interest-welcome',
 				$user,
@@ -180,10 +180,6 @@ class Hooks {
 						],
 						[
 							1,
-							$user->getName()
-						],
-						[
-							2,
 							$user->getName()
 						]
 					]
@@ -211,7 +207,7 @@ class Hooks {
 	 * @return boolean
 	 */
 	public static function onUserGroupsChanged(
-		$user,
+		$target,
 		$add,
 		$remove,
 		$performer,
@@ -224,12 +220,12 @@ class Hooks {
 			return true;
 		}
 
-		if (!$user instanceof User) {
+		if (!$target instanceof User) {
 			// TODO: Support UserRightsProxy
 			return true;
 		}
 
-		if ($user->equals($performer)) {
+		if ($target->equals($performer)) {
 			// Don't notify for self changes.
 			return true;
 		}
@@ -246,12 +242,60 @@ class Hooks {
 			}
 		}
 
+		$url = Title::newFromText($target->getName(), NS_USER)->getFullURL();
 		if ($expiryChanged) {
-			// @TODO: Create 'user-account-groups-expiration-change' Notification
+			// @TODO: Fix user note.
+			$broadcast = NotificationBroadcast::newSingle(
+				'user-account-groups-expiration-change',
+				$performer,
+				$target,
+				[
+					'url' => $url,
+					'message' => [
+						[
+							'user_note',
+							''
+						],
+						[
+							1,
+							$target->getName()
+						],
+						[
+							2,
+							implode(', ', $expiryChanged)
+						],
+						[
+							3,
+							count($expiryChanged)
+								]
+					]
+				]
+			);
+			$broadcast->transmit();
 		}
 
 		if ($reallyAdded || $remove) {
 			// @TODO: Create 'user-account-groups-changed' Notification
+			$broadcast = NotificationBroadcast::newSingle(
+				'user-account-groups-changed',
+				$performer,
+				$target,
+				[
+					'url' => $url,
+					'message' => [
+						[
+							'user_note',
+							(count($reallyAdded) ? wfMessage('user-note-user-account-groups-changed-added', implode(', ', $reallyAdded))->parse().(count($remove) ? "\n" : '') : '').
+							(count($remove) ? wfMessage('user-note-user-account-groups-changed-removed', implode(', ', $remove))->parse() : '')
+						],
+						[
+							1,
+							$target->getName()
+						]
+					]
+				]
+			);
+			$broadcast->transmit();
 		}
 
 		return true;
