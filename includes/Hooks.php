@@ -358,8 +358,8 @@ class Hooks {
 
 		foreach ($insertions as $page) {
 			if (MWNamespace::isContent($page['pl_namespace'])) {
-				$title = Title::makeTitle($page['pl_namespace'], $page['pl_title']);
-				if ($title->isRedirect()) {
+				$linkToTitle = Title::makeTitle($page['pl_namespace'], $page['pl_title']);
+				if ($linkToTitle->isRedirect()) {
 					continue;
 				}
 
@@ -369,24 +369,24 @@ class Hooks {
 					$agent,
 					$notifyUser,
 					[
-						'url' => $title->getFullURL(),
+						'url' => $linkToTitle->getFullURL(),
 						'message' => [
 							[
 								'user_note',
 								wfMessage(
 									'user-note-user-interest-page-linked',
 									$linksUpdate->getTitle()->getFullText(),
-									$title->getFullText(),
+									$linkToTitle->getFullText(),
 									$agent->getName()
 								)->parse()
 							],
 							[
 								1,
-								$linksUpdate->getTitle()->getFullText() // From
+								$linksUpdate->getTitle()->getFullText()
 							],
 							[
 								2,
-								$title->getFullText() // To
+								$linkToTitle->getFullText()
 							]
 						]
 					]
