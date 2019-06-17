@@ -11,18 +11,15 @@
      */
 
     var api = new mw.Api();
-    
     window.log = function(...args){
         mw.log('[REVERB]', ...args);
     }
     log('Display Logic Loaded.');
 
-
     /**
      *  Identify user box to place notifications directly next to it.
      *  Also remove any echo notification boxes that may exist.
      */
-
     var userBox;
     $('.netbar-box').each(function(){
         nbx = $(this);
@@ -82,7 +79,6 @@
             notificationPanel.toggle();
         });     
         
-        
         loadNotifications(0,50,function(data){
             if (data.notifications && data.notifications.length) {
                 var notifications = buildNotificationsFromData(data,true);
@@ -104,7 +100,6 @@
             }
         });
     }
-
 
     var buildNotificationsFromData = function(data, compact) {
         // build content for panel
@@ -184,6 +179,7 @@
      * 
      *    This is not the *only* code that effects special pages -- its just code that only effects special pages.                                                                                        
      */
+
     if (notificationPage) {
 
         // Mark All as Read button
@@ -214,6 +210,7 @@
      *  Imagine we are using template engines instead of just writing html into javascript. 
      *                                                                                 
      */
+
     var buildNotification = function(d) {
         var html = ''
         + '<div class="reverb-npn-row" data-id="'+d.id+'">'
@@ -221,9 +218,11 @@
         + '        <img src="/extensions/Reverb/resources/icons/'+d.icon+'" class="reverb-icon" />'
         + '    </div>'
         + '    <div class="reverb-npnr-right">'
-        + '        <div class="reverb-npnr-header">'+d.header+'</div>'
-        + '        <div class="reverb-npnr-body">'+d.body+'</div>'
-        + '        <div class="reverb-npnr-bottom">'
+        + '        <div class="reverb-npnr-header">'+d.header+'</div>';
+        if (d.body && d.body.length) {
+           html += '<div class="reverb-npnr-body">'+d.body+'</div>'
+        }
+        html += '      <div class="reverb-npnr-bottom">'
         + '            <span class="reverb-npnr-'+d.read+'"></span>'
         + '            ' + d.created
         + '        </div>'
@@ -266,6 +265,7 @@
                  + '</div>'
         return $(html);
     }
+
     /*
         Developer: 
             Let's replace echo with a nice
