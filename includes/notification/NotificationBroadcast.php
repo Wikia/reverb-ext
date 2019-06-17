@@ -16,6 +16,7 @@ use CentralIdLookup;
 use Hydrawiki\Reverb\Client\V1\Resources\NotificationBroadcast as NotificationBroadcastResource;
 use Hydrawiki\Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful;
 use MediaWiki\MediaWikiServices;
+use MWException;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\SiteIdentifier;
 use Reverb\Identifier\UserIdentifier;
