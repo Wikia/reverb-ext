@@ -349,6 +349,17 @@ class Notification {
 	}
 
 	/**
+	 * Get the importance of this notification to assist with sorting.
+	 *
+	 * @return integer Importance
+	 */
+	public function getImportance(): int {
+		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
+		$reverbNotifications = $mainConfig->get('ReverbNotifications');
+		return intval($reverbNotifications[$this->getType()]['importance']);
+	}
+
+	/**
 	 * Get an array representation of this object suitable for APIs or otherwise.
 	 *
 	 * @return array
@@ -371,7 +382,8 @@ class Notification {
 			'dismissed_at' => $this->getDismissedAt(),
 			'origin_url' => $this->getOriginUrl(),
 			'agent_url' => $this->getAgentUrl(),
-			'canonical_url' => $this->getCanonicalUrl()
+			'canonical_url' => $this->getCanonicalUrl(),
+			'importance' => $this->getImportance()
 		];
 	}
 }

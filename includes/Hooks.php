@@ -108,7 +108,9 @@ class Hooks {
 							]
 						]
 					);
-					$broadcast->transmit();
+					if ($broadcast) {
+						$broadcast->transmit();
+					}
 				}
 			}
 		}
@@ -146,7 +148,9 @@ class Hooks {
 							]
 						]
 					);
-					$broadcast->transmit();
+					if ($broadcast) {
+						$broadcast->transmit();
+					}
 				}
 			}
 		}
@@ -185,7 +189,9 @@ class Hooks {
 					]
 				]
 			);
-			$broadcast->transmit();
+			if ($broadcast) {
+				$broadcast->transmit();
+			}
 		}
 
 		return true;
@@ -271,7 +277,9 @@ class Hooks {
 					]
 				]
 			);
-			$broadcast->transmit();
+			if ($broadcast) {
+				$broadcast->transmit();
+			}
 		}
 
 		if ($reallyAdded || $remove) {
@@ -301,7 +309,9 @@ class Hooks {
 					]
 				]
 			);
-			$broadcast->transmit();
+			if ($broadcast) {
+				$broadcast->transmit();
+			}
 		}
 
 		return true;
@@ -381,7 +391,9 @@ class Hooks {
 						]
 					]
 				);
-				$broadcast->transmit();
+				if ($broadcast) {
+					$broadcast->transmit();
+				}
 			}
 		}
 
@@ -444,7 +456,9 @@ class Hooks {
 					]
 				]
 			);
-			$broadcast->transmit();
+			if ($broadcast) {
+				$broadcast->transmit();
+			}
 		}
 
 		return true;

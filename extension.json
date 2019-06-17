@@ -85,25 +85,25 @@
 		"ReverbNotifications": {
 			"value": {
 				"user-interest-welcome": {
-					"importance": "0"
+					"importance": 0
 				},
 				"user-interest-talk-page-edit": {
-					"importance": "9"
+					"importance": 9
 				},
 				"user-interest-page-linked": {
-					"importance": "1"
+					"importance": 1
 				},
 				"article-edit-revert": {
-					"importance": "8"
+					"importance": 8
 				},
 				"article-edit-thanks": {
-					"importance": "0"
+					"importance": 0
 				},
 				"user-account-groups-expiration-change": {
-					"importance": "9"
+					"importance": 9
 				},
 				"user-account-groups-changed": {
-					"importance": "9"
+					"importance": 9
 				}
 			},
 			"merge_strategy": "array_plus_2d"
