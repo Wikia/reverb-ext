@@ -102,9 +102,22 @@ class Notification {
 	public function getHeader(bool $long = false): Message {
 		$parameters = $this->getMessageParameters();
 		unset($parameters['user_note']);
+
+		// Pad parameters that start at not 1.
+		// This fixes issues with legacy Echo language strings missing parameters at the beginning of the string.
+		if (count($parameters) > 0) {
+			$max = max(array_keys($parameters));
+			for ($i = 1; $i < $max; $i++) {
+				if (!isset($parameters[$i])) {
+					$parameters[$i] = null;
+				}
+			}
+			ksort($parameters);
+		}
+
 		return wfMessage(
 			($long ? 'long' : 'short') . '-header-' . $this->getType()
-		)->params($this->getMessageParameters());
+		)->params($parameters);
 	}
 
 	/**
@@ -158,7 +171,7 @@ class Notification {
 	 * @return integer Dismissed Date
 	 */
 	public function getDismissedAt(): int {
-		return $this->resource->dismissed_at;
+		return intval($this->resource->dismissed_at);
 	}
 
 	/**
@@ -336,6 +349,17 @@ class Notification {
 	}
 
 	/**
+	 * Get the importance of this notification to assist with sorting.
+	 *
+	 * @return integer Importance
+	 */
+	public function getImportance(): int {
+		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
+		$reverbNotifications = $mainConfig->get('ReverbNotifications');
+		return intval($reverbNotifications[$this->getType()]['importance']);
+	}
+
+	/**
 	 * Get an array representation of this object suitable for APIs or otherwise.
 	 *
 	 * @return array
@@ -358,7 +382,8 @@ class Notification {
 			'dismissed_at' => $this->getDismissedAt(),
 			'origin_url' => $this->getOriginUrl(),
 			'agent_url' => $this->getAgentUrl(),
-			'canonical_url' => $this->getCanonicalUrl()
+			'canonical_url' => $this->getCanonicalUrl(),
+			'importance' => $this->getImportance()
 		];
 	}
 }
