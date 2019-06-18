@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Reverb\Identifier;
 
+use DynamicSettings\Environment;
 use MediaWiki\MediaWikiServices;
 
 abstract class Identifier {
@@ -34,7 +35,7 @@ abstract class Identifier {
 	 *
 	 * @var string
 	 */
-	protected $id = '';
+	protected $who = '';
 
 	/**
 	 * What/Type to class mapping.
@@ -49,19 +50,60 @@ abstract class Identifier {
 	/**
 	 * Get a new instance based on the identifier given.
 	 *
-	 * @param string $identifier String based identifier with namespace, what, and ID.
+	 * @param string|array $identifier String or array based identifier with namespace, what, and who.
 	 *
 	 * @return Identifier One of the Identifier children.
 	 *
 	 * @throws InvalidIdentifierException
 	 */
-	public static function factory(string $identifier): Identifier {
-		$idPieces = self::splitIdentifier($identifier);
+	public static function factory($identifier): Identifier {
+		if (!is_array($identifier)) {
+			$idPieces = self::splitIdentifier($identifier);
+		} else {
+			$idPieces = $identifier;
+		}
 		if ($idPieces === null || !isset(self::$whatClassMap[$idPieces['what']])) {
 			throw new InvalidIdentifierException();
 		}
 
-		return new self::$whatClassMap[$idPieces['what']]($idPieces['namespace'], $idPieces['id']);
+		return new self::$whatClassMap[$idPieces['what']]((string)$idPieces['namespace'], (string)$idPieces['who']);
+	}
+
+	/**
+	 * Return a factory response for an user identifier.
+	 *
+	 * @param mixed $who Unique identifier of the item.
+	 *
+	 * @return UserIdentifier
+	 */
+	public static function newUser($who): UserIdentifier {
+		$who = strval($who);
+		return self::factory(['namespace' => self::getConfiguredNamespace(), 'what' => 'user', 'who' => $who]);
+	}
+
+	/**
+	 * Return a factory response for a site identifier.
+	 *
+	 * @param mixed $who Unique identifier of the item.
+	 *
+	 * @return SiteIdentifier
+	 */
+	public static function newSite($who): SiteIdentifier {
+		$who = strval($who);
+		return self::factory(['namespace' => self::getConfiguredNamespace(), 'what' => 'site', 'who' => $who]);
+	}
+
+	/**
+	 * Return a factory response for a local site identifier.
+	 *
+	 * @return SiteIdentifier
+	 */
+	public static function newLocalSite(): SiteIdentifier {
+		$siteKey = Environment::getSiteKey();
+		if (empty($siteKey)) {
+			throw new MWException('Site key could not be detected.');
+		}
+		return self::factory(['namespace' => self::getConfiguredNamespace(), 'what' => 'site', 'who' => $siteKey]);
 	}
 
 	/**
@@ -72,13 +114,13 @@ abstract class Identifier {
 	 * @return array|null Array with ['namespace' => 'hydra', 'what' => 'hydra', 'id' => 'hydra'] or null if invalid.
 	 */
 	private static function splitIdentifier(string $identifier): ?array {
-		$regex = '#^([a-z]{1,64})/([a-z]{1,64}):([\w]{1,64})$#';
+		$regex = '#^([a-z]{1,64}):([a-z]{1,64}):([\w]{1,64})$#';
 		$matches = [];
 		if (preg_match($regex, $identifier, $matches) > 0) {
 			return [
 				'namespace' => $matches[1],
 				'what' => $matches[2],
-				'id' => $matches[3]
+				'who' => $matches[3]
 			];
 		}
 		return null;
@@ -88,13 +130,13 @@ abstract class Identifier {
 	 * Main Constructor
 	 *
 	 * @param string $namespace Namespace
-	 * @param string $id        Unique ID
+	 * @param string $who       Unique ID
 	 *
 	 * @return void
 	 */
-	private function __construct(string $namespace, string $id) {
+	private function __construct(string $namespace, string $who) {
 		$this->namespace = $namespace;
-		$this->id = $id;
+		$this->who = $who;
 	}
 
 	/**
@@ -103,7 +145,7 @@ abstract class Identifier {
 	 * @return string
 	 */
 	public function __toString(): string {
-		return $this->whereIsHome() . "/" . $this->whatAmI() . ':' . $this->whoAmI();
+		return $this->whereIsHome() . ":" . $this->whatAmI() . ':' . $this->whoAmI();
 	}
 
 	/**
@@ -130,7 +172,7 @@ abstract class Identifier {
 	 * @return string
 	 */
 	public function whoAmI(): string {
-		return $this->id;
+		return $this->who;
 	}
 
 	/**
@@ -139,7 +181,7 @@ abstract class Identifier {
 	 * @return boolean
 	 */
 	public function isLocal(): bool {
-		return $this->namespace === $this->getConfiguredNamespace();
+		return $this->namespace === self::getConfiguredNamespace();
 	}
 
 	/**
@@ -147,7 +189,7 @@ abstract class Identifier {
 	 *
 	 * @return string
 	 */
-	public function getConfiguredNamespace(): string {
+	public static function getConfiguredNamespace(): string {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
 		return $mainConfig->get('ReverbNamespace');
 	}

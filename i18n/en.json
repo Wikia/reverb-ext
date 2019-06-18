@@ -1,8 +1,55 @@
 {
-	"@metadata": {
-		"authors": [
-			"Alexia E. Smith"
-		]
-	},
-	"reverb_description": "Notification system for MediaWiki and Reverb notification service."
+    "@metadata": {
+        "authors": [
+            "Andrew Garrett",
+            "Alangi Derick",
+            "Alex Monk",
+            "Amir E. Aharoni",
+            "Andrew Garrett",
+            "Benny Situ",
+            "Brad Jorsch",
+            "Erik Bernhardson",
+            "James D. Forrester",
+            "Jon Robson",
+            "Kunal Mehta",
+            "lokal-profil",
+            "lwelling",
+            "MatmaRex",
+            "Matthew Flaschen",
+            "Matthias Mullie",
+            "mhutti1",
+            "Moriel Schottlender",
+            "Nemo bis",
+            "Nischay Nahata",
+            "Raimond Spekking",
+            "Reedy",
+            "Roan Kattouw",
+            "Ryan Kaldari",
+            "Siebrand Mazeland",
+            "Stephane Bisson",
+            "theopolisme",
+            "Tony Thomas",
+            "Terry Chay",
+            "umherirrender",
+            "Yuki Shira"
+        ]
+    },
+    "reverb_description": "Notification system for MediaWiki and Reverb notification service.",
+	"apihelp-notifications-example": "Get the first page of notifications available.  Pages are singular and should not be multiplied by the number of items per page.",
+    "long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|left}} a message on <strong>{{GENDER:$3|your}} talk page<\/strong>.",
+    "short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|left}} {{GENDER:$3|you}} a message.",
+    "long-header-user-interest-page-linked": "A link was made from <strong>$1<\/strong> to <strong>$2<\/strong>.",
+    "short-header-user-interest-page-linked": "Linked from <strong>$1<\/strong>.",
+	"user-note-user-interest-page-linked": "$3 added a link to <strong>$2<\/strong> from <strong>$1<\/strong>",
+    "short-header-user-account-groups-changed": "{{GENDER:$1|Your}} user rights were {{GENDER:$1|changed}}.",
+    "long-header-user-account-groups-changed": "{{GENDER:$1|Your}} user rights were {{GENDER:$1|changed}}.",
+	"user-note-user-account-groups-changed-added": "You have been added to: $1",
+	"user-note-user-account-groups-changed-removed": "You are no longer a member of: $1",
+    "short-header-user-account-groups-expiration-change": "The expiry of {{GENDER:$1|your}} membership in the following {{PLURAL:$3|group|groups}} has been {{GENDER:$1|changed}}: $2.",
+    "long-header-user-account-groups-expiration-change": "The expiry of {{GENDER:$1|your}} membership in the following {{PLURAL:$3|group|groups}} has been {{GENDER:$1|changed}}: $2.",
+    "short-header-user-interest-welcome": "{{GENDER:$2|Welcome}} to {{SITENAME}}, $1!",
+    "long-header-user-interest-welcome": "{{GENDER:$2|Welcome}} to {{SITENAME}}, $1! We're glad {{GENDER:$2|you're}} here.",
+    "short-header-article-edit-revert": "Your {{PLURAL:$3|edit on <strong>$2<\/strong> was|edits on <strong>$2<\/strong> were}} {{GENDER:$1|reverted}}.",
+    "long-header-article-edit-revert": "Your {{PLURAL:$3|edit on <strong>$2<\/strong> was|edits on <strong>$2<\/strong> were}} {{GENDER:$1|reverted}}.",
+    "user-note-article-edit-revert": "$4 removed {{PLURAL:$3|edit|edits}} on the article <strong>$2<\/strong>."
 }

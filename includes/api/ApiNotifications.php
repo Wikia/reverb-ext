@@ -13,23 +13,59 @@ declare(strict_types=1);
 namespace Reverb\Api;
 
 use ApiBase;
+use Reverb\Notification\NotificationBundle;
 
 class ApiNotifications extends ApiBase {
 	/**
-	 * Is POST required?
+	 * Main API entry point.
 	 *
-	 * @return boolean
+	 * @return void
 	 */
 	public function execute() {
+		$this->params = $this->extractRequestParams();
+
+		if (!$this->getUser()->isLoggedIn()) {
+			$this->dieUsageMsg(['apierror-permissiondenied-generic']);
+		}
+
+		switch ($this->params['do']) {
+			case 'getNotificationsForUser':
+				$response = $this->getNotificationsForUser();
+				break;
+			default:
+				$this->dieUsageMsg(['invaliddo', $this->params['do']]);
+				break;
+		}
+
+		foreach ($response as $key => $value) {
+			$this->getResult()->addValue(null, $key, $value);
+		}
 	}
 
 	/**
-	 * Is POST required?
+	 * Get notifications for the current user.
 	 *
-	 * @return boolean
+	 * @return array
 	 */
-	public function mustBePosted() {
-		return true;
+	public function getNotificationsForUser(): array {
+		$return = [
+			'notifications' => []
+		];
+
+		$bundle = NotificationBundle::getBundleForUser(
+			$this->getUser(),
+			[],
+			$this->params['itemsPerPage'],
+			$this->params['page']
+		);
+
+		if ($bundle !== null) {
+			foreach ($bundle as $key => $notification) {
+				$return['notifications'][] = $notification->toArray();
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -39,20 +75,21 @@ class ApiNotifications extends ApiBase {
 	 */
 	public function getAllowedParams() {
 		return [
-			/*'category' => [
+			'do' => [
 				ApiBase::PARAM_TYPE => 'string',
-				ApiBase::PARAM_REQUIRED => false
-			]*/
+				ApiBase::PARAM_REQUIRED => true
+			],
+			'page' => [
+				ApiBase::PARAM_TYPE => 'integer',
+				ApiBase::PARAM_REQUIRED => true,
+				ApiBase::PARAM_DFLT => 0
+			],
+			'itemsPerPage' => [
+				ApiBase::PARAM_TYPE => 'integer',
+				ApiBase::PARAM_REQUIRED => true,
+				ApiBase::PARAM_DFLT => 50
+			]
 		];
-	}
-
-	/**
-	 * Get the name of the required POST token.
-	 *
-	 * @return string
-	 */
-	public function needsToken() {
-		return 'csrf';
 	}
 
 	/**
@@ -62,7 +99,7 @@ class ApiNotifications extends ApiBase {
 	 */
 	protected function getExamplesMessages() {
 		return [
-			'action=notifications&token=123ABC' => 'apihelp-notifications-example',
+			'action=notifications&page=0&itemsPerPage=50' => 'apihelp-notifications-example',
 		];
 	}
 

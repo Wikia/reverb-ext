@@ -18,10 +18,12 @@ use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
+use Reverb\Notification\NotificationBroadcast;
 use Revision;
 use SkinTemplate;
 use SpecialPage;
 use Status;
+use Title;
 use User;
 use WikiPage;
 
@@ -61,8 +63,8 @@ class Hooks {
 		Content $content,
 		string $summary,
 		bool $isMinor,
-		bool $isWatch,
-		string $section,
+		?bool $isWatch,
+		?string $section,
 		int &$flags,
 		$revision,
 		Status &$status,
@@ -79,13 +81,6 @@ class Hooks {
 
 		$title = $wikiPage->getTitle();
 
-		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-
-		// $thresholds = [ 1, 10, 100, 1000, 10000, 100000, 1000000 ];
-		// Echo sends a 'thank you' notification on certain thresholds.
-		// Do we wish to keep these?
-		// @TODO: Create 'article-edit-thanks' Notification
-
 		if ($title->getNamespace() == NS_USER_TALK) {
 			$notifyUser = User::newFromName($title->getText());
 			// If the recipient is a valid non-anonymous user and hasn't turned off their
@@ -94,7 +89,28 @@ class Hooks {
 				// If this is a minor edit, only notify if the agent doesn't have talk page
 				// minor edit notification blocked.
 				if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
-					// @TODO: Create 'user-interest-talk-page-edit' Notification
+					// @TODO: Fix user note.
+					$broadcast = NotificationBroadcast::newSingle(
+						'user-interest-talk-page-edit',
+						$user,
+						$notifyUser,
+						[
+							'url' => $title->getFullURL(),
+							'message' => [
+								[
+									'user_note',
+									''
+								],
+								[
+									1,
+									$user->getName()
+								]
+							]
+						]
+					);
+					if ($broadcast) {
+						$broadcast->transmit();
+					}
 				}
 			}
 		}
@@ -103,9 +119,38 @@ class Hooks {
 		if ($undidRevId > 0) {
 			$undidRevision = Revision::newFromId($undidRevId);
 			if ($undidRevision && $undidRevision->getTitle()->equals($title)) {
-				$victimId = $undidRevision->getUser();
-				if ($victimId) {
-					// @TODO: Create 'article-edit-revert' Notification
+				$notifyUser = $undidRevision->getRevisionRecord()->getUser();
+				if ($notifyUser && $notifyUser->getId()) {
+					// @TODO: Fix user note and count reverted revisions.
+					$broadcast = NotificationBroadcast::newSingle(
+						'article-edit-revert',
+						$user,
+						$notifyUser,
+						[
+							'url' => $title->getFullURL(),
+							'message' => [
+								[
+									'user_note',
+									''
+								],
+								[
+									1,
+									$user->getName()
+								],
+								[
+									2,
+									$title->getFullText()
+								],
+								[
+									3,
+									1
+								]
+							]
+						]
+					);
+					if ($broadcast) {
+						$broadcast->transmit();
+					}
 				}
 			}
 		}
@@ -125,8 +170,28 @@ class Hooks {
 	 */
 	public static function onLocalUserCreated(User $user, bool $autocreated): bool {
 		if (!$autocreated) {
-			// @TODO: Create 'user-interest-welcome' Notification
-			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
+			// @TODO: Fix user note.
+			$broadcast = NotificationBroadcast::newSingle(
+				'user-interest-welcome',
+				$user,
+				$notifyUser,
+				[
+					'url' => $title->getFullURL(),
+					'message' => [
+						[
+							'user_note',
+							''
+						],
+						[
+							1,
+							$user->getName()
+						]
+					]
+				]
+			);
+			if ($broadcast) {
+				$broadcast->transmit();
+			}
 		}
 
 		return true;
@@ -135,7 +200,7 @@ class Hooks {
 	/**
 	 * Handler for UserGroupsChanged hook.
 	 *
-	 * @param User        $user      user that was changed
+	 * @param User        $target    user that was changed
 	 * @param array       $add       strings corresponding to groups added
 	 * @param array       $remove    strings corresponding to groups removed
 	 * @param User|bool   $performer
@@ -148,7 +213,7 @@ class Hooks {
 	 * @return boolean
 	 */
 	public static function onUserGroupsChanged(
-		$user,
+		$target,
 		$add,
 		$remove,
 		$performer,
@@ -161,17 +226,15 @@ class Hooks {
 			return true;
 		}
 
-		if (!$user instanceof User) {
+		if (!$target instanceof User) {
 			// TODO: Support UserRightsProxy
 			return true;
 		}
 
-		if ($user->equals($performer)) {
+		if ($target->equals($performer)) {
 			// Don't notify for self changes.
 			return true;
 		}
-
-		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
 
 		// If any old groups are in $add, those groups are having their expiry
 		// changed, not actually being added
@@ -185,12 +248,70 @@ class Hooks {
 			}
 		}
 
+		$url = Title::newFromText($target->getName(), NS_USER)->getFullURL();
 		if ($expiryChanged) {
-			// @TODO: Create 'user-account-groups-expiration-change' Notification
+			// @TODO: Fix user note.
+			$broadcast = NotificationBroadcast::newSingle(
+				'user-account-groups-expiration-change',
+				$performer,
+				$target,
+				[
+					'url' => $url,
+					'message' => [
+						[
+							'user_note',
+							''
+						],
+						[
+							1,
+							$target->getName()
+						],
+						[
+							2,
+							implode(', ', $expiryChanged)
+						],
+						[
+							3,
+							count($expiryChanged)
+						]
+					]
+				]
+			);
+			if ($broadcast) {
+				$broadcast->transmit();
+			}
 		}
 
 		if ($reallyAdded || $remove) {
-			// @TODO: Create 'user-account-groups-changed' Notification
+			$broadcast = NotificationBroadcast::newSingle(
+				'user-account-groups-changed',
+				$performer,
+				$target,
+				[
+					'url' => $url,
+					'message' => [
+						[
+							'user_note',
+							(count($reallyAdded) ? wfMessage(
+								'user-note-user-account-groups-changed-added',
+								implode(', ', $reallyAdded)
+							)->parse() .
+							(count($remove) ? "\n" : '') : '') .
+							(count($remove) ? wfMessage(
+								'user-note-user-account-groups-changed-removed',
+								implode(', ', $remove)
+							)->parse() : '')
+						],
+						[
+							1,
+							$target->getName()
+						]
+					]
+				]
+			);
+			if ($broadcast) {
+				$broadcast->transmit();
+			}
 		}
 
 		return true;
@@ -224,28 +345,55 @@ class Hooks {
 		// 3. non-transcluding pages &&
 		// 4. non-redirect pages
 		if ($table !== 'pagelinks'
-		|| !MWNamespace::isContent($linksUpdate->getTitle()->getNamespace())
-		|| !$linksUpdate->mRecursive
-		|| $linksUpdate->getTitle()->isRedirect()
+			|| !MWNamespace::isContent($linksUpdate->getTitle()->getNamespace())
+			|| !$linksUpdate->mRecursive
+			|| $linksUpdate->getTitle()->isRedirect()
 		) {
 			return true;
 		}
 
-		$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-
-		$user = $linksUpdate->getTriggeringUser();
+		$agent = $linksUpdate->getTriggeringUser();
 
 		$revid = $linksUpdate->getRevision() ? $linksUpdate->getRevision()->getId() : null;
 
 		foreach ($insertions as $page) {
 			if (MWNamespace::isContent($page['pl_namespace'])) {
-				$title = Title::makeTitle($page['pl_namespace'], $page['pl_title']);
-				if ($title->isRedirect()) {
+				$linkToTitle = Title::makeTitle($page['pl_namespace'], $page['pl_title']);
+				if ($linkToTitle->isRedirect()) {
 					continue;
 				}
 
-				$linkFromPageId = $linksUpdate->getTitle()->getArticleId();
-				// @TODO: Create 'user-interest-page-linked' Notification
+				// @TODO: Fix note, but do we desire this note system?  This breaks localization.
+				$broadcast = NotificationBroadcast::newSingle(
+					'user-interest-page-linked',
+					$agent,
+					$notifyUser,
+					[
+						'url' => $linkToTitle->getFullURL(),
+						'message' => [
+							[
+								'user_note',
+								wfMessage(
+									'user-note-user-interest-page-linked',
+									$linksUpdate->getTitle()->getFullText(),
+									$linkToTitle->getFullText(),
+									$agent->getName()
+								)->parse()
+							],
+							[
+								1,
+								$linksUpdate->getTitle()->getFullText()
+							],
+							[
+								2,
+								$linkToTitle->getFullText()
+							]
+						]
+					]
+				);
+				if ($broadcast) {
+					$broadcast->transmit();
+				}
 			}
 		}
 
@@ -270,14 +418,47 @@ class Hooks {
 		Revision $newRevision,
 		Revision $oldRevision
 	): bool {
-		$victimId = $oldRevision->getUser();
+		$notifyUser = $oldRevision->getRevisionRecord()->getUser();
 		$latestRevision = $wikiPage->getRevision();
 		self::$lastRevertedRevision = $latestRevision;
 
 		// Skip anonymous users and null edits.
-		if ($victimId && !$oldRevision->getContent()->equals($newRevision->getContent())) {
-			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-			// @TODO: Create 'article-edit-revert' Notification
+		if ($notifyUser && $notifyUser->getId() && !$oldRevision->getContent()->equals($newRevision->getContent())) {
+			// @TODO: Fix user note and count reverted revisions.  Echo defaulted to plural/2 for rollback.
+			$title = $wikiPage->getTitle();
+			$broadcast = NotificationBroadcast::newSingle(
+				'article-edit-revert',
+				$agent,
+				$notifyUser,
+				[
+					'url' => $title->getFullURL(),
+					'message' => [
+						[
+							'user_note',
+							''
+						],
+						[
+							1,
+							$notifyUser->getName()
+						],
+						[
+							2,
+							$title->getFullText()
+						],
+						[
+							3,
+							2
+						],
+						[
+							4,
+							$agent->getName()
+						]
+					]
+				]
+			);
+			if ($broadcast) {
+				$broadcast->transmit();
+			}
 		}
 
 		return true;
