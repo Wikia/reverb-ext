@@ -80,7 +80,7 @@
 	},
 	"config": {
 		"ReverbApiEndPoint": {
-			"value": "https://reverb.localhost/v1"
+			"value": "http://127.0.0.1:8101/v1"
 		},
 		"ReverbNotifications": {
 			"value": {
