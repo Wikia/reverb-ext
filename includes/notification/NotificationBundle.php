@@ -102,7 +102,7 @@ class NotificationBundle extends ArrayObject {
 			$userIdentifier = Identifier::newUser($globalId);
 
 			try {
-				$notificationResources = $client->notifications()->page(
+				$notificationTargetResources = $client->notification_targets()->page(
 					$itemsPerPage,
 					$itemsPerPage * $pageNumber
 				)->filter(
@@ -114,14 +114,15 @@ class NotificationBundle extends ArrayObject {
 					)
 				)->all();
 			} catch (ApiResponseInvalid $e) {
-				// @TODO: Logging and error reporting.
+				wfLogWarning('Invalid API response from the service: ' . $e->getMessage());
 				return null;
 			} catch (Exception $e) {
+				wfLogWarning('General exception encountered when communicating with the service: ' . $e->getMessage());
 				return null;
 			}
 
-			foreach ($notificationResources as $key => $resource) {
-				$notification = new Notification($resource);
+			foreach ($notificationTargetResources as $key => $resource) {
+				$notification = new Notification($resource->notification());
 				$notifications[$notification->getId()] = $notification;
 			}
 

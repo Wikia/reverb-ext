@@ -171,7 +171,7 @@ class Notification {
 	 * @return integer Dismissed Date
 	 */
 	public function getDismissedAt(): int {
-		return $this->resource->dismissed_at;
+		return intval($this->resource->dismissed_at);
 	}
 
 	/**
