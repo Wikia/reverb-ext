@@ -117,7 +117,7 @@ class Notification {
 
 		return wfMessage(
 			($long ? 'long' : 'short') . '-header-' . $this->getType()
-		)->params($parameters);
+		)->rawParams($parameters);
 	}
 
 	/**
