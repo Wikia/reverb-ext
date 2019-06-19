@@ -66,7 +66,8 @@ class ApiNotifications extends ApiBase {
 			$return['meta'] = [
 				'unread' => $bundle->getUnreadCount(),
 				'read' => $bundle->getReadCount(),
-				'total' => $bundle->getTotal(),
+				'total_this_page' => $bundle->getTotalThisPage(),
+				'total_all' => $bundle->getTotalAll(),
 				'page' => $bundle->getPageNumber(),
 				'items_per_page' => $bundle->getItemsPerPage()
 			];
