@@ -36,6 +36,7 @@
     },
 	"reverb_description": "Notification system for MediaWiki and Reverb notification service.",
 	"apihelp-notifications-example": "Get the first page of notifications available.  Pages are singular and should not be multiplied by the number of items per page.",
+	"apihelp-notifications-summary": "Retrieve notifications for the current user.",
 	"long-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|left}} a message on <strong>{{GENDER:$3|your}} talk page<\/strong>.",
 	"short-header-user-interest-talk-page-edit": "$1 {{GENDER:$2|left}} {{GENDER:$3|you}} a message.",
 	"long-header-user-interest-page-linked": "A link was made from <strong>$1<\/strong> to <strong>$2<\/strong>.",
