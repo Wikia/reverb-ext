@@ -50,7 +50,14 @@ class NotificationBundle extends ArrayObject {
 	 *
 	 * @var integer
 	 */
-	protected $total = 0;
+	protected $totalThisPage = 0;
+
+	/**
+	 * Total notifications in this bundle.
+	 *
+	 * @var integer
+	 */
+	protected $totalAll = 0;
 
 	/**
 	 * Number of unread notifications in this bundle.
@@ -154,9 +161,10 @@ class NotificationBundle extends ArrayObject {
 			$bundle->filters = $filters;
 			$bundle->itemsPerPage = $itemsPerPage;
 			$bundle->pageNumber = $pageNumber;
-			$bundle->total = count($notifications);
 			$bundle->unread = intval($meta['unread-count'] ?? 0);
 			$bundle->read = intval($meta['read-count'] ?? 0);
+			$bundle->totalThisPage = count($notifications);
+			$bundle->totalAll = $bundle->unread + $bundle->read;
 
 			// Set user context on NotificationBundle.
 			$bundle->setUser($user);
@@ -188,8 +196,17 @@ class NotificationBundle extends ArrayObject {
 	 *
 	 * @return integer
 	 */
-	public function getTotal(): int {
-		return $this->total;
+	public function getTotalThisPage(): int {
+		return $this->totalThisPage;
+	}
+
+	/**
+	 * Return the total notifications available from the service.
+	 *
+	 * @return integer
+	 */
+	public function getTotalAll(): int {
+		return $this->totalAll;
 	}
 
 	/**
