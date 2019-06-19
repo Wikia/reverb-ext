@@ -153,8 +153,8 @@ class NotificationBundle extends ArrayObject {
 			$bundle->itemsPerPage = $itemsPerPage;
 			$bundle->pageNumber = $pageNumber;
 			$bundle->total = count($notifications);
-			$bundle->unread = 0; //intval(do the thing);
-			$bundle->read = 0; //intval(do the thing);
+			$bundle->unread = 0; // intval(do the thing);
+			$bundle->read = 0; // intval(do the thing);
 
 			// Set user context on NotificationBundle.
 			$bundle->setUser($user);
