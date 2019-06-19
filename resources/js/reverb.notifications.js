@@ -20,7 +20,8 @@
     var meta = {
         "unread": 0,
         "read": 0,
-        "total": 0,
+        "total_this_page": 0,
+        "total_all": 0,
         "page": 0,
         "items_per_page": 0
     }
@@ -53,7 +54,7 @@
      * Setup "control functions"
      */
     var updateCounts = function() {
-        var total = meta.total;
+        var total = meta.total_all;
         var totalUnread = meta.unread;
         var totalRead = meta.read;
         $("#reverb-ru-all").html( mw.msg('special-button-all',total) );
@@ -102,6 +103,12 @@
                 var notifications = buildNotificationsFromData(data,true);
                 for (var x in notifications) {
                     addNotification(notifications[x]);
+                }
+
+                if (meta.unread > panelTotal) {
+                   addNotification(
+                        buildViewMore( meta.unread - panelTotal )
+                    )
                 }
             }
         });
@@ -230,7 +237,8 @@
      */
 
     var buildViewMore = function(more) {
-        var html = '<div class="reverb-npn-viewmore">View '+ more +' more notifications</div>'
+        var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="/Special:Notifications">View '+ more +' Additional Unread <i class="fa fa-arrow-right"></i></button></div>';
+        return $(html);
     }
 
     var buildNotification = function(d) {

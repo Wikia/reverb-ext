@@ -53,7 +53,27 @@
     color: #fff;
 } 
 
+
 .reverb-nph-right a:hover {
+    text-decoration: none;
+    color: #fff;
+}
+
+.reverb-npn-viewmore:link,  
+.reverb-npn-viewmore:active,
+.reverb-npn-viewmore:visited{
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+}
+
+.reverb-npn-viewmore:hover {
     text-decoration: none;
     color: #fff;
 }
