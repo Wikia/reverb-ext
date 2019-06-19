@@ -46,6 +46,27 @@ class NotificationBundle extends ArrayObject {
 	protected $pageNumber = 0;
 
 	/**
+	 * Total notifications in this bundle.
+	 *
+	 * @var integer
+	 */
+	protected $total = 0;
+
+	/**
+	 * Number of unread notifications in this bundle.
+	 *
+	 * @var integer
+	 */
+	protected $unreadCount = 0;
+
+	/**
+	 * Number of read notifications in this bundle.
+	 *
+	 * @var integer
+	 */
+	protected $readCount = 0;
+
+	/**
 	 * Main Constructor
 	 *
 	 * @param array   $notifications Array of Reverb\Notification\Notification objects.
@@ -126,11 +147,16 @@ class NotificationBundle extends ArrayObject {
 				$notifications[$notification->getId()] = $notification;
 			}
 
+			$meta = $notificationTargetResources->meta();
+
 			$bundle = new NotificationBundle($notifications);
 
 			$bundle->filters = $filters;
 			$bundle->itemsPerPage = $itemsPerPage;
 			$bundle->pageNumber = $pageNumber;
+			$bundle->total = count($notifications);
+			$bundle->unread = intval($meta['unread-count'] ?? 0);
+			$bundle->read = intval($meta['read-count'] ?? 0);
 
 			// Set user context on NotificationBundle.
 			$bundle->setUser($user);
@@ -158,11 +184,47 @@ class NotificationBundle extends ArrayObject {
 	}
 
 	/**
-	 * Return the total notifications returned by the meta data in the response.
+	 * Return the total notifications collected.
 	 *
 	 * @return integer
 	 */
 	public function getTotal(): int {
-		// code...
+		return $this->total;
+	}
+
+	/**
+	 * Return the unread count from the meta data.
+	 *
+	 * @return integer
+	 */
+	public function getUnreadCount(): int {
+		return $this->unread;
+	}
+
+	/**
+	 * Return the unread count from the meta data.
+	 *
+	 * @return integer
+	 */
+	public function getReadCount(): int {
+		return $this->read;
+	}
+
+	/**
+	 * Return the calculated page number.
+	 *
+	 * @return integer
+	 */
+	public function getPageNumber(): int {
+		return $this->pageNumber;
+	}
+
+	/**
+	 * Return the requested items per page for reference.
+	 *
+	 * @return integer
+	 */
+	public function getItemsPerPage(): int {
+		return $this->itemsPerPage;
 	}
 }

@@ -63,6 +63,13 @@ class ApiNotifications extends ApiBase {
 			foreach ($bundle as $key => $notification) {
 				$return['notifications'][] = $notification->toArray();
 			}
+			$return['meta'] = [
+				'unread' => $bundle->getUnreadCount(),
+				'read' => $bundle->getReadCount(),
+				'total' => $bundle->getTotal(),
+				'page' => $bundle->getPageNumber(),
+				'items_per_page' => $bundle->getItemsPerPage()
+			];
 		}
 
 		return $return;
