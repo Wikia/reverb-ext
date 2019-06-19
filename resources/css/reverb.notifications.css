@@ -320,3 +320,17 @@ label.reverb-filter-label {
 .reverb-button-bar  button.reverb-selected {
     color: #f37f20;
 }
+
+.reverb-notification-page-paging {
+    
+}
+
+.reverb-npp-bottom {
+    padding: 10px 0px 0px 0px;
+    border-top: 1px solid #4f4f4f;
+}
+
+.reverb-npp-top {
+    padding: 15px 0px 10px 0px;
+    border-bottom: 1px solid #4f4f4f;
+}

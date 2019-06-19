@@ -213,7 +213,9 @@
         });
 
 
-        loadNotifications(0,10,function(data){
+        var perPage = 10;
+
+        loadNotifications(0,perPage,function(data){
             if (data.notifications && data.notifications.length) {
                 console.log(data.notifications);
                 var notifications = buildNotificationsFromData(data,false);
@@ -221,6 +223,29 @@
                     addNotification(notifications[x],'specialpage');
                 }
             }
+
+            if (meta.total_all > meta.total_this_page) {
+                // Oh boy, we gotta do pagination guys
+
+                $(".reverb-notification-page-paging").pagination({
+                    items: meta.total_all,
+                    itemsOnPage: meta.items_per_page,
+                    cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
+                    onPageClick: function(page,event) {
+                        loadNotifications(page-1,perPage,function(data){
+                            if (data.notifications && data.notifications.length) {
+                                $(".reverb-notification-page-notifications").empty();
+                                var notifications = buildNotificationsFromData(data,false);
+                                for (var x in notifications) {
+                                    addNotification(notifications[x],'specialpage');
+                                }
+                            }
+                        });
+                    }
+                });
+
+            }
+
         });
 
     }
