@@ -45,7 +45,6 @@
     line-height: 1;
     letter-spacing: normal;
     text-align: right;
-    color: #ffffff;
 }
 
 .reverb-nph-right a:link, 
@@ -69,7 +68,6 @@
     font-stretch: normal;
     line-height: 1;
     letter-spacing: normal;
-    color: #ffffff;
 }
 
 .reverb-nph-preferences {
@@ -156,7 +154,6 @@
     font-stretch: normal;
     line-height: 1.5;
     letter-spacing: normal;
-    color: #ffffff;
 }
 
 .reverb-npnr-body {
@@ -170,7 +167,6 @@
     font-stretch: normal;
     line-height: 1.5;
     letter-spacing: normal;
-    color: #ffffff;
 }
 
 .reverb-npnr-bottom {
@@ -185,6 +181,14 @@
     padding: 10px 0px;
     display: flex;
     justify-content: flex-start;
+}
+
+.skin-hydra .reverb-notification-page {
+    color: #000;
+}
+
+.skin-hydradark .reverb-notification-page {
+    color: #FFF;
 }
 
 .reverb-notification-page-left {
@@ -203,7 +207,6 @@
 
 .reverb-filter-title {
     margin: 20px 10px;
-    
     height: 18px;
     font-family: Rubik, Helvetica, sans-serif;
     font-size: 16px;
@@ -212,7 +215,6 @@
     font-stretch: normal;
     line-height: 1.13;
     letter-spacing: normal;
-    color: #ffffff;
 }
 
 .reverb-filter-row {
@@ -225,7 +227,6 @@
     font-stretch: normal;
     line-height: 1;
     letter-spacing: normal;
-    color: #ffffff;
     border-bottom: 1px solid #4f4f4f;
 }
 

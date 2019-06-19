@@ -77,7 +77,11 @@
         notificationButton.insertBefore(userBox);
         notificationButton.on('click', function(){
             notificationPanel.toggle();
-        });     
+        });
+        
+        $('#global-wrapper').on('click',function(){
+            notificationPanel.hide();
+        });
         
         loadNotifications(0,50,function(data){
             if (data.notifications && data.notifications.length) {
