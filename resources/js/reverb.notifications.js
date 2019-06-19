@@ -16,6 +16,16 @@
     }
     log('Display Logic Loaded.');
 
+    // Update this with every API call for accurate meta tracking
+    var meta = {
+        "unread": 0,
+        "read": 0,
+        "total_this_page": 0,
+        "total_all": 0,
+        "page": 0,
+        "items_per_page": 0
+    }
+
     /**
      *  Identify user box to place notifications directly next to it.
      *  Also remove any echo notification boxes that may exist.
@@ -43,7 +53,10 @@
     /**
      * Setup "control functions"
      */
-    var updateCounts = function(total, totalUnread, totalRead) {
+    var updateCounts = function() {
+        var total = meta.total_all;
+        var totalUnread = meta.unread;
+        var totalRead = meta.read;
         $("#reverb-ru-all").html( mw.msg('special-button-all',total) );
         $("#reverb-ru-read").html( mw.msg('special-button-read',totalRead) );
         $("#reverb-ru-unread").html( mw.msg('special-button-unread',totalUnread) );
@@ -77,13 +90,25 @@
         notificationButton.insertBefore(userBox);
         notificationButton.on('click', function(){
             notificationPanel.toggle();
-        });     
+        });
         
-        loadNotifications(0,50,function(data){
+        $('#global-wrapper').on('click',function(){
+            notificationPanel.hide();
+        });
+        
+        var panelTotal = 10;
+
+        loadNotifications(0,panelTotal,function(data){
             if (data.notifications && data.notifications.length) {
                 var notifications = buildNotificationsFromData(data,true);
                 for (var x in notifications) {
                     addNotification(notifications[x]);
+                }
+
+                if (meta.unread > panelTotal) {
+                   addNotification(
+                        buildViewMore( meta.unread - panelTotal )
+                    )
                 }
             }
         });
@@ -95,6 +120,11 @@
 
         api.get({action:'notifications', do:'getNotificationsForUser', page: page, itemsPerPage: perpage, format:'json'})
         .done(function(data) {
+            if (data.meta) {
+                meta = data.meta;
+            }
+            updateCounts();
+
             if (data.notifications && data.notifications.length) {
                 cb(data)
             }
@@ -103,8 +133,6 @@
 
     var buildNotificationsFromData = function(data, compact) {
         // build content for panel
-        var unread = 0;
-        var total = data.notifications.length;
         var notifications = [];
         for (var x in data.notifications) {
             var n = data.notifications[x];
@@ -126,7 +154,6 @@
             
             // Handle Read Count -- Not available from API yet
             var wasRead = n.dismissed_at ? true : false;
-            if (!wasRead) { unread++; } 
             var read = wasRead ? "read" : "unread";
 
             var notificationData = {
@@ -140,8 +167,6 @@
 
             notifications.push(buildNotification(notificationData));
         }
-        // @TODO maybe move this somewhere else?
-        updateCounts(total, unread, (total - unread));
         return notifications;
     }
 
@@ -188,7 +213,7 @@
         });
 
 
-        loadNotifications(0,5,function(data){
+        loadNotifications(0,10,function(data){
             if (data.notifications && data.notifications.length) {
                 console.log(data.notifications);
                 var notifications = buildNotificationsFromData(data,false);
@@ -210,6 +235,11 @@
      *  Imagine we are using template engines instead of just writing html into javascript. 
      *                                                                                 
      */
+
+    var buildViewMore = function(more) {
+        var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="/Special:Notifications">View '+ more +' Additional Unread <i class="fa fa-arrow-right"></i></button></div>';
+        return $(html);
+    }
 
     var buildNotification = function(d) {
         var html = ''
