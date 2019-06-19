@@ -147,14 +147,16 @@ class NotificationBundle extends ArrayObject {
 				$notifications[$notification->getId()] = $notification;
 			}
 
+			$meta = $notificationTargetResources->meta();
+
 			$bundle = new NotificationBundle($notifications);
 
 			$bundle->filters = $filters;
 			$bundle->itemsPerPage = $itemsPerPage;
 			$bundle->pageNumber = $pageNumber;
 			$bundle->total = count($notifications);
-			$bundle->unread = 0; // intval(do the thing);
-			$bundle->read = 0; // intval(do the thing);
+			$bundle->unread = intval($meta['unread-count'] ?? 0);
+			$bundle->read = intval($meta['read-count'] ?? 0);
 
 			// Set user context on NotificationBundle.
 			$bundle->setUser($user);
