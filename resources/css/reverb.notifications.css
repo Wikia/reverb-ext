@@ -334,3 +334,7 @@ label.reverb-filter-label {
     padding: 15px 0px 10px 0px;
     border-bottom: 1px solid #4f4f4f;
 }
+
+.reverb-bell-unread {
+    color: #f37f20;
+}

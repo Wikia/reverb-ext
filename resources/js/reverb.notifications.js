@@ -53,14 +53,25 @@
     /**
      * Setup "control functions"
      */
-    var updateCounts = function() {
+    var updateCounts = function(npo) {
         var total = meta.total_all;
         var totalUnread = meta.unread;
         var totalRead = meta.read;
+
+        var notificationPageOnly = npo ? npo : false;
+
         $("#reverb-ru-all").html( mw.msg('special-button-all',total) );
         $("#reverb-ru-read").html( mw.msg('special-button-read',totalRead) );
         $("#reverb-ru-unread").html( mw.msg('special-button-unread',totalUnread) );
-        $(".reverb-total-notifications").html(totalUnread);
+
+        if (!notificationPageOnly) {
+            $(".reverb-total-notifications").html(totalUnread);
+            if (totalUnread > 0) {
+                $('.reverb-bell').addClass('reverb-bell-unread');
+            } else {
+                $('.reverb-bell').removeClass('reverb-bell-unread');
+            }
+        }
     };
 
     var addNotification = function(notification, target) {
@@ -99,6 +110,7 @@
         var panelTotal = 10;
 
         loadNotifications(0,panelTotal,function(data){
+            updateCounts();
             if (data.notifications && data.notifications.length) {
                 var notifications = buildNotificationsFromData(data,true);
                 for (var x in notifications) {
@@ -123,8 +135,6 @@
             if (data.meta) {
                 meta = data.meta;
             }
-            updateCounts();
-
             if (data.notifications && data.notifications.length) {
                 cb(data)
             }
@@ -216,6 +226,8 @@
         var perPage = 10;
 
         loadNotifications(0,perPage,function(data){
+            updateCounts(true);
+            
             if (data.notifications && data.notifications.length) {
                 console.log(data.notifications);
                 var notifications = buildNotificationsFromData(data,false);
@@ -315,8 +327,8 @@
     }
 
     var buildNotificationButton = function(data) {
-        var html = '<div class="netbar-box right reverb-notifications">'
-                 + '    <i class="fa fa-envelope"></i> <span class="reverb-total-notifications"></span>'
+        var html = '<div class="netbar-box right reverb-notifications reverb-bell">'
+                 + '    <i class="fa fa-envelope"></i>'
                  + '</div>'
         return $(html);
     }
