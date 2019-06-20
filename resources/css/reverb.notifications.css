@@ -29,6 +29,25 @@
     display: none;
 }
 
+div.reverb-np:before, div.reverb-np:after {
+	content: ' ';
+	height: 0;
+	position: absolute;
+	width: 0;
+    border: 10px solid; /* arrow size */
+    border-color: transparent;
+}
+
+div.reverb-np:before {
+    border-bottom-color: #202020;  /* arrow color */
+    color: #fff;
+	position: absolute;
+	top: -20px;
+	right: 67px;
+	z-index: 2;
+}
+
+
 .reverb-np-header {
     font-size: 16px;
     font-weight: bold;
@@ -174,6 +193,16 @@
     font-stretch: normal;
     line-height: 1.5;
     letter-spacing: normal;
+}
+
+.reverb-npnr-header a:link,
+.reverb-npnr-header a:active,
+.reverb-npnr-header a:visited {
+    color: #f37f20;
+}
+
+.reverb-npnr-header a:hover {
+    color: #f37f20;
 }
 
 .reverb-npnr-body {

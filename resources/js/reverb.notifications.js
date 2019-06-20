@@ -99,6 +99,9 @@
         var notificationPanel = buildNotificationPanel({globalNotifications: false});
         notificationPanel.appendTo('body');
         notificationButton.insertBefore(userBox);
+        notificationButton.on('hover mouseover', function(){
+            notificationPanel.show();
+        });
         notificationButton.on('click', function(){
             notificationPanel.toggle();
         });
@@ -109,7 +112,7 @@
         
         var panelTotal = 10;
 
-        loadNotifications(0,panelTotal,function(data){
+        loadNotifications({page: 0, perpage: panelTotal},function(data){
             updateCounts();
             if (data.notifications && data.notifications.length) {
                 var notifications = buildNotificationsFromData(data,true);
@@ -126,11 +129,32 @@
         });
     }
 
-    var loadNotifications = function(page, perpage, cb) {
-        if (!page) page = 0;
-        if (!perpage) perpage = 50;
+    var loadNotifications = function(filters, cb) {
 
-        api.get({action:'notifications', do:'getNotificationsForUser', page: page, itemsPerPage: perpage, format:'json'})
+        var f = {
+            page: 0,
+            perpage: 50,
+            unread: 1,
+            read: 1,
+            type: null
+        }
+
+        for (var x in filters) {
+            f[x] = filters[x];
+        }
+
+        var data = {
+            action:'notifications', 
+            do:'getNotificationsForUser', 
+            page: f.page, 
+            itemsPerPage: f.perpage,
+            read: f.read,
+            unread: f.unread,
+            type: f.type,
+            format:'json'
+        };
+
+        api.get(data)
         .done(function(data) {
             if (data.meta) {
                 meta = data.meta;
@@ -225,7 +249,7 @@
 
         var perPage = 10;
 
-        loadNotifications(0,perPage,function(data){
+        loadNotifications({page: 0, perpage: perPage},function(data){
             updateCounts(true);
             
             if (data.notifications && data.notifications.length) {
@@ -244,7 +268,7 @@
                     itemsOnPage: meta.items_per_page,
                     cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
                     onPageClick: function(page,event) {
-                        loadNotifications(page-1,perPage,function(data){
+                        loadNotifications({page: page-1, perpage: perPage},function(data){
                             if (data.notifications && data.notifications.length) {
                                 $(".reverb-notification-page-notifications").empty();
                                 var notifications = buildNotificationsFromData(data,false);
