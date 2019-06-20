@@ -223,6 +223,7 @@
     var markRead = function(id){
         api.post({action:'notifications', do:'dismissNotification', notificationId: id, format:'json'})
         .done(function(data) {
+            console.log(data);
             if (data.success) {
                 // If marked read, remove the little bubblyboi
                 $(".reverb-npnr-unread[data-id='"+id+"']").addClass('reverb-nrpr-read').removeClass('reverb-npnr-unread');
@@ -325,7 +326,7 @@
            html += '<div class="reverb-npnr-body">'+d.body+'</div>'
         }
         html += '      <div class="reverb-npnr-bottom">'
-        + '            <span class="reverb-npnr-'+d.read+'"></span>'
+        + '            <span class="reverb-npnr-'+d.read+'" data-id="'+d.id+'"></span>'
         + '            ' + d.created
         + '        </div>'
         + '    </div>'
