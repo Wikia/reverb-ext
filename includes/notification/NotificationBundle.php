@@ -96,6 +96,11 @@ class NotificationBundle extends ArrayObject {
 	 *
 	 * @param User  $user         User object to use for look up.
 	 * @param array $filters      [Optional] Filters for notifications.
+	 *                            [
+	 *                            'read' => 1, // 1 only
+	 *                            'unread' => 1, // 1 only
+	 *                            'type' => article-edit-revert // Accepts comma separated notification types.
+	 *                            ]
 	 * @param array $itemsPerPage [Optional] Number of items per page.
 	 * @param array $pageNumber   [Optional] Page number to read.
 	 *
@@ -119,9 +124,7 @@ class NotificationBundle extends ArrayObject {
 		$lookup = CentralIdLookup::factory();
 		$globalId = $lookup->centralIdFromLocalUser($user);
 
-		// @TODO: The only filter right now is 'target-id'.
-		// Later on we will need to implement this function to validate passed filters.
-		// $filters = self::validateFilters($filters);
+		$filters = self::validateFilters($filters);
 
 		if (!empty($globalId)) {
 			$notifications = [];

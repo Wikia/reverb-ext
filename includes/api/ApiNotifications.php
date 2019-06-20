@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Reverb\Api;
 
 use ApiBase;
+use Reverb\Notification\NotificationBroadcast;
 use Reverb\Notification\NotificationBundle;
 
 class ApiNotifications extends ApiBase {
@@ -52,9 +53,28 @@ class ApiNotifications extends ApiBase {
 			'notifications' => []
 		];
 
+		$filters = [];
+		if ($this->params['read'] === 1) {
+			$filters['read'] = 1;
+		}
+		if ($this->params['unread'] === 1) {
+			$filters['unread'] = 1;
+		}
+		if (!empty($this->params['type'])) {
+			$types = explode(',', $this->params['type']);
+			foreach ($types as $key => $type) {
+				if (!NotificationBroadcast::isTypeConfigured($type)) {
+					unset($types[$key]);
+				}
+			}
+			if (!empty($types)) {
+				$filters['type'] = implode(',', $types);
+			}
+		}
+
 		$bundle = NotificationBundle::getBundleForUser(
 			$this->getUser(),
-			[],
+			$filters,
 			$this->params['itemsPerPage'],
 			$this->params['page']
 		);
@@ -96,6 +116,21 @@ class ApiNotifications extends ApiBase {
 				ApiBase::PARAM_TYPE => 'integer',
 				ApiBase::PARAM_REQUIRED => true,
 				ApiBase::PARAM_DFLT => 50
+			],
+			'type' => [
+				ApiBase::PARAM_TYPE => 'string',
+				ApiBase::PARAM_REQUIRED => false,
+				ApiBase::PARAM_DFLT => null
+			],
+			'read' => [
+				ApiBase::PARAM_TYPE => 'integer',
+				ApiBase::PARAM_REQUIRED => false,
+				ApiBase::PARAM_DFLT => null
+			],
+			'unread' => [
+				ApiBase::PARAM_TYPE => 'integer',
+				ApiBase::PARAM_REQUIRED => false,
+				ApiBase::PARAM_DFLT => null
 			]
 		];
 	}
