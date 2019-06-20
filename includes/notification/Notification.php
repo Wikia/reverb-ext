@@ -53,6 +53,13 @@ class Notification {
 	private $agentIdCache = null;
 
 	/**
+	 * Dismissed Timestamp
+	 *
+	 * @var integer
+	 */
+	private $dismissedAt = 0;
+
+	/**
 	 * Main Constructor
 	 *
 	 * @param NotificationResource $resource Already known notification resource.
@@ -169,12 +176,23 @@ class Notification {
 	}
 
 	/**
-	 * Get the dismissed date for this notification.
+	 * Get the dismissed timestamp for this notification.
 	 *
-	 * @return integer Dismissed Date
+	 * @return integer Dismissed Timestamp
 	 */
 	public function getDismissedAt(): int {
-		return intval($this->resource->dismissed_at);
+		return intval($this->dismissedAt);
+	}
+
+	/**
+	 * Set the dismissed timestamp for this notification.
+	 *
+	 * @param integer Dismissed Timestamp
+	 *
+	 * @return void
+	 */
+	public function setDismissedAt(int $dismissedAt) {
+		$this->dismissedAt = $dismissedAt;
 	}
 
 	/**
