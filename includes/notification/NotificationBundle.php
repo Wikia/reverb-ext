@@ -174,6 +174,28 @@ class NotificationBundle extends ArrayObject {
 	}
 
 	/**
+	 * Remove any filters that may be invalid.
+	 *
+	 * @param array $filters Unchecked Filters
+	 *
+	 * @return array Filters with anything invalid removed.
+	 */
+	public static function validateFilters($filters): array {
+		$validFilters = [
+			'read' => 'intval',
+			'unread' => 'intval',
+			'type' => 'strval'
+		];
+
+		$filters = array_intersect_key($filters, $validFilters);
+
+		foreach ($filters as $key => $filter) {
+			$filters[$key] = $validFilters[$key]($filter);
+		}
+		return $filters;
+	}
+
+	/**
 	 * Get the next page of bundled notifications.
 	 *
 	 * @return NotificationBundle|null
