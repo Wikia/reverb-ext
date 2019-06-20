@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Reverb\Api;
 
 use ApiBase;
+use Reverb\Notification\Notification;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Notification\NotificationBundle;
 
@@ -106,15 +107,13 @@ class ApiNotifications extends ApiBase {
 	 */
 	public function dismissNotification(): array {
 		$success = false;
-		$dismissedAt = 0;
 
 		$id = $this->params['notificationId'];
 		if (!empty($id)) {
-			
+			$success = Notification::dismissNotification($this->getUser(), (string)$id);
 		}
 
 		return [
-			'dismissedAt' => $dismissedAt,
 			'success' => $success
 		];
 	}
