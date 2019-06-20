@@ -99,8 +99,11 @@
         var notificationPanel = buildNotificationPanel({globalNotifications: false});
         notificationPanel.appendTo('body');
         notificationButton.insertBefore(userBox);
+
+        // TODO: Allow hover state and click state. Some work needs to be done here for that to function.
+
         notificationButton.on('hover mouseover', function(){
-            notificationPanel.show();
+            //notificationPanel.show();
         });
         notificationButton.on('click', function(){
             notificationPanel.toggle();
