@@ -27,7 +27,7 @@ class ApiNotifications extends ApiBase {
 		$this->params = $this->extractRequestParams();
 
 		if (!$this->getUser()->isLoggedIn()) {
-			$this->dieUsageMsg(['apierror-permissiondenied-generic']);
+			$this->dieWithError(['apierror-permissiondenied-generic']);
 		}
 
 		switch ($this->params['do']) {
@@ -106,6 +106,10 @@ class ApiNotifications extends ApiBase {
 	 * @return array
 	 */
 	public function dismissNotification(): array {
+		if (!$this->getRequest()->wasPosted()) {
+			$this->dieWithError(['apierror-mustbeposted', __FUNCTION__]);
+		}
+
 		$success = false;
 
 		$id = $this->params['notificationId'];
