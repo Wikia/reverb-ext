@@ -33,6 +33,9 @@ class ApiNotifications extends ApiBase {
 			case 'getNotificationsForUser':
 				$response = $this->getNotificationsForUser();
 				break;
+			case 'dismissNotification':
+				$response = $this->dismissNotification();
+				break;
 			default:
 				$this->dieUsageMsg(['invaliddo', $this->params['do']]);
 				break;
@@ -97,6 +100,26 @@ class ApiNotifications extends ApiBase {
 	}
 
 	/**
+	 * Dismiss a notification based on ID.
+	 *
+	 * @return array
+	 */
+	public function dismissNotification(): array {
+		$success = false;
+		$dismissedAt = 0;
+
+		$id = $this->params['notificationId'];
+		if (!empty($id)) {
+			
+		}
+
+		return [
+			'dismissedAt' => $dismissedAt,
+			'success' => $success
+		];
+	}
+
+	/**
 	 * Array of allowed parameters on the API request.
 	 *
 	 * @return array
@@ -129,6 +152,11 @@ class ApiNotifications extends ApiBase {
 			],
 			'unread' => [
 				ApiBase::PARAM_TYPE => 'integer',
+				ApiBase::PARAM_REQUIRED => false,
+				ApiBase::PARAM_DFLT => null
+			],
+			'notificationId' => [
+				ApiBase::PARAM_TYPE => 'string',
 				ApiBase::PARAM_REQUIRED => false,
 				ApiBase::PARAM_DFLT => null
 			]
