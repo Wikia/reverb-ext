@@ -142,7 +142,7 @@ class ApiNotifications extends ApiBase {
 	 */
 	protected function getExamplesMessages() {
 		return [
-			'action=notifications&page=0&itemsPerPage=50' => 'apihelp-notifications-example',
+			'action=notifications&do=getNotificationsForUser&page=0&itemsPerPage=50' => 'apihelp-notifications-example',
 		];
 	}
 
