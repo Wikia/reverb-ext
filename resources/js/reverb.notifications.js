@@ -221,7 +221,16 @@
 
     // Handle marking events as read!
     var markRead = function(id){
-        alert("Eventually, this will mark id "+id+" as read.");
+        api.post({action:'notifications', do:'dismissNotification', notificationId: id, format:'json'})
+        .done(function(data) {
+            if (data.success) {
+                // If marked read, remove the little bubblyboi
+                $(".reverb-npnr-unread[data-id='"+id+"']").addClass('reverb-nrpr-read').removeClass('reverb-npnr-unread');
+            } else {
+                console.log('There was an issue dismissing id '+id);
+            }
+        });
+
     }
 
     $(document).on('click', ".reverb-npnr-unread", function(){
@@ -256,7 +265,6 @@
             updateCounts(true);
             
             if (data.notifications && data.notifications.length) {
-                console.log(data.notifications);
                 var notifications = buildNotificationsFromData(data,false);
                 for (var x in notifications) {
                     addNotification(notifications[x],'specialpage');
