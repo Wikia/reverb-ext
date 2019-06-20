@@ -14,7 +14,10 @@ namespace Reverb\Notification;
 
 use CentralIdLookup;
 use DynamicSettings\Wiki;
+use Exception;
+use Hydrawiki\Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful as ApiRequestUnsuccessful;
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
+use Hydrawiki\Reverb\Client\V1\Resources\NotificationTarget as NotificationTargetResource;
 use MediaWiki\MediaWikiServices;
 use Message;
 use MWException;
@@ -385,5 +388,41 @@ class Notification {
 			'canonical_url' => $this->getCanonicalUrl(),
 			'importance' => $this->getImportance()
 		];
+	}
+
+	/**
+	 * Dismiss a notification based on the original resource ID.
+	 *
+	 * @param User   $user Target user that the notification originally targetted.
+	 * @param string $id   The ID from the original resource.
+	 *
+	 * @return null
+	 */
+	public static function dismissNotification(User $user, string $id): bool {
+		$lookup = CentralIdLookup::factory();
+		$globalId = $lookup->centralIdFromLocalUser($user);
+		$userIdentifier = Identifier::newUser($globalId);
+		if (!$userIdentifier) {
+			return false;
+		}
+
+		$target = new NotificationTargetResource(
+			[
+				'target-id' => (string)$userIdentifier,
+				'dismissed-at' => time()
+			]
+		);
+		$target->setId((string)$userIdentifier . ':' . $id);
+
+		try {
+			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
+			$response = $client->update($target);
+			return true;
+		} catch (ApiRequestUnsuccessful $e) {
+			wfLogWarning('Invalid API response from the service: ' . $e->getMessage());
+		} catch (Exception $e) {
+			wfLogWarning('General exception encountered when communicating with the service: ' . $e->getMessage());
+		}
+		return false;
 	}
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Reverb\Api;
 
 use ApiBase;
+use Reverb\Notification\Notification;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Notification\NotificationBundle;
 
@@ -32,6 +33,9 @@ class ApiNotifications extends ApiBase {
 		switch ($this->params['do']) {
 			case 'getNotificationsForUser':
 				$response = $this->getNotificationsForUser();
+				break;
+			case 'dismissNotification':
+				$response = $this->dismissNotification();
 				break;
 			default:
 				$this->dieUsageMsg(['invaliddo', $this->params['do']]);
@@ -97,6 +101,24 @@ class ApiNotifications extends ApiBase {
 	}
 
 	/**
+	 * Dismiss a notification based on ID.
+	 *
+	 * @return array
+	 */
+	public function dismissNotification(): array {
+		$success = false;
+
+		$id = $this->params['notificationId'];
+		if (!empty($id)) {
+			$success = Notification::dismissNotification($this->getUser(), (string)$id);
+		}
+
+		return [
+			'success' => $success
+		];
+	}
+
+	/**
 	 * Array of allowed parameters on the API request.
 	 *
 	 * @return array
@@ -131,6 +153,11 @@ class ApiNotifications extends ApiBase {
 				ApiBase::PARAM_TYPE => 'integer',
 				ApiBase::PARAM_REQUIRED => false,
 				ApiBase::PARAM_DFLT => null
+			],
+			'notificationId' => [
+				ApiBase::PARAM_TYPE => 'string',
+				ApiBase::PARAM_REQUIRED => false,
+				ApiBase::PARAM_DFLT => null
 			]
 		];
 	}
@@ -142,7 +169,7 @@ class ApiNotifications extends ApiBase {
 	 */
 	protected function getExamplesMessages() {
 		return [
-			'action=notifications&page=0&itemsPerPage=50' => 'apihelp-notifications-example',
+			'action=notifications&do=getNotificationsForUser&page=0&itemsPerPage=50' => 'apihelp-notifications-example',
 		];
 	}
 
