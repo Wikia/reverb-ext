@@ -187,7 +187,7 @@ class Notification {
 	/**
 	 * Set the dismissed timestamp for this notification.
 	 *
-	 * @param integer Dismissed Timestamp
+	 * @param integer $dismissedAt Dismissed Timestamp
 	 *
 	 * @return void
 	 */
