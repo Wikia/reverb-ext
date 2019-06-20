@@ -137,9 +137,9 @@
         var f = {
             page: 0,
             perpage: 50,
-            unread: 1,
-            read: 1,
-            type: null
+            //unread: 1,
+            //read: 1,
+            //type: null
         }
 
         for (var x in filters) {
@@ -151,11 +151,18 @@
             do:'getNotificationsForUser', 
             page: f.page, 
             itemsPerPage: f.perpage,
-            read: f.read,
-            unread: f.unread,
-            type: f.type,
             format:'json'
         };
+
+        if (f.type) {
+            data.type = f.type;
+        }
+        if (f.unread) {
+            data.unread = f.unread;
+        }
+        if (f.read) {
+            data.read = f.read;
+        }
 
         api.get(data)
         .done(function(data) {
@@ -163,6 +170,7 @@
                 meta = data.meta;
             }
             if (data.notifications && data.notifications.length) {
+                console.log(data.notifications);
                 cb(data)
             }
         });
@@ -221,7 +229,7 @@
 
     // Handle marking events as read!
     var markRead = function(id){
-        api.post({action:'notifications', do:'dismissNotification', notificationId: id, format:'json'})
+        api.post({action:'notifications', do:'dismissNotification', notificationId: id, format:'json', formatversion: 2})
         .done(function(data) {
             console.log(data);
             if (data.success) {
