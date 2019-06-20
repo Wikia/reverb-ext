@@ -333,6 +333,10 @@ label.reverb-filter-label {
     font-weight: bold;
 }
 
+button.reverb-active-button {
+    color: #f37f20;
+}
+
 .skin-hydra .reverb-button-bar  button {
     border-color: #0c81c9;
     background-color: #d9d9d9;

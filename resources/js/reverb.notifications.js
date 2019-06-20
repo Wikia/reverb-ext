@@ -235,6 +235,14 @@
             if (data.success) {
                 // If marked read, remove the little bubblyboi
                 $(".reverb-npnr-unread[data-id='"+id+"']").addClass('reverb-nrpr-read').removeClass('reverb-npnr-unread');
+                $(".reverb-npn-row[data-id='"+id+"']").fadeOut();
+
+                console.log(meta);
+                meta.unread = meta.unread - 1;
+                meta.read = meta.read + 1;
+                updateCounts();
+
+                
             } else {
                 console.log('There was an issue dismissing id '+id);
             }
@@ -262,48 +270,75 @@
 
     if (notificationPage) {
 
+        var perPage = 10;
+        var activeFilters = {};
+
         // Mark All as Read button
         $("#reverb-mark-all-read").click(function(){
-            alert("Not implamented yet.");
+            alert("RIP");
+        });
+
+        $("#reverb-ru-all").click(function(){
+            generateWithFilters({page: 0, perpage: perPage}, true);
+            $(".reverb-active-button").removeClass('reverb-active-button');
+            $(this).addClass('reverb-active-button');
+        });
+
+        $("#reverb-ru-unread").click(function(){
+            generateWithFilters({page: 0, perpage: perPage, unread: 1}, true);
+            $(".reverb-active-button").removeClass('reverb-active-button');
+            $(this).addClass('reverb-active-button');
+        });
+
+        $("#reverb-ru-read").click(function(){
+            generateWithFilters({page: 0, perpage: perPage, read: 1}, true);
+            $(".reverb-active-button").removeClass('reverb-active-button');
+            $(this).addClass('reverb-active-button');
         });
 
 
-        var perPage = 10;
-
-        loadNotifications({page: 0, perpage: perPage},function(data){
-            updateCounts(true);
-            
-            if (data.notifications && data.notifications.length) {
-                var notifications = buildNotificationsFromData(data,false);
-                for (var x in notifications) {
-                    addNotification(notifications[x],'specialpage');
+        var generateWithFilters = function(filters, noUpdateCount) {
+            activeFilters = filters;
+            noUpdateCount = noUpdateCount ? true : false;
+            loadNotifications(filters,function(data){
+                if (!noUpdateCount) {
+                   updateCounts(true);
                 }
-            }
-
-            if (meta.total_all > meta.total_this_page) {
-                // Oh boy, we gotta do pagination guys
-
-                $(".reverb-notification-page-paging").pagination({
-                    items: meta.total_all,
-                    itemsOnPage: meta.items_per_page,
-                    cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
-                    onPageClick: function(page,event) {
-                        loadNotifications({page: page-1, perpage: perPage},function(data){
-                            if (data.notifications && data.notifications.length) {
-                                $(".reverb-notification-page-notifications").empty();
-                                var notifications = buildNotificationsFromData(data,false);
-                                for (var x in notifications) {
-                                    addNotification(notifications[x],'specialpage');
-                                }
-                            }
-                        });
+                if (data.notifications && data.notifications.length) {
+                    $(".reverb-notification-page-paging").empty();
+                    $(".reverb-notification-page-notifications").empty();
+                    var notifications = buildNotificationsFromData(data,false);
+                    for (var x in notifications) {
+                        addNotification(notifications[x],'specialpage');
                     }
-                });
+                }
+                if (meta.total_all > meta.total_this_page) {
+                    // Oh boy, we gotta do pagination guys
+                    $(".reverb-notification-page-paging").pagination({
+                        items: meta.total_all,
+                        itemsOnPage: meta.items_per_page,
+                        cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
+                        onPageClick: function(page,event) {
+                            var newfilters = activeFilters;
+                            newfilters.page = page-1;
+                            console.log(newfilters);
+                            loadNotifications(newfilters,function(data){
+                                if (data.notifications && data.notifications.length) {
+                                    $(".reverb-notification-page-notifications").empty();
+                                    var notifications = buildNotificationsFromData(data,false);
+                                    for (var x in notifications) {
+                                        addNotification(notifications[x],'specialpage');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        generateWithFilters({page: 0, perpage: perPage});
 
-            }
-
-        });
-
+    
     }
 
     /***
