@@ -417,7 +417,6 @@ class Notification {
 		try {
 			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
 			$response = $client->update($target);
-			// Check the response.
 			return true;
 		} catch (ApiRequestUnsuccessful $e) {
 			wfLogWarning('Invalid API response from the service: ' . $e->getMessage());
