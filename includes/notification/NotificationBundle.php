@@ -96,6 +96,11 @@ class NotificationBundle extends ArrayObject {
 	 *
 	 * @param User  $user         User object to use for look up.
 	 * @param array $filters      [Optional] Filters for notifications.
+	 *                            [
+	 *                            'read' => 1, // 1 only
+	 *                            'unread' => 1, // 1 only
+	 *                            'type' => article-edit-revert // Accepts comma separated notification types.
+	 *                            ]
 	 * @param array $itemsPerPage [Optional] Number of items per page.
 	 * @param array $pageNumber   [Optional] Page number to read.
 	 *
@@ -119,9 +124,7 @@ class NotificationBundle extends ArrayObject {
 		$lookup = CentralIdLookup::factory();
 		$globalId = $lookup->centralIdFromLocalUser($user);
 
-		// @TODO: The only filter right now is 'target-id'.
-		// Later on we will need to implement this function to validate passed filters.
-		// $filters = self::validateFilters($filters);
+		$filters = self::validateFilters($filters);
 
 		if (!empty($globalId)) {
 			$notifications = [];
@@ -171,6 +174,28 @@ class NotificationBundle extends ArrayObject {
 			return $bundle;
 		}
 		return null;
+	}
+
+	/**
+	 * Remove any filters that may be invalid.
+	 *
+	 * @param array $filters Unchecked Filters
+	 *
+	 * @return array Filters with anything invalid removed.
+	 */
+	public static function validateFilters($filters): array {
+		$validFilters = [
+			'read' => 'intval',
+			'unread' => 'intval',
+			'type' => 'strval'
+		];
+
+		$filters = array_intersect_key($filters, $validFilters);
+
+		foreach ($filters as $key => $filter) {
+			$filters[$key] = $validFilters[$key]($filter);
+		}
+		return $filters;
 	}
 
 	/**
