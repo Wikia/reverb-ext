@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Reverb\Api;
 
 use ApiBase;
+use Reverb\Notification\Notification;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Notification\NotificationBundle;
 
@@ -26,12 +27,15 @@ class ApiNotifications extends ApiBase {
 		$this->params = $this->extractRequestParams();
 
 		if (!$this->getUser()->isLoggedIn()) {
-			$this->dieUsageMsg(['apierror-permissiondenied-generic']);
+			$this->dieWithError(['apierror-permissiondenied-generic']);
 		}
 
 		switch ($this->params['do']) {
 			case 'getNotificationsForUser':
 				$response = $this->getNotificationsForUser();
+				break;
+			case 'dismissNotification':
+				$response = $this->dismissNotification();
 				break;
 			default:
 				$this->dieUsageMsg(['invaliddo', $this->params['do']]);
@@ -97,6 +101,28 @@ class ApiNotifications extends ApiBase {
 	}
 
 	/**
+	 * Dismiss a notification based on ID.
+	 *
+	 * @return array
+	 */
+	public function dismissNotification(): array {
+		if (!$this->getRequest()->wasPosted()) {
+			$this->dieWithError(['apierror-mustbeposted', __FUNCTION__]);
+		}
+
+		$success = false;
+
+		$id = $this->params['notificationId'];
+		if (!empty($id)) {
+			$success = Notification::dismissNotification($this->getUser(), (string)$id);
+		}
+
+		return [
+			'success' => $success
+		];
+	}
+
+	/**
 	 * Array of allowed parameters on the API request.
 	 *
 	 * @return array
@@ -129,6 +155,11 @@ class ApiNotifications extends ApiBase {
 			],
 			'unread' => [
 				ApiBase::PARAM_TYPE => 'integer',
+				ApiBase::PARAM_REQUIRED => false,
+				ApiBase::PARAM_DFLT => null
+			],
+			'notificationId' => [
+				ApiBase::PARAM_TYPE => 'string',
 				ApiBase::PARAM_REQUIRED => false,
 				ApiBase::PARAM_DFLT => null
 			]
