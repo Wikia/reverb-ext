@@ -115,7 +115,7 @@
         
         var panelTotal = 10;
 
-        loadNotifications({page: 0, perpage: panelTotal},function(data){
+        loadNotifications({page: 0, perpage: panelTotal, unread: 1},function(data){
             updateCounts();
             if (data.notifications && data.notifications.length) {
                 var notifications = buildNotificationsFromData(data,true);
@@ -302,7 +302,6 @@
                     }
                 }
 
-                console.log(filters);
                 generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
                 $(".reverb-active-button").removeClass('reverb-active-button');
                 $("#reverb-ru-all").addClass('reverb-active-button');
