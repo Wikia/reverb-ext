@@ -3,30 +3,30 @@
 }
 
 .reverb-filter-notice {
-    width:100%;
-    text-align: center;
+	width:100%;
+	text-align: center;
 }
 
 .reverb-icon {
-    width: 24px;
-    height: 24px;
+	width: 24px;
+	height: 24px;
 }
 
 .reverb-np {
-    /*display: none;*/
-    width: 500px;
-    height: auto;
-    border: 1px solid #4f4f4f;
-    background: #202020;
-    color: #ffffff;
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    z-index: 9999999;
-    border-radius: 5px;
-    padding: 20px;
-    font-family: 'Helvetica', sans-serif;
-    display: none;
+	/*display: none;*/
+	width: 500px;
+	height: auto;
+	border: 1px solid #4f4f4f;
+	background: #202020;
+	color: #ffffff;
+	position: absolute;
+	top: 5px;
+	right: 15px;
+	z-index: 9999999;
+	border-radius: 5px;
+	padding: 20px;
+	font-family: 'Helvetica', sans-serif;
+	display: none;
 }
 
 div.reverb-np:before, div.reverb-np:after {
@@ -34,13 +34,13 @@ div.reverb-np:before, div.reverb-np:after {
 	height: 0;
 	position: absolute;
 	width: 0;
-    border: 10px solid; /* arrow size */
-    border-color: transparent;
+	border: 10px solid; /* arrow size */
+	border-color: transparent;
 }
 
 div.reverb-np:before {
-    border-bottom-color: #202020;  /* arrow color */
-    color: #fff;
+	border-bottom-color: #202020;  /* arrow color */
+	color: #fff;
 	position: absolute;
 	top: -20px;
 	right: 67px;
@@ -49,120 +49,120 @@ div.reverb-np:before {
 
 
 .reverb-np-header {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 0px 0px 15px 0px;
-    border-bottom: 1px solid #4f4f4f;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 0px 0px 15px 0px;
+	border-bottom: 1px solid #4f4f4f;
 }
 
 .reverb-nph-right {
-    float: right;
-    font-size: 14px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1;
-    letter-spacing: normal;
-    text-align: right;
+	float: right;
+	font-size: 14px;
+	font-weight: bold;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1;
+	letter-spacing: normal;
+	text-align: right;
 }
 
 .reverb-nph-right a:link, 
 .reverb-nph-right a:active, 
 .reverb-nph-right a:visited {
-    color: #fff;
+	color: #fff;
 } 
 
 
 .reverb-nph-right a:hover {
-    text-decoration: none;
-    color: #fff;
+	text-decoration: none;
+	color: #fff;
 }
 
 .reverb-npn-viewmore:link,  
 .reverb-npn-viewmore:active,
 .reverb-npn-viewmore:visited{
-    color: #fff;
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1;
-    letter-spacing: normal;
+	color: #fff;
+	width: 100%;
+	text-align: center;
+	font-size: 14px;
+	font-weight: bold;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1;
+	letter-spacing: normal;
 }
 
 .reverb-npn-viewmore:hover {
-    text-decoration: none;
-    color: #fff;
+	text-decoration: none;
+	color: #fff;
 }
 
 .reverb-nph-notifications {
-    padding: 0px 10px 0px 0px;
-    border-right: 1px solid #4f4f4f;
-    font-family: Helvetica, sans-serif;
-    font-size: 20px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1;
-    letter-spacing: normal;
+	padding: 0px 10px 0px 0px;
+	border-right: 1px solid #4f4f4f;
+	font-family: Helvetica, sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1;
+	letter-spacing: normal;
 }
 
 .reverb-nph-preferences {
-    padding: 0px 0px 0px 5px;
+	padding: 0px 0px 0px 5px;
 }
 
 .reverb-np-notifications {
-    /* MEMES GO HERE */
+	/* MEMES GO HERE */
 }
 
 .reverb-np-no-unread {
-    text-align: center;
-    padding: 20px 20px;
+	text-align: center;
+	padding: 20px 20px;
 }
 
 .reverb-npn {
-    max-height: 500px;
-    overflow-y: auto;
+	max-height: 500px;
+	overflow-y: auto;
 }
 
 .reverb-npn-row, .reverb-notification-page-row {
-    padding: 10px 0px;
-    display: flex;
-    justify-content: flex-start;
+	padding: 10px 0px;
+	display: flex;
+	justify-content: flex-start;
 }
 
 .reverb-npn-row-global {
-    border-bottom: 1px solid #4f4f4f;
-    margin-bottom: 5px;
-    background-color: #212121;
+	border-bottom: 1px solid #4f4f4f;
+	margin-bottom: 5px;
+	background-color: #212121;
 }
 
 .reverb-npn-row-global > .reverb-npnr-right {
-    border-bottom: 0;
-    padding: 5px 0px;
+	border-bottom: 0;
+	padding: 5px 0px;
 }
 
 .reverb-npnr-unread-global {
-    position: relative;
-    top: 5px;
+	position: relative;
+	top: 5px;
 }
 
 .reverb-icon-global {
-    position: relative;
-    top: 5px;
+	position: relative;
+	top: 5px;
 }
 
 .reverb-npnr-left {
-    padding: 0px 15px 0px 5px;
+	padding: 0px 15px 0px 5px;
 }
 
 .reverb-npnr-right {
-    flex: 1;
-    margin-right: 5px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #4f4f4f;
+	flex: 1;
+	margin-right: 5px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #4f4f4f;
 }
 
 .reverb-npn-row:hover {
@@ -170,204 +170,204 @@ div.reverb-np:before {
 }
 
 .reverb-npnr-unread {
-    width: 10px;
-    height: 10px;
-    background-color: #f37f20;
-    border-radius: 25px;
-    float: right;
+	width: 10px;
+	height: 10px;
+	background-color: #f37f20;
+	border-radius: 25px;
+	float: right;
 }
 
 .reverb-npnr-read {
-    width: 10px;
-    height: 10px;
-    background-color: #202020;
-    border-radius: 25px;
-    float: right;
+	width: 10px;
+	height: 10px;
+	background-color: #202020;
+	border-radius: 25px;
+	float: right;
   }
 
 .reverb-npnr-header {
-    font-family: Helvetica, sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.5;
-    letter-spacing: normal;
+	font-family: Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.5;
+	letter-spacing: normal;
 }
 
 .reverb-npnr-header a:link,
 .reverb-npnr-header a:active,
 .reverb-npnr-header a:visited {
-    color: #f37f20;
+	color: #f37f20;
 }
 
 .reverb-npnr-header a:hover {
-    color: #f37f20;
+	color: #f37f20;
 }
 
 .reverb-npnr-body {
-    margin-top: 10px;
-    padding: 3px 0px;
-    opacity: 0.75;
-    font-family: Helvetica, sans-serif;
-    font-size: 14px;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.5;
-    letter-spacing: normal;
+	margin-top: 10px;
+	padding: 3px 0px;
+	opacity: 0.75;
+	font-family: Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.5;
+	letter-spacing: normal;
 }
 
 .reverb-npnr-bottom {
-    margin-top: 10px;
-    width: 100%;
-    font-size: 14px;
-    line-height: 21px;
-    font-weight: bold;
+	margin-top: 10px;
+	width: 100%;
+	font-size: 14px;
+	line-height: 21px;
+	font-weight: bold;
 }
 
 .reverb-notification-page {
-    padding: 10px 0px;
-    display: flex;
-    justify-content: flex-start;
+	padding: 10px 0px;
+	display: flex;
+	justify-content: flex-start;
 }
 
 .skin-hydra .reverb-notification-page {
-    color: #000;
+	color: #000;
 }
 
 .skin-hydradark .reverb-notification-page {
-    color: #FFF;
+	color: #FFF;
 }
 
 .reverb-notification-page-left {
-    width: 300px;
-    border: solid 1px #bed1cf;
+	width: 300px;
+	border: solid 1px #bed1cf;
 }
 
 .reverb-notification-page-right {
-    flex: 1;
-    margin-left: 20px;
+	flex: 1;
+	margin-left: 20px;
 }
 
 .reverb-pull-right {
-    float: right;
+	float: right;
 }
 
 .reverb-filter-title {
-    margin: 20px 10px;
-    height: 18px;
-    font-family: Rubik, Helvetica, sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.13;
-    letter-spacing: normal;
+	margin: 20px 10px;
+	height: 18px;
+	font-family: Rubik, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.13;
+	letter-spacing: normal;
 }
 
 .reverb-filter-row {
-    margin: 0px 10px;
-    padding: 12px 0px;
-    font-family: Rubik, Helvetica, sans-serif;
-    font-size: 14px;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1;
-    letter-spacing: normal;
-    border-bottom: 1px solid #4f4f4f;
+	margin: 0px 10px;
+	padding: 12px 0px;
+	font-family: Rubik, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1;
+	letter-spacing: normal;
+	border-bottom: 1px solid #4f4f4f;
 }
 
 
 
 input[type=checkbox].reverb-filter-checkbox {
-    position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+	position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
 }
 
 input[type=checkbox].reverb-filter-checkbox + label.reverb-filter-label {
-    padding-left:21px;
-    height:16px; 
-    display:inline-block;
-    line-height:16px;
-    background-repeat:no-repeat;
-    background-position: 0 0;
-    font-size:16px;
-    vertical-align:middle;
-    cursor:pointer;
+	padding-left:21px;
+	height:16px; 
+	display:inline-block;
+	line-height:16px;
+	background-repeat:no-repeat;
+	background-position: 0 0;
+	font-size:16px;
+	vertical-align:middle;
+	cursor:pointer;
 
 }
 
 input[type=checkbox].reverb-filter-checkbox:checked + label.reverb-filter-label {
-    background-position: 0 -16px;
+	background-position: 0 -16px;
 }
 
 label.reverb-filter-label {
-    background-image:url(../images/checkbox.png);
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+	background-image:url(../images/checkbox.png);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 .skin-hydra label.reverb-filter-label {
-    background-image:url(../images/checkbox-light.png);
+	background-image:url(../images/checkbox-light.png);
 }
 
 .reverb-button-bar {
-    padding: 0px 0px 20px 0px;
-    border-bottom: 1px solid #fff;
+	padding: 0px 0px 20px 0px;
+	border-bottom: 1px solid #fff;
 }
 
 .reverb-button-bar  button {
-    border-radius: 2px;
-    border: solid 1px #f37f20;
-    background-color: #000000;
-    color: #ffffff;
-    padding: 10px;
-    margin-left: -5px; /* Dumb way to bump them all together. Roll Tide */
-    font-size: 14px;
-    font-family: Helveta, sans-serif;
-    font-weight: bold;
+	border-radius: 2px;
+	border: solid 1px #f37f20;
+	background-color: #000000;
+	color: #ffffff;
+	padding: 10px;
+	margin-left: -5px; /* Dumb way to bump them all together. Roll Tide */
+	font-size: 14px;
+	font-family: Helveta, sans-serif;
+	font-weight: bold;
 }
 
 button.reverb-active-button {
-    color: #f37f20;
+	color: #f37f20;
 }
 
 .skin-hydra .reverb-button-bar  button {
-    border-color: #0c81c9;
-    background-color: #d9d9d9;
-    color: #000;
+	border-color: #0c81c9;
+	background-color: #d9d9d9;
+	color: #000;
 }
 
 .skin-hydra .reverb-button-bar  button:hover, 
 .skin-hydra  .reverb-button-bar  button.reverb-selected {
-    color: #0c81c9;
+	color: #0c81c9;
 }
 
 
 .reverb-button-bar  button:hover, 
 .reverb-button-bar  button.reverb-selected {
-    color: #f37f20;
+	color: #f37f20;
 }
 
 .reverb-notification-page-paging {
-    
+	
 }
 
 .reverb-npp-bottom {
-    padding: 10px 0px 0px 0px;
-    border-top: 1px solid #4f4f4f;
+	padding: 10px 0px 0px 0px;
+	border-top: 1px solid #4f4f4f;
 }
 
 .reverb-npp-top {
-    padding: 15px 0px 10px 0px;
-    border-bottom: 1px solid #4f4f4f;
+	padding: 15px 0px 10px 0px;
+	border-bottom: 1px solid #4f4f4f;
 }
 
 .reverb-bell-unread {
-    color: #f37f20;
+	color: #f37f20;
 }
