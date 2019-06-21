@@ -278,6 +278,37 @@
             alert("RIP");
         });
 
+        $(".reverb-filter-checkbox").change(function() {
+            console.log(this.id + " changed");
+            if (this.id == "filter_all") {
+                // This is the all checkbox. Lets uncheck every other box
+                $('.reverb-filter-checkbox').each(function () { 
+                    if (this.id !== "filter_all") {
+                        this.checked = false; 
+                    }
+                });
+                generateWithFilters({page: 0, perpage: perPage}, false);
+                $(".reverb-active-button").removeClass('reverb-active-button');
+                $("#reverb-ru-all").addClass('reverb-active-button');
+            } else {
+                // A different filter was clicked.
+                $('#filter_all').get(0).checked = false;
+                var checked = $('.reverb-filter-checkbox:checked');
+                var filters = [];
+                for (var x in checked) {
+                    if (checked[x].id) {
+                        var filter = checked[x].id.toString().replace("filter_","");
+                        filters.push(filter);
+                    }
+                }
+
+                console.log(filters);
+                generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
+                $(".reverb-active-button").removeClass('reverb-active-button');
+                $("#reverb-ru-all").addClass('reverb-active-button');
+            }
+        });
+
         $("#reverb-ru-all").click(function(){
             generateWithFilters({page: 0, perpage: perPage}, true);
             $(".reverb-active-button").removeClass('reverb-active-button');
