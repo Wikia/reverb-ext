@@ -331,6 +331,7 @@ label.reverb-filter-label {
 	font-size: 14px;
 	font-family: Helveta, sans-serif;
 	font-weight: bold;
+	cursor: pointer;
 }
 
 button.reverb-active-button {
