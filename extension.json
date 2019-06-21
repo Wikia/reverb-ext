@@ -69,6 +69,26 @@
 				"special-button-read",
 				"special-button-unread"
 			]
+		},
+		"ext.reverb.notifications.scripts.notificationPage": {
+			"targets": [
+				"desktop",
+				"mobile"
+			],
+			"scripts": [
+				"resources/js/reverb.pagination.js"
+			],
+			"position": "bottom"
+		},
+		"ext.reverb.notifications.styles.notificationPage": {
+			"targets": [
+				"desktop",
+				"mobile"
+			],
+			"styles": [
+				"resources/css/reverb.pagination.css"
+			],
+			"position": "bottom"
 		}
 	},
 	"ResourceFileModulePaths": {
