@@ -175,7 +175,6 @@
 				meta = data.meta;
 			}
 			if (data.notifications && data.notifications.length) {
-				console.log(data.notifications);
 				cb(data)
 			}
 		});
@@ -199,9 +198,10 @@
 			icon = icon ? icon : "feedback.svg"; // set a default fallback icon
 
 			// Convert for javascript
-			var created_at = n.created_at * 1000;
-			var created = moment(created_at).fromNow();
-			
+			var created_at = moment(n.created_at * 1000);
+			var created = created_at.fromNow();
+			var timestamp = created_at.format("dddd, MMMM Do YYYY, h:mm:ss a");
+
 			// Handle Read Count -- Not available from API yet
 			var wasRead = n.dismissed_at ? true : false;
 			var read = wasRead ? "read" : "unread";
@@ -212,7 +212,8 @@
 				body: message,
 				read: read,
 				icon: icon,
-				created: created
+				created: created,
+				timestamp: timestamp
 			};
 
 			notifications.push(buildNotification(notificationData));
@@ -236,20 +237,19 @@
 	var markRead = function(id){
 		api.post({action:'notifications', do:'dismissNotification', notificationId: id, format:'json', formatversion: 2})
 		.done(function(data) {
-			console.log(data);
+
 			if (data.success) {
 				// If marked read, remove the little bubblyboi
 				$(".reverb-npnr-unread[data-id='"+id+"']").addClass('reverb-nrpr-read').removeClass('reverb-npnr-unread');
-				$(".reverb-npn-row[data-id='"+id+"']").fadeOut();
+				//$(".reverb-npn-row[data-id='"+id+"']").fadeOut();
 
-				console.log(meta);
 				meta.unread = meta.unread - 1;
 				meta.read = meta.read + 1;
 				updateCounts();
 
 				
 			} else {
-				console.log('There was an issue dismissing id '+id);
+				log('There was an issue dismissing id '+id);
 			}
 		});
 
@@ -286,7 +286,6 @@
 		});
 
 		$(".reverb-filter-checkbox").change(function() {
-			console.log(this.id + " changed");
 			if (this.id == "filter_all") {
 				// This is the all checkbox. Lets uncheck every other box
 				$('.reverb-filter-checkbox').each(function () { 
@@ -358,7 +357,6 @@
 						onPageClick: function(page,event) {
 							var newfilters = activeFilters;
 							newfilters.page = page-1;
-							console.log(newfilters);
 							loadNotifications(newfilters,function(data){
 								if (data.notifications && data.notifications.length) {
 									$(".reverb-notification-page-notifications").empty();
@@ -407,7 +405,7 @@
 		}
 		html += '      <div class="reverb-npnr-bottom">'
 		+ '            <span class="reverb-npnr-'+d.read+'" data-id="'+d.id+'"></span>'
-		+ '            ' + d.created
+		+ '            <span title="'+d.timestamp+'">' + d.created + '</span>'
 		+ '        </div>'
 		+ '    </div>'
 		+ '</div>';
@@ -420,22 +418,9 @@
 				 + '    <div class="reverb-np-header">'
 				 + '        <span class="reverb-nph-right"><a href="/Special:Notifications">View All <i class="fa fa-arrow-right"></i></a></span>'
 				 + '        <span class="reverb-nph-notifications">Notifications (<span class="reverb-total-notifications">0</span>)</span>'
-				 + '        <span class="reverb-nph-preferences"><a href="#" onClick="return devNotice(\'This will open preferences, once that page exists.\')"><i class="fa fa-cog"></i></a></span>'
-				 + '    </div>';
-			if (data.globalNotifications) {
-				html += '<div class="reverb-npn-row reverb-npn-row-global">'
-					  + '   <div class="reverb-npnr-left">'
-					  + '       <img src="/extensions/Reverb/resources/icons/global.svg" class="reverb-icon reverb-icon-global">'
-					  + '   </div>'
-					  + '   <div class="reverb-npnr-right">'
-					  + '       <div class="reverb-npnr-header">'
-					  + '           3 unread notifications from other wikis. <i class="fa fa-chevron-down"></i>'
-					  + '           <span class="reverb-npnr-unread reverb-npnr-unread-global"></span>'
-					  + '       </div>'
-					  + '   </div>'
-					  + '</div>';
-			}
-			html +='    <div class="reverb-npn">'
+				 + '        <span class="reverb-nph-preferences"><a href="/Special:Preferences#mw-prefsection-reverb"><i class="fa fa-cog"></i></a></span>'
+				 + '    </div>'
+				 + '    <div class="reverb-npn">'
 				 + '        <div class="reverb-np-no-unread">No Unread Notifications</div>'
 				 + '    </div>'
 				 + '</div>'
