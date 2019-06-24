@@ -202,6 +202,9 @@
 			var created = created_at.fromNow();
 			var timestamp = created_at.format("dddd, MMMM Do YYYY, h:mm:ss a");
 
+			var site_name = n.site_name;
+			var site_url = n.origin_url;
+
 			// Handle Read Count -- Not available from API yet
 			var wasRead = n.dismissed_at ? true : false;
 			var read = wasRead ? "read" : "unread";
@@ -213,7 +216,9 @@
 				read: read,
 				icon: icon,
 				created: created,
-				timestamp: timestamp
+				timestamp: timestamp,
+				site_name: site_name,
+				site_url: site_url
 			};
 
 			notifications.push(buildNotification(notificationData));
@@ -406,6 +411,7 @@
 		html += '      <div class="reverb-npnr-bottom">'
 		+ '            <span class="reverb-npnr-'+d.read+'" data-id="'+d.id+'"></span>'
 		+ '            <span title="'+d.timestamp+'">' + d.created + '</span>'
+		+ '            <span class="reverb-npnrb-site">on <a href="'+d.site_url+'">'+d.site_name+'</span>'
 		+ '        </div>'
 		+ '    </div>'
 		+ '</div>';
