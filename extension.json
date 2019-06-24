@@ -140,22 +140,22 @@
 		"ReverbIcons": {
 			"value": {
 				"category": {
-					"user": "feedback.svg",
-					"article": "feedback.svg"
+					"user": "fa-bullhorn",
+					"article": "fa-bullhorn"
 				},
 				"subcategory": {
-					"user-account": ".svg",
-					"user-interest": ".svg",
-					"article-edit": ".svg"
+					"user-account": "",
+					"user-interest": "",
+					"article-edit": ""
 				},
 				"notification": {
-					"user-interest-welcome": ".svg",
-					"user-interest-talk-page-edit": ".svg",
-					"user-interest-page-linked": ".svg",
-					"article-edit-revert": ".svg",
-					"article-edit-thanks": ".svg",
-					"user-account-groups-expiration-change": ".svg",
-					"user-account-groups-changed": ".svg"
+					"user-interest-welcome": "",
+					"user-interest-talk-page-edit": "",
+					"user-interest-page-linked": "",
+					"article-edit-revert": "",
+					"article-edit-thanks": "",
+					"user-account-groups-expiration-change": "",
+					"user-account-groups-changed": ""
 				}
 			},
 			"merge_strategy": "array_plus_2d"

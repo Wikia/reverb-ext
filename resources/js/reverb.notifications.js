@@ -194,8 +194,10 @@
 			var message = n.user_note ? n.user_note : "";
 
 			// Try Notification, then Subcategory, then Category...
-			var icon = (n.icons.notification && n.icons.notificaton !== ".svg") ? n.icons.notification : ( (n.icons.subcategory && n.icons.subcategory !== ".svg" ) ? n.icons.subcategory : ((n.icons.category && n.icons.category !== ".svg") ? n.icons.category : false));
-			icon = icon ? icon : "feedback.svg"; // set a default fallback icon
+			var icon = (n.icons.notification) ? n.icons.notification : ( (n.icons.subcategory && n.icons.subcategory) ? n.icons.subcategory : ((n.icons.category && n.icons.category) ? n.icons.category : false));
+			icon = icon ? icon : "fa-bullhorn";
+
+
 
 			// Convert for javascript
 			var created_at = moment(n.created_at * 1000);
@@ -401,7 +403,7 @@
 		var html = ''
 		+ '<div class="reverb-npn-row" data-id="'+d.id+'">'
 		+ '    <div class="reverb-npnr-left">'
-		+ '        <img src="/extensions/Reverb/resources/icons/'+d.icon+'" class="reverb-icon" />'
+		+ '        <i class="fa '+d.icon+' fa-lg reverb-icon"></i>'
 		+ '    </div>'
 		+ '    <div class="reverb-npnr-right">'
 		+ '        <div class="reverb-npnr-header">'+d.header+'</div>';

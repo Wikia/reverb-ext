@@ -383,3 +383,10 @@ button.reverb-active-button {
 .reverb-bell-unread {
 	color: #f37f20;
 }
+
+.reverb-icon {
+	position: relative;
+	top: 5px;
+	left: 5px;
+	color: #36c;
+}
