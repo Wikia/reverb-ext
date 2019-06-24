@@ -60,6 +60,13 @@ class Notification {
 	private $dismissedAt = 0;
 
 	/**
+	 * Cache of loaded wikis.
+	 *
+	 * @var array
+	 */
+	private static $wikiCache = [];
+
+	/**
 	 * Main Constructor
 	 *
 	 * @param NotificationResource $resource Already known notification resource.
@@ -227,6 +234,11 @@ class Notification {
 	 */
 	public function getOrigin(): ?Wiki {
 		$id = $this->getOriginId();
+
+		if (isset(self::$wikiCache[$id])) {
+			return self::$wikiCache[$id];
+		}
+
 		if ($id !== null) {
 			if ($id->whoAmI() === 'master') {
 				$wiki = Wiki::getFakeMainWiki();
@@ -234,6 +246,7 @@ class Notification {
 				$wiki = Wiki::loadFromHash($id->whoAmI());
 			}
 			if (!empty($wiki)) {
+				self::$wikiCache[$id] = $wiki;
 				return $wiki;
 			}
 		}
@@ -386,6 +399,8 @@ class Notification {
 	 * @return array
 	 */
 	public function toArray(): array {
+		$wiki = $this->getOrigin();
+
 		return [
 			'icons' => [
 				'notification' => $this->getNotificationIcon(),
@@ -402,6 +417,8 @@ class Notification {
 			'created_at' => $this->getCreatedAt(),
 			'dismissed_at' => $this->getDismissedAt(),
 			'origin_url' => $this->getOriginUrl(),
+			'site_key' => ($wiki !== null ? $wiki->getSiteKey() : null),
+			'site_name' => ($wiki !== null ? $wiki->getNameForDisplay() : null),
 			'agent_url' => $this->getAgentUrl(),
 			'canonical_url' => $this->getCanonicalUrl(),
 			'importance' => $this->getImportance()
