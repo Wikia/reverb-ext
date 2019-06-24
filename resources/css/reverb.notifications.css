@@ -322,6 +322,7 @@ label.reverb-filter-label {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	width: 100%;
 }
 
 .skin-hydra label.reverb-filter-label {
@@ -343,6 +344,7 @@ label.reverb-filter-label {
 	font-size: 14px;
 	font-family: Helveta, sans-serif;
 	font-weight: bold;
+	cursor: pointer;
 }
 
 button.reverb-active-button {

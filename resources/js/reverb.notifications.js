@@ -174,9 +174,7 @@
 			if (data.meta) {
 				meta = data.meta;
 			}
-			if (data.notifications && data.notifications.length) {
-				cb(data)
-			}
+			cb(data)
 		});
 	}
 
@@ -286,7 +284,6 @@
 		var activeFilters = {};
 
 
-
 		// Mark All as Read button
 		$("#reverb-mark-all-read").click(function(){
 			devNotice("This feature is still in development and will be available in a future update.");
@@ -313,6 +310,10 @@
 						var filter = checked[x].id.toString().replace("filter_","");
 						filters.push(filter);
 					}
+				}
+
+				if (!checked.length) {
+					$("#filter_all").click();
 				}
 
 				generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
@@ -344,38 +345,45 @@
 			activeFilters = filters;
 			noUpdateCount = noUpdateCount ? true : false;
 			loadNotifications(filters,function(data){
-				if (!noUpdateCount) {
-				   updateCounts(true);
-				}
-				if (data.notifications && data.notifications.length) {
+					if (!noUpdateCount) {
+					updateCounts(true);
+					}
+					if (data.notifications && data.notifications.length) {
+						$(".reverb-notification-page-paging").empty();
+						$(".reverb-notification-page-notifications").empty();
+						var notifications = buildNotificationsFromData(data,false);
+						for (var x in notifications) {
+							addNotification(notifications[x],'specialpage');
+						}
+					
+					if (meta.total_all > meta.total_this_page) {
+						// Oh boy, we gotta do pagination guys
+						$(".reverb-notification-page-paging").pagination({
+							items: meta.total_all,
+							itemsOnPage: meta.items_per_page,
+							cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
+							onPageClick: function(page,event) {
+								var newfilters = activeFilters;
+								newfilters.page = page-1;
+								loadNotifications(newfilters,function(data){
+									if (data.notifications && data.notifications.length) {
+										$(".reverb-notification-page-notifications").empty();
+										var notifications = buildNotificationsFromData(data,false);
+										for (var x in notifications) {
+											addNotification(notifications[x],'specialpage');
+										}
+									}
+								});
+							}
+						});
+					}
+				} else {
+					// We need to display a "no items" section.
 					$(".reverb-notification-page-paging").empty();
 					$(".reverb-notification-page-notifications").empty();
-					var notifications = buildNotificationsFromData(data,false);
-					for (var x in notifications) {
-						addNotification(notifications[x],'specialpage');
-					}
+					addNotification(buildNoNotifications(),'specialpage');
 				}
-				if (meta.total_all > meta.total_this_page) {
-					// Oh boy, we gotta do pagination guys
-					$(".reverb-notification-page-paging").pagination({
-						items: meta.total_all,
-						itemsOnPage: meta.items_per_page,
-						cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
-						onPageClick: function(page,event) {
-							var newfilters = activeFilters;
-							newfilters.page = page-1;
-							loadNotifications(newfilters,function(data){
-								if (data.notifications && data.notifications.length) {
-									$(".reverb-notification-page-notifications").empty();
-									var notifications = buildNotificationsFromData(data,false);
-									for (var x in notifications) {
-										addNotification(notifications[x],'specialpage');
-									}
-								}
-							});
-						}
-					});
-				}
+
 			});
 		}
 		generateWithFilters({page: 0, perpage: perPage});
@@ -396,6 +404,11 @@
 
 	var buildViewMore = function(more) {
 		var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="/Special:Notifications">View '+ more +' Additional Unread <i class="fa fa-arrow-right"></i></button></div>';
+		return $(html);
+	}
+
+	var buildNoNotifications = function() {
+		var html = '<div class="reverb-no-notifications">No Notifications</div>';
 		return $(html);
 	}
 
@@ -437,7 +450,7 @@
 
 	var buildNotificationButton = function(data) {
 		var html = '<div class="netbar-box right reverb-notifications reverb-bell">'
-				 + '    <i class="fa fa-envelope"></i>'
+				 + '    <i class="fas fa-bell"></i>'
 				 + '</div>'
 		return $(html);
 	}
