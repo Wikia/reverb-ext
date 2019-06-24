@@ -10,6 +10,11 @@
 	 *           We out here using jQuery in 2019.                              
 	 */
 
+	var devNotice = function(msg) {
+		alert("[Reverb Development Notice] "+msg);
+		console.log('[REVERB DEV NOTE]',msg);
+	}
+
 	var api = new mw.Api();
 	window.log = function(...args){
 		mw.log('[REVERB]', ...args);
@@ -169,10 +174,7 @@
 			if (data.meta) {
 				meta = data.meta;
 			}
-			if (data.notifications && data.notifications.length) {
-				console.log(data.notifications);
-				cb(data)
-			}
+			cb(data)
 		});
 	}
 
@@ -190,13 +192,19 @@
 			var message = n.user_note ? n.user_note : "";
 
 			// Try Notification, then Subcategory, then Category...
-			var icon = (n.icons.notification && n.icons.notificaton !== ".svg") ? n.icons.notification : ( (n.icons.subcategory && n.icons.subcategory !== ".svg" ) ? n.icons.subcategory : ((n.icons.category && n.icons.category !== ".svg") ? n.icons.category : false));
-			icon = icon ? icon : "feedback.svg"; // set a default fallback icon
+			var icon = (n.icons.notification) ? n.icons.notification : ( (n.icons.subcategory && n.icons.subcategory) ? n.icons.subcategory : ((n.icons.category && n.icons.category) ? n.icons.category : false));
+			icon = icon ? icon : "fa-bullhorn";
+
+
 
 			// Convert for javascript
-			var created_at = n.created_at * 1000;
-			var created = moment(created_at).fromNow();
-			
+			var created_at = moment(n.created_at * 1000);
+			var created = created_at.fromNow();
+			var timestamp = created_at.format("dddd, MMMM Do YYYY, h:mm:ss a");
+
+			var site_name = n.site_name;
+			var site_url = n.origin_url;
+
 			// Handle Read Count -- Not available from API yet
 			var wasRead = n.dismissed_at ? true : false;
 			var read = wasRead ? "read" : "unread";
@@ -207,7 +215,10 @@
 				body: message,
 				read: read,
 				icon: icon,
-				created: created
+				created: created,
+				timestamp: timestamp,
+				site_name: site_name,
+				site_url: site_url
 			};
 
 			notifications.push(buildNotification(notificationData));
@@ -231,20 +242,19 @@
 	var markRead = function(id){
 		api.post({action:'notifications', do:'dismissNotification', notificationId: id, format:'json', formatversion: 2})
 		.done(function(data) {
-			console.log(data);
+
 			if (data.success) {
 				// If marked read, remove the little bubblyboi
 				$(".reverb-npnr-unread[data-id='"+id+"']").addClass('reverb-nrpr-read').removeClass('reverb-npnr-unread');
-				$(".reverb-npn-row[data-id='"+id+"']").fadeOut();
+				//$(".reverb-npn-row[data-id='"+id+"']").fadeOut();
 
-				console.log(meta);
 				meta.unread = meta.unread - 1;
 				meta.read = meta.read + 1;
 				updateCounts();
 
 				
 			} else {
-				console.log('There was an issue dismissing id '+id);
+				log('There was an issue dismissing id '+id);
 			}
 		});
 
@@ -273,13 +283,13 @@
 		var perPage = 10;
 		var activeFilters = {};
 
+
 		// Mark All as Read button
 		$("#reverb-mark-all-read").click(function(){
-			alert("RIP");
+			devNotice("This feature is still in development and will be available in a future update.");
 		});
 
 		$(".reverb-filter-checkbox").change(function() {
-			console.log(this.id + " changed");
 			if (this.id == "filter_all") {
 				// This is the all checkbox. Lets uncheck every other box
 				$('.reverb-filter-checkbox').each(function () { 
@@ -300,6 +310,10 @@
 						var filter = checked[x].id.toString().replace("filter_","");
 						filters.push(filter);
 					}
+				}
+
+				if (!checked.length) {
+					$("#filter_all").click();
 				}
 
 				generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
@@ -331,39 +345,45 @@
 			activeFilters = filters;
 			noUpdateCount = noUpdateCount ? true : false;
 			loadNotifications(filters,function(data){
-				if (!noUpdateCount) {
-				   updateCounts(true);
-				}
-				if (data.notifications && data.notifications.length) {
+					if (!noUpdateCount) {
+					updateCounts(true);
+					}
+					if (data.notifications && data.notifications.length) {
+						$(".reverb-notification-page-paging").empty();
+						$(".reverb-notification-page-notifications").empty();
+						var notifications = buildNotificationsFromData(data,false);
+						for (var x in notifications) {
+							addNotification(notifications[x],'specialpage');
+						}
+					
+					if (meta.total_all > meta.total_this_page) {
+						// Oh boy, we gotta do pagination guys
+						$(".reverb-notification-page-paging").pagination({
+							items: meta.total_all,
+							itemsOnPage: meta.items_per_page,
+							cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
+							onPageClick: function(page,event) {
+								var newfilters = activeFilters;
+								newfilters.page = page-1;
+								loadNotifications(newfilters,function(data){
+									if (data.notifications && data.notifications.length) {
+										$(".reverb-notification-page-notifications").empty();
+										var notifications = buildNotificationsFromData(data,false);
+										for (var x in notifications) {
+											addNotification(notifications[x],'specialpage');
+										}
+									}
+								});
+							}
+						});
+					}
+				} else {
+					// We need to display a "no items" section.
 					$(".reverb-notification-page-paging").empty();
 					$(".reverb-notification-page-notifications").empty();
-					var notifications = buildNotificationsFromData(data,false);
-					for (var x in notifications) {
-						addNotification(notifications[x],'specialpage');
-					}
+					addNotification(buildNoNotifications(),'specialpage');
 				}
-				if (meta.total_all > meta.total_this_page) {
-					// Oh boy, we gotta do pagination guys
-					$(".reverb-notification-page-paging").pagination({
-						items: meta.total_all,
-						itemsOnPage: meta.items_per_page,
-						cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
-						onPageClick: function(page,event) {
-							var newfilters = activeFilters;
-							newfilters.page = page-1;
-							console.log(newfilters);
-							loadNotifications(newfilters,function(data){
-								if (data.notifications && data.notifications.length) {
-									$(".reverb-notification-page-notifications").empty();
-									var notifications = buildNotificationsFromData(data,false);
-									for (var x in notifications) {
-										addNotification(notifications[x],'specialpage');
-									}
-								}
-							});
-						}
-					});
-				}
+
 			});
 		}
 		generateWithFilters({page: 0, perpage: perPage});
@@ -387,11 +407,16 @@
 		return $(html);
 	}
 
+	var buildNoNotifications = function() {
+		var html = '<div class="reverb-no-notifications">No Notifications</div>';
+		return $(html);
+	}
+
 	var buildNotification = function(d) {
 		var html = ''
 		+ '<div class="reverb-npn-row" data-id="'+d.id+'">'
 		+ '    <div class="reverb-npnr-left">'
-		+ '        <img src="/extensions/Reverb/resources/icons/'+d.icon+'" class="reverb-icon" />'
+		+ '        <i class="fa '+d.icon+' fa-lg reverb-icon"></i>'
 		+ '    </div>'
 		+ '    <div class="reverb-npnr-right">'
 		+ '        <div class="reverb-npnr-header">'+d.header+'</div>';
@@ -400,7 +425,8 @@
 		}
 		html += '      <div class="reverb-npnr-bottom">'
 		+ '            <span class="reverb-npnr-'+d.read+'" data-id="'+d.id+'"></span>'
-		+ '            ' + d.created
+		+ '            <span title="'+d.timestamp+'">' + d.created + '</span>'
+		+ '            <span class="reverb-npnrb-site">on <a href="'+d.site_url+'">'+d.site_name+'</span>'
 		+ '        </div>'
 		+ '    </div>'
 		+ '</div>';
@@ -413,22 +439,9 @@
 				 + '    <div class="reverb-np-header">'
 				 + '        <span class="reverb-nph-right"><a href="/Special:Notifications">View All <i class="fa fa-arrow-right"></i></a></span>'
 				 + '        <span class="reverb-nph-notifications">Notifications (<span class="reverb-total-notifications">0</span>)</span>'
-				 + '        <span class="reverb-nph-preferences"><i class="fa fa-cog"></i></span>'
-				 + '    </div>';
-			if (data.globalNotifications) {
-				html += '<div class="reverb-npn-row reverb-npn-row-global">'
-					  + '   <div class="reverb-npnr-left">'
-					  + '       <img src="/extensions/Reverb/resources/icons/global.svg" class="reverb-icon reverb-icon-global">'
-					  + '   </div>'
-					  + '   <div class="reverb-npnr-right">'
-					  + '       <div class="reverb-npnr-header">'
-					  + '           3 unread notifications from other wikis. <i class="fa fa-chevron-down"></i>'
-					  + '           <span class="reverb-npnr-unread reverb-npnr-unread-global"></span>'
-					  + '       </div>'
-					  + '   </div>'
-					  + '</div>';
-			}
-			html +='    <div class="reverb-npn">'
+				 + '        <span class="reverb-nph-preferences"><a href="/Special:Preferences#mw-prefsection-reverb"><i class="fa fa-cog"></i></a></span>'
+				 + '    </div>'
+				 + '    <div class="reverb-npn">'
 				 + '        <div class="reverb-np-no-unread">No Unread Notifications</div>'
 				 + '    </div>'
 				 + '</div>'
@@ -437,7 +450,7 @@
 
 	var buildNotificationButton = function(data) {
 		var html = '<div class="netbar-box right reverb-notifications reverb-bell">'
-				 + '    <i class="fa fa-envelope"></i>'
+				 + '    <i class="fas fa-bell"></i>'
 				 + '</div>'
 		return $(html);
 	}

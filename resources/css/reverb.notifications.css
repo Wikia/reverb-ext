@@ -226,6 +226,18 @@ div.reverb-np:before {
 	font-weight: bold;
 }
 
+.reverb-npnrb-site {
+	font-weight: normal;
+	font-size: 12px;
+	color: #d9d9d9;
+}
+
+.reverb-npnrb-site a:link,
+.reverb-npnrb-site a:active,
+.reverb-npnrb-site a:visited {
+	color: #d9d9d9;
+}
+
 .reverb-notification-page {
 	padding: 10px 0px;
 	display: flex;
@@ -310,6 +322,7 @@ label.reverb-filter-label {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	width: 100%;
 }
 
 .skin-hydra label.reverb-filter-label {
@@ -331,6 +344,7 @@ label.reverb-filter-label {
 	font-size: 14px;
 	font-family: Helveta, sans-serif;
 	font-weight: bold;
+	cursor: pointer;
 }
 
 button.reverb-active-button {
@@ -370,4 +384,11 @@ button.reverb-active-button {
 
 .reverb-bell-unread {
 	color: #f37f20;
+}
+
+.reverb-icon {
+	position: relative;
+	top: 5px;
+	left: 5px;
+	color: #36c;
 }
