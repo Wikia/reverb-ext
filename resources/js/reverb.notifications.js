@@ -10,6 +10,11 @@
 	 *           We out here using jQuery in 2019.                              
 	 */
 
+	var devNotice = function(msg) {
+		alert("[Reverb Development Notice] "+msg);
+		console.log('[REVERB DEV NOTE]',msg);
+	}
+
 	var api = new mw.Api();
 	window.log = function(...args){
 		mw.log('[REVERB]', ...args);
@@ -273,9 +278,11 @@
 		var perPage = 10;
 		var activeFilters = {};
 
+
+
 		// Mark All as Read button
 		$("#reverb-mark-all-read").click(function(){
-			alert("RIP");
+			devNotice("This feature is still in development and will be available in a future update.");
 		});
 
 		$(".reverb-filter-checkbox").change(function() {
@@ -413,7 +420,7 @@
 				 + '    <div class="reverb-np-header">'
 				 + '        <span class="reverb-nph-right"><a href="/Special:Notifications">View All <i class="fa fa-arrow-right"></i></a></span>'
 				 + '        <span class="reverb-nph-notifications">Notifications (<span class="reverb-total-notifications">0</span>)</span>'
-				 + '        <span class="reverb-nph-preferences"><i class="fa fa-cog"></i></span>'
+				 + '        <span class="reverb-nph-preferences"><a href="#" onClick="return devNotice(\'This will open preferences, once that page exists.\')"><i class="fa fa-cog"></i></a></span>'
 				 + '    </div>';
 			if (data.globalNotifications) {
 				html += '<div class="reverb-npn-row reverb-npn-row-global">'
