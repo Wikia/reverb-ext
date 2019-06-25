@@ -85,7 +85,7 @@ class Hooks {
 			$notifyUser = User::newFromName($title->getText());
 			// If the recipient is a valid non-anonymous user and hasn't turned off their
 			// notifications, generate a talk page post Echo notification.
-			if ($notifyUser && $notifyUser->getId()) {
+			if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($user)) {
 				// If this is a minor edit, only notify if the agent doesn't have talk page
 				// minor edit notification blocked.
 				if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
