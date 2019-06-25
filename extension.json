@@ -99,13 +99,14 @@
 		"notifications": "\\Reverb\\Api\\ApiNotifications"
 	},
 	"Hooks": {
-		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged",
-		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
-		"LocalUserCreated": "Reverb\\Hooks::onLocalUserCreated",
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
-		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
-		"SpecialPageBeforeExecute": "Reverb\\Hooks::onSpecialPageBeforeExecute"
+		"GetNewMessagesAlert": "Reverb\\Hooks::onGetNewMessagesAlert",
+		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
+		"LocalUserCreated": "Reverb\\Hooks::onLocalUserCreated",
+		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
+		"SpecialPageBeforeExecute": "Reverb\\Hooks::onSpecialPageBeforeExecute",
+		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged"
 	},
 	"config": {
 		"ReverbApiEndPoint": {

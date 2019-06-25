@@ -85,7 +85,7 @@ class Hooks {
 			$notifyUser = User::newFromName($title->getText());
 			// If the recipient is a valid non-anonymous user and hasn't turned off their
 			// notifications, generate a talk page post Echo notification.
-			if ($notifyUser && $notifyUser->getId()) {
+			if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($user)) {
 				// If this is a minor edit, only notify if the agent doesn't have talk page
 				// minor edit notification blocked.
 				if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
@@ -120,7 +120,7 @@ class Hooks {
 			$undidRevision = Revision::newFromId($undidRevId);
 			if ($undidRevision && $undidRevision->getTitle()->equals($title)) {
 				$notifyUser = $undidRevision->getRevisionRecord()->getUser();
-				if ($notifyUser && $notifyUser->getId()) {
+				if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($user)) {
 					// @TODO: Fix user note and count reverted revisions.
 					$broadcast = NotificationBroadcast::newSingle(
 						'article-edit-revert',
@@ -423,7 +423,8 @@ class Hooks {
 		self::$lastRevertedRevision = $latestRevision;
 
 		// Skip anonymous users and null edits.
-		if ($notifyUser && $notifyUser->getId() && !$oldRevision->getContent()->equals($newRevision->getContent())) {
+		if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($agent)
+		&& !$oldRevision->getContent()->equals($newRevision->getContent())) {
 			// @TODO: Fix user note and count reverted revisions.  Echo defaulted to plural/2 for rollback.
 			$title = $wikiPage->getTitle();
 			$broadcast = NotificationBroadcast::newSingle(
@@ -490,5 +491,28 @@ class Hooks {
 	public static function onSpecialPageBeforeExecute(SpecialPage $special, $subPage) {
 		$twig = MediaWikiServices::getInstance()->getService('TwiggyService');
 		$twig->setTemplateLocation('Reverb', __DIR__ . '/../resources/templates');
+	}
+
+	/**
+	 * Handler for GetNewMessagesAlert hook.
+	 * We're using the GetNewMessagesAlert hook instead of the
+	 * ArticleEditUpdateNewTalk hook since we still want the user_newtalk data
+	 * to be updated and availble to client-side tools and the API.
+	 *
+	 * @param string     $newMessagesAlert An alert that the user has new messages
+	 *                                     or an empty string if the user does not
+	 *                                     (empty by default)
+	 * @param array      $newtalks         This will be empty if the user has no new messages
+	 *                                     or an Array containing links and revisions if
+	 *                                     there are new messages
+	 * @param User       $user             The user who is loading the page
+	 * @param OutputPage $out              Output object
+	 *
+	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/GetNewMessagesAlert
+	 *
+	 * @return boolean Suppress entirely.
+	 */
+	public static function onGetNewMessagesAlert(&$newMessagesAlert, $newtalks, $user, $out) {
+		return false;
 	}
 }
