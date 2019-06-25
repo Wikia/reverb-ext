@@ -101,7 +101,7 @@
 	"Hooks": {
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
-		"GetNewMessagesAlert": "Reverb\\Hooks::::onGetNewMessagesAlert",
+		"GetNewMessagesAlert": "Reverb\\Hooks::onGetNewMessagesAlert",
 		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
 		"LocalUserCreated": "Reverb\\Hooks::onLocalUserCreated",
 		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
