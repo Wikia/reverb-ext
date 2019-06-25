@@ -120,7 +120,7 @@ class Hooks {
 			$undidRevision = Revision::newFromId($undidRevId);
 			if ($undidRevision && $undidRevision->getTitle()->equals($title)) {
 				$notifyUser = $undidRevision->getRevisionRecord()->getUser();
-				if ($notifyUser && $notifyUser->getId()) {
+				if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($user)) {
 					// @TODO: Fix user note and count reverted revisions.
 					$broadcast = NotificationBroadcast::newSingle(
 						'article-edit-revert',
@@ -423,7 +423,7 @@ class Hooks {
 		self::$lastRevertedRevision = $latestRevision;
 
 		// Skip anonymous users and null edits.
-		if ($notifyUser && $notifyUser->getId() && !$oldRevision->getContent()->equals($newRevision->getContent())) {
+		if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($agent) && !$oldRevision->getContent()->equals($newRevision->getContent())) {
 			// @TODO: Fix user note and count reverted revisions.  Echo defaulted to plural/2 for rollback.
 			$title = $wikiPage->getTitle();
 			$broadcast = NotificationBroadcast::newSingle(
