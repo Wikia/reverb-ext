@@ -13,6 +13,10 @@ declare(strict_types=1);
 namespace Reverb\Api;
 
 use ApiBase;
+use CentralIdLookup;
+use Hydrawiki\Reverb\Client\V1\Resources\NotificationDismissals as NotificationDismissalsResource;
+use MediaWiki\MediaWikiServices;
+use Reverb\Identifier\Identifier;
 use Reverb\Notification\Notification;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Notification\NotificationBundle;
@@ -36,6 +40,9 @@ class ApiNotifications extends ApiBase {
 				break;
 			case 'dismissNotification':
 				$response = $this->dismissNotification();
+				break;
+			case 'dismissAllNotifications':
+				$response = $this->dismissAllNotifications();
 				break;
 			default:
 				$this->dieUsageMsg(['invaliddo', $this->params['do']]);
@@ -115,6 +122,42 @@ class ApiNotifications extends ApiBase {
 		$id = $this->params['notificationId'];
 		if (!empty($id)) {
 			$success = Notification::dismissNotification($this->getUser(), (string)$id);
+		}
+
+		return [
+			'success' => $success
+		];
+	}
+
+	/**
+	 * Dismiss a notification based on ID.
+	 *
+	 * @return array
+	 */
+	public function dismissAllNotifications(): array {
+		if (!$this->getRequest()->wasPosted()) {
+			$this->dieWithError(['apierror-mustbeposted', __FUNCTION__]);
+		}
+
+		$success = false;
+
+		$lookup = CentralIdLookup::factory();
+		$globalId = $lookup->centralIdFromLocalUser($this->getUser());
+		$userIdentifier = Identifier::newUser($globalId);
+		$dismiss = new NotificationDismissalsResource(
+			[
+				'target-id' => (string)$userIdentifier
+			]
+		);
+
+		try {
+			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
+			$response = $client->notification_dismissals()->create($dismiss);
+			$success = true;
+		} catch (ApiRequestUnsuccessful $e) {
+			wfLogWarning('Invalid API response from the service: ' . $e->getMessage());
+		} catch (Exception $e) {
+			wfLogWarning('General exception encountered when communicating with the service: ' . $e->getMessage());
 		}
 
 		return [
