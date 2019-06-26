@@ -67,5 +67,6 @@
     "notifications": "Notifications",
     "view-all": "View All",
     "no-unread": "No Unread Notifications",
-    "view-additional-unread": "View $1 Additional Unread"
+    "view-additional-unread": "View $1 Additional Unread",
+    "filter-by-type": "Filter by Type"
 }
