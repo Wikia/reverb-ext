@@ -290,7 +290,10 @@
 
 		// Mark All as Read button
 		$("#reverb-mark-all-read").click(function(){
-			devNotice("This feature is still in development and will be available in a future update.");
+			api.post({action:'notifications', do:'dismissAllNotifications', format:'json', formatversion: 2})
+			.done(function(data) {
+				generateWithFilters({page: 0, perpage: perPage}, true);
+			});
 		});
 
 		$(".reverb-filter-checkbox").change(function() {
