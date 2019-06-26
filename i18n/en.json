@@ -64,5 +64,8 @@
 	"short-header-article-edit-revert": "Your {{PLURAL:$3|edit on <strong>$2<\/strong> was|edits on <strong>$2<\/strong> were}} {{GENDER:$1|reverted}}.",
 	"long-header-article-edit-revert": "Your {{PLURAL:$3|edit on <strong>$2<\/strong> was|edits on <strong>$2<\/strong> were}} {{GENDER:$1|reverted}}.",
     "user-note-article-edit-revert": "$4 removed {{PLURAL:$3|edit|edits}} on the article <strong>$2<\/strong>.",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "view-all": "View All",
+    "no-unread": "No Unread Notifications",
+    "view-additional-unread": "View $1 Additional Unread"
 }

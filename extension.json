@@ -67,7 +67,11 @@
 			"messages": [
 				"special-button-all",
 				"special-button-read",
-				"special-button-unread"
+				"special-button-unread",
+				"notifications",
+				"view-all",
+				"no-unread",
+				"view-additional-unread"
 			]
 		},
 		"ext.reverb.notifications.scripts.notificationPage": {
