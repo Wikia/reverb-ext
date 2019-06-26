@@ -136,7 +136,7 @@ class ApiNotifications extends ApiBase {
 	 */
 	public function dismissAllNotifications(): array {
 		if (!$this->getRequest()->wasPosted()) {
-			//$this->dieWithError(['apierror-mustbeposted', __FUNCTION__]);
+			$this->dieWithError(['apierror-mustbeposted', __FUNCTION__]);
 		}
 
 		$success = false;
