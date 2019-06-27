@@ -15,6 +15,10 @@
 		console.log('[REVERB DEV NOTE]',msg);
 	}
 
+	var l = function(v,v2) {
+		return mw.message(v,v2).plain();
+	}
+
 	var api = new mw.Api();
 	window.log = function(...args){
 		mw.log('[REVERB]', ...args);
@@ -286,7 +290,10 @@
 
 		// Mark All as Read button
 		$("#reverb-mark-all-read").click(function(){
-			devNotice("This feature is still in development and will be available in a future update.");
+			api.post({action:'notifications', do:'dismissAllNotifications', format:'json', formatversion: 2})
+			.done(function(data) {
+				generateWithFilters({page: 0, perpage: perPage}, true);
+			});
 		});
 
 		$(".reverb-filter-checkbox").change(function() {
@@ -403,12 +410,12 @@
 	 */
 
 	var buildViewMore = function(more) {
-		var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="/Special:Notifications">View '+ more +' Additional Unread <i class="fa fa-arrow-right"></i></button></div>';
+		var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="/Special:Notifications">'+l('view-additional-unread',more)+' <i class="fa fa-arrow-right"></i></button></div>';
 		return $(html);
 	}
 
 	var buildNoNotifications = function() {
-		var html = '<div class="reverb-no-notifications">No Notifications</div>';
+		var html = '<div class="reverb-no-notifications">'+l('no-unread')+'</div>';
 		return $(html);
 	}
 
@@ -437,12 +444,12 @@
 		// lots of i18n stuff to add in here...
 		var html = '<div class="reverb-np">'
 				 + '    <div class="reverb-np-header">'
-				 + '        <span class="reverb-nph-right"><a href="/Special:Notifications">View All <i class="fa fa-arrow-right"></i></a></span>'
-				 + '        <span class="reverb-nph-notifications">Notifications (<span class="reverb-total-notifications">0</span>)</span>'
+				 + '        <span class="reverb-nph-right"><a href="/Special:Notifications">'+l('view-all')+' <i class="fa fa-arrow-right"></i></a></span>'
+				 + '        <span class="reverb-nph-notifications">'+ l('notifications') +' (<span class="reverb-total-notifications">0</span>)</span>'
 				 + '        <span class="reverb-nph-preferences"><a href="/Special:Preferences#mw-prefsection-reverb"><i class="fa fa-cog"></i></a></span>'
 				 + '    </div>'
 				 + '    <div class="reverb-npn">'
-				 + '        <div class="reverb-np-no-unread">No Unread Notifications</div>'
+				 + '        <div class="reverb-np-no-unread">'+l('no-unread')+'</div>'
 				 + '    </div>'
 				 + '</div>'
 		return $(html);
