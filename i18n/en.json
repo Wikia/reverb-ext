@@ -69,6 +69,8 @@
 	"no-unread": "No Unread Notifications",
 	"view-additional-unread": "View $1 Additional Unread",
 	"filter-by-type": "Filter by Type",
+	"reverb-email-action-description": "View on Site",
+	"reverb-email-preferences-footer": "To control which notification emails we send <a href='$1'>change your preferences</a>.",
 	"prefs-reverb": "Notifications",
 	"prefs-reverb-email-options": "Email options",
 	"prefs-reverb-article-edit": "Article Edit Notifications",
