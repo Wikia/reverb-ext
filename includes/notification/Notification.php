@@ -142,7 +142,7 @@ class Notification {
 	 *
 	 * @return string|null Defined user note or null.
 	 */
-	protected function getUserNote(): ?string {
+	public function getUserNote(): ?string {
 		$parameters = $this->getMessageParameters();
 		return $parameters['user_note'] ?? null;
 	}
@@ -235,15 +235,17 @@ class Notification {
 	public function getOrigin(): ?Wiki {
 		$id = $this->getOriginId();
 
-		if (isset(self::$wikiCache[$id])) {
-			return self::$wikiCache[$id];
-		}
-
 		if ($id !== null) {
-			if ($id->whoAmI() === 'master') {
+			$id = $id->whoAmI();
+
+			if (isset(self::$wikiCache[$id])) {
+				return self::$wikiCache[$id];
+			}
+
+			if ($id === 'master') {
 				$wiki = Wiki::getFakeMainWiki();
 			} else {
-				$wiki = Wiki::loadFromHash($id->whoAmI());
+				$wiki = Wiki::loadFromHash($id);
 			}
 			if (!empty($wiki)) {
 				self::$wikiCache[$id] = $wiki;
