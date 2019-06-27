@@ -44,6 +44,7 @@ class SpecialNotifications extends SpecialPage {
 		// Additional Scrips for the Notification Page
 		$this->output->addModules('ext.reverb.notifications.scripts.notificationPage');
 		$this->output->addModuleStyles('ext.reverb.notifications.styles.notificationPage');
+		$this->output->setPageTitle(wfMessage('notifications'));
 
 		$this->output->addHtml($template->render(['types' => $types]));
 	}
