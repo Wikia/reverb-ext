@@ -1,5 +1,6 @@
 #netbar .netbar-box.reverb-notifications {
    cursor: pointer;
+   position: relative;
 }
 
 .reverb-filter-notice {
@@ -29,7 +30,7 @@
 	display: none;
 }
 
-div.reverb-np:before, div.reverb-np:after {
+div.reverb-np-arrow:before, div.reverb-np:after {
 	content: ' ';
 	height: 0;
 	position: absolute;
@@ -38,13 +39,23 @@ div.reverb-np:before, div.reverb-np:after {
 	border-color: transparent;
 }
 
-div.reverb-np:before {
-	border-bottom-color: #202020;  /* arrow color */
+div.reverb-np-arrow:before {
+	border-bottom-color: #202020; /* arrow color */
 	color: #fff;
 	position: absolute;
 	top: -20px;
-	right: 67px;
+	right: 0px;
 	z-index: 2;
+}
+
+div.reverb-np-arrow {
+	position: absolute;
+	top: 35px;
+	left: 1px;
+	background: transparent;
+	width: 20px;
+	height: 1px;
+	display: none;
 }
 
 
