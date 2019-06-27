@@ -13,16 +13,19 @@ declare(strict_types=1);
 namespace Reverb\Notification;
 
 use CentralIdLookup;
-use Hydrawiki\Reverb\Client\V1\Resources\NotificationBroadcast as NotificationBroadcastResource;
 use Hydrawiki\Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful;
+use Hydrawiki\Reverb\Client\V1\Resources\NotificationBroadcast as NotificationBroadcastResource;
 use MediaWiki\MediaWikiServices;
 use MWException;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\SiteIdentifier;
 use Reverb\Identifier\UserIdentifier;
+use Reverb\Traits\NotificationListTrait;
 use User;
 
 class NotificationBroadcast {
+	use NotificationListTrait;
+
 	/**
 	 * SiteIdentifier Origin
 	 *
@@ -97,8 +100,8 @@ class NotificationBroadcast {
 	 * Get a new instance for a broadcast to a single target.
 	 *
 	 * @param string $type   Notification Type
-	 * @param User   $agent  User that triggerred the creation of the notification.
-	 * @param User   $target User that the notification is targetting.
+	 * @param User   $agent  User that triggered the creation of the notification.
+	 * @param User   $target User that the notification is targeting.
 	 * @param array  $meta   Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return null
@@ -116,8 +119,8 @@ class NotificationBroadcast {
 	 * Get a new instance for a broadcast to a single target.
 	 *
 	 * @param string $type    Notification Type
-	 * @param User   $agent   User that triggerred the creation of the notification.
-	 * @param array  $targets User that the notification is targetting.
+	 * @param User   $agent   User that triggered the creation of the notification.
+	 * @param array  $targets User that the notification is targeting.
 	 * @param array  $meta    Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return null
@@ -230,12 +233,16 @@ class NotificationBroadcast {
 			if (!($target instanceof User)) {
 				throw new MWException('Invalid target passed.');
 			}
+
 			$targetGlobalId = $lookup->centralIdFromLocalUser($target);
 			if (!$targetGlobalId) {
 				unset($targets[$key]);
 				continue;
 			}
-			$targetIdentifiers[] = Identifier::newUser($targetGlobalId);
+			$targetShouldBeNotified = $this->shouldNotify($target, $this->attributes['type'], 'web');
+			if ($targetShouldBeNotified) {
+				$targetIdentifiers[] = Identifier::newUser($targetGlobalId);
+			}
 		}
 
 		$this->targets = $targets;
@@ -278,6 +285,9 @@ class NotificationBroadcast {
 	 * @return boolean Operation Success
 	 */
 	public function transmit(): bool {
+		$email = NotificationEmail::newFromBroadcast($this);
+		$email->send();
+
 		if (empty($this->targetIds)) {
 			return true;
 		}
@@ -299,9 +309,6 @@ class NotificationBroadcast {
 			$this->lastError = $e->getMessage();
 			return false;
 		}
-
-		$email = NotificationEmail::newFromBroadcast($this);
-		$email->send();
 
 		return true;
 	}

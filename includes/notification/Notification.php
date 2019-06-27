@@ -25,11 +25,14 @@ use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
 use Reverb\Identifier\SiteIdentifier;
 use Reverb\Identifier\UserIdentifier;
+use Reverb\Traits\NotificationListTrait;
+use Reverb\Traits\UserContextTrait;
 use Title;
 use User;
 
 class Notification {
-	use \Reverb\Traits\UserContextTrait;
+	use UserContextTrait;
+	use NotificationListTrait;
 
 	/**
 	 * Data Resource
@@ -320,7 +323,7 @@ class Notification {
 	 * @return string Category
 	 */
 	public function getCategory(): string {
-		return substr($this->getType(), 0, strpos($this->getType(), '-'));
+		return $this->getCategoryFromType($this->getType());
 	}
 
 	/**
@@ -329,7 +332,7 @@ class Notification {
 	 * @return string Subcategory
 	 */
 	public function getSubcategory(): string {
-		return substr($this->getType(), 0, strpos($this->getType(), '-', strpos($this->getType(), '-') + 1));
+		return $this->getSubCategoryFromType($this->getType());
 	}
 
 	/**

@@ -13,8 +13,11 @@ declare(strict_types=1);
 namespace Reverb\Notification;
 
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
+use Reverb\Traits\NotificationListTrait;
 
 class NotificationEmail {
+	use NotificationListTrait;
+
 	/**
 	 * The notification source of truth.
 	 *
@@ -82,7 +85,7 @@ class NotificationEmail {
 		$targets = $this->getTargets();
 		$success = 0;
 		foreach ($targets as $user) {
-			if ($user->getBoolOption($notification->getType())) {
+			if ($this->shouldNotify($user, $attributes['type'], 'email')) {
 				$status = $user->sendMail(strip_tags((string)$header), $body);
 				if ($status->isGood()) {
 					$success++;
