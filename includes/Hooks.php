@@ -26,14 +26,33 @@ use Status;
 use Title;
 use User;
 use WikiPage;
+use Reverb\Traits\NotificationListTrait;
 
 class Hooks {
+	use NotificationListTrait;
+
 	/**
 	 * Store last reverted revision
 	 *
 	 * @var Revision
 	 */
 	protected static $lastRevertedRevision;
+
+	/**
+	 * Handle extension defaults
+	 *
+	 * @return void
+	 */
+	public static function registerExtension() {
+		global $wgDefaultUserOptions, $wgReverbNotifications;
+
+		foreach ($wgReverbNotifications as $notification => $notificationData) {
+			$sub = self::getSubCategoryFromType($notification);
+			$name = self::getNotificationName($notification);
+			$wgDefaultUserOptions["reverb-{$sub}-email-{$name}"] = false;
+			$wgDefaultUserOptions["reverb-{$sub}-web-{$name}"] = true;
+		}
+	}
 
 	/**
 	 * Handler for PageContentSaveComplete hook
@@ -514,5 +533,74 @@ class Hooks {
 	 */
 	public static function onGetNewMessagesAlert(&$newMessagesAlert, $newtalks, $user, $out) {
 		return false;
+	}
+
+	/**
+	 * Handler for GetPreferences hook.
+	 *
+	 * @param User  $user        User to get preferences for
+	 * @param array $preferences Preferences array
+	 *
+	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/GetPreferences
+	 *
+	 * @throws MWException
+	 * @return bool true in all cases
+	 */
+	public static function onGetPreferences($user, &$preferences) {
+		$preferences['reverb-email-frequency'] = [
+			'type' => 'select',
+			'label-message' => 'reverb-pref-send-me',
+			'section' => 'reverb/reverb-email-options',
+			'options' => [
+				wfMessage('reverb-pref-email-frequency-never')->plain() => 0,
+				wfMessage('reverb-pref-email-frequency-immediately')->plain() => 1
+			],
+		];
+
+		// Display information about the user's currently set email address
+		$emailAddress = $user->getEmail() && $user->isAllowed('viewmyprivateinfo')
+			? htmlspecialchars($user->getEmail()) : '';
+
+		$preferences['reverb-emailaddress'] = [
+			'type' => 'info',
+			'raw' => true,
+			'default' => $emailAddress,
+			'label-message' => 'reverb-pref-send-to',
+			'section' => 'reverb/reverb-email-options'
+		];
+
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig('reverb');
+
+		$columns = [];
+		$reverbNotifiers = $config->get('ReverbNotifiers');
+		foreach ($reverbNotifiers as $notifierType => $notifierData) {
+			$formatMessage = wfMessage('reverb-pref-' . $notifierType)->escaped();
+			$columns[$formatMessage] = $notifierType;
+		}
+
+		$notifications = self::organizeNotificationList($user, $config->get('ReverbNotifications'));
+
+		foreach ($notifications as $group => $notificationType) {
+			$rows = [];
+			$tooltips = [];
+
+			foreach ($notificationType as $key => $notification) {
+				$notificationTitle = wfMessage('reverb-pref-title-' . $key)->numParams(1)->escaped();
+				$rows[$notificationTitle] = $notification['name'];
+				$hasTooltip = !wfMessage('reverb-pref-tooltip-' . $key)->inContentLanguage()->isBlank();
+				if ($hasTooltip) {
+					$tooltips[$notificationTitle] = wfMessage('reverb-pref-tooltip-' . $key)->text();
+				}
+			}
+
+			$preferences['reverb-' . $group] = [
+				'class' => 'HTMLCheckMatrix',
+				'section' => 'reverb/reverb-' . $group,
+				'rows' => $rows,
+				'columns' => $columns,
+				'prefix' => 'reverb-' . $group . '-',
+				'tooltips' => $tooltips
+			];
+		}
 	}
 }
