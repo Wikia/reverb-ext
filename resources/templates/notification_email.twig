@@ -1,0 +1,86 @@
+<html>
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+		<meta content="width=device-width, initial-scale=1.0" name="viewport">
+		<style>
+			body {
+				font-family: sans-serif;
+			}
+
+			.notification_body {
+				background-color: #eaecf0;
+				display: grid;
+				grid-template-columns: 1fr;
+				grid-template-rows: 1fr 1fr;
+				grid-template-areas: "main" "footer";
+			}
+
+			.main {
+				grid-area: main;
+			}
+
+			.footer {
+				grid-area: footer;
+				text-align: center;
+			}
+
+			.notification_details {
+				background-color: white;
+				display: grid;
+				grid-template-areas: "icon header" "icon note" "icon action";
+				grid-template-columns: auto 1fr;
+				grid-template-rows: 1fr 1fr 1fr;
+				margin: 30px auto;
+				max-width: 600px;
+				padding: 20px;
+			}
+
+			.icon {
+				grid-area: icon;
+			}
+
+			.icon span {
+				display: block;
+				height: 30px;
+				margin: 0 5px 0 20px;
+				width: 30px;
+			}
+
+			.header {
+				grid-area: header;
+			}
+
+			.note {
+				grid-area: note;
+			}
+
+			.action {
+				grid-area: action;
+			}
+
+			.action a {
+				background-color: teal;
+				border: 2px solid black;
+				color: white;
+				display: inline-block;
+				padding: 5px;
+				text-decoration: none;
+			}
+		</style>
+		<base href="{{ wgCanonicalServer }}">
+		<title></title>
+	</head>
+	<body>
+		<div class="notification_body">
+			<div class="main">
+				<div class="notification_details">
+					<div class="icon"><span>{{ icon }}</span></div>
+					<div class="header">{{ header|raw }}</div>
+					<div class="note">{{ user_note }}</div>
+					<div class="action"><a href="{{ action }}">{{ action_description }}</a></div>
+				</div>
+			</div>
+			<div class="footer">{{ footer|raw }}</div>
+		</div>
+	</body>
+</html>

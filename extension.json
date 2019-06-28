@@ -21,6 +21,7 @@
 			"i18n"
 		]
 	},
+	"callback": "Reverb\\Hooks::registerExtension",
 	"AutoloadClasses": {
 		"Reverb\\Api\\ApiNotifications": "includes/api/ApiNotifications.php",
 		"Reverb\\Hooks": "includes/Hooks.php",
@@ -31,6 +32,7 @@
 		"Reverb\\Notification\\Notification": "includes/notification/Notification.php",
 		"Reverb\\Notification\\NotificationBroadcast": "includes/notification/NotificationBroadcast.php",
 		"Reverb\\Notification\\NotificationBundle": "includes/notification/NotificationBundle.php",
+		"Reverb\\Notification\\NotificationEmail": "includes/notification/NotificationEmail.php",
 		"Reverb\\Special\\SpecialNotifications": "includes/special/SpecialNotifications.php",
 		"Reverb\\Traits\\UserContextTrait": "includes/traits/UserContextTrait.php"
 	},
@@ -102,6 +104,9 @@
 	"APIModules": {
 		"notifications": "\\Reverb\\Api\\ApiNotifications"
 	},
+	"DefaultUserOptions": {
+		"reverb-email-frequency": 1
+	},
 	"Hooks": {
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
@@ -110,7 +115,8 @@
 		"LocalUserCreated": "Reverb\\Hooks::onLocalUserCreated",
 		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
 		"SpecialPageBeforeExecute": "Reverb\\Hooks::onSpecialPageBeforeExecute",
-		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged"
+		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged",
+		"GetPreferences": "Reverb\\Hooks::onGetPreferences"
 	},
 	"config": {
 		"ReverbApiEndPoint": {
@@ -167,7 +173,22 @@
 		},
 		"ReverbNamespace": {
 			"value": "hydra"
+		},
+		"ReverbNotifiers": {
+			"value": {
+				"web": [
+					"ReverbNotifiers",
+					"notifyWithNotification"
+				],
+				"email": [
+					"ReverbNotifiers",
+					"notifyWithEmail"
+				]
+			}
 		}
+	},
+	"ConfigRegistry": {
+		"reverb": "GlobalVarConfig::newInstance"
 	},
 	"load_composer_autoloader": true,
 	"manifest_version": 2

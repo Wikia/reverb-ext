@@ -34,7 +34,7 @@ trait UserContextTrait {
 	 *
 	 * @param User|null $user User to set as context.
 	 *
-	 * @return User|null
+	 * @return void
 	 */
 	public function setUser(?User $user) {
 		$this->user = $user;

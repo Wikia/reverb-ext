@@ -25,11 +25,14 @@ use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
 use Reverb\Identifier\SiteIdentifier;
 use Reverb\Identifier\UserIdentifier;
+use Reverb\Traits\NotificationListTrait;
+use Reverb\Traits\UserContextTrait;
 use Title;
 use User;
 
 class Notification {
-	use \Reverb\Traits\UserContextTrait;
+	use UserContextTrait;
+	use NotificationListTrait;
 
 	/**
 	 * Data Resource
@@ -134,7 +137,7 @@ class Notification {
 
 		return wfMessage(
 			($long ? 'long' : 'short') . '-header-' . $this->getType()
-		)->params($parameters);
+		)->params($parameters)->inLanguage($this->getUser()->getOption('language'));
 	}
 
 	/**
@@ -142,7 +145,7 @@ class Notification {
 	 *
 	 * @return string|null Defined user note or null.
 	 */
-	protected function getUserNote(): ?string {
+	public function getUserNote(): ?string {
 		$parameters = $this->getMessageParameters();
 		return $parameters['user_note'] ?? null;
 	}
@@ -235,15 +238,17 @@ class Notification {
 	public function getOrigin(): ?Wiki {
 		$id = $this->getOriginId();
 
-		if (isset(self::$wikiCache[$id])) {
-			return self::$wikiCache[$id];
-		}
-
 		if ($id !== null) {
-			if ($id->whoAmI() === 'master') {
+			$id = $id->whoAmI();
+
+			if (isset(self::$wikiCache[$id])) {
+				return self::$wikiCache[$id];
+			}
+
+			if ($id === 'master') {
 				$wiki = Wiki::getFakeMainWiki();
 			} else {
-				$wiki = Wiki::loadFromHash($id->whoAmI());
+				$wiki = Wiki::loadFromHash($id);
 			}
 			if (!empty($wiki)) {
 				self::$wikiCache[$id] = $wiki;
@@ -318,7 +323,7 @@ class Notification {
 	 * @return string Category
 	 */
 	public function getCategory(): string {
-		return substr($this->getType(), 0, strpos($this->getType(), '-'));
+		return $this->getCategoryFromType($this->getType());
 	}
 
 	/**
@@ -327,7 +332,7 @@ class Notification {
 	 * @return string Subcategory
 	 */
 	public function getSubcategory(): string {
-		return substr($this->getType(), 0, strpos($this->getType(), '-', strpos($this->getType(), '-') + 1));
+		return $this->getSubCategoryFromType($this->getType());
 	}
 
 	/**

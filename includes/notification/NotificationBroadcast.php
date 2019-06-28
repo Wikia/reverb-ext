@@ -13,16 +13,19 @@ declare(strict_types=1);
 namespace Reverb\Notification;
 
 use CentralIdLookup;
-use Hydrawiki\Reverb\Client\V1\Resources\NotificationBroadcast as NotificationBroadcastResource;
 use Hydrawiki\Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful;
+use Hydrawiki\Reverb\Client\V1\Resources\NotificationBroadcast as NotificationBroadcastResource;
 use MediaWiki\MediaWikiServices;
 use MWException;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\SiteIdentifier;
 use Reverb\Identifier\UserIdentifier;
+use Reverb\Traits\NotificationListTrait;
 use User;
 
 class NotificationBroadcast {
+	use NotificationListTrait;
+
 	/**
 	 * SiteIdentifier Origin
 	 *
@@ -31,18 +34,32 @@ class NotificationBroadcast {
 	private $origin = null;
 
 	/**
+	 * User Agent
+	 *
+	 * @var User
+	 */
+	private $agent = null;
+
+	/**
 	 * UserIdentifier Agent
 	 *
 	 * @var UserIdentifier
 	 */
-	private $agent = null;
+	private $agentId = null;
+
+	/**
+	 * User Targets
+	 *
+	 * @var array User
+	 */
+	private $targets = [];
 
 	/**
 	 * UserIdentifier Targets
 	 *
 	 * @var array
 	 */
-	private $targets = [];
+	private $targetIds = [];
 
 	/**
 	 * Meta attributes part of the notification.
@@ -83,8 +100,8 @@ class NotificationBroadcast {
 	 * Get a new instance for a broadcast to a single target.
 	 *
 	 * @param string $type   Notification Type
-	 * @param User   $agent  User that triggerred the creation of the notification.
-	 * @param User   $target User that the notification is targetting.
+	 * @param User   $agent  User that triggered the creation of the notification.
+	 * @param User   $target User that the notification is targeting.
 	 * @param array  $meta   Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return null
@@ -95,45 +112,15 @@ class NotificationBroadcast {
 		User $target,
 		array $meta
 	): ?self {
-		if (!self::isTypeConfigured($type)) {
-			throw new MWException('The notification type passed is not defined.');
-		}
-
-		if (!isset($meta['url']) || empty($meta['url'])) {
-			throw new MWException('No canonical URL passed for broadcast.');
-		}
-
-		$broadcast = new self();
-
-		$lookup = CentralIdLookup::factory();
-		$agentGlobalId = $lookup->centralIdFromLocalUser($agent);
-		$targetGlobalId = $lookup->centralIdFromLocalUser($target);
-
-		if (!$agentGlobalId || !$targetGlobalId) {
-			return null;
-		}
-
-		$broadcast->setAgent(Identifier::newUser($agentGlobalId));
-		$broadcast->addTarget(Identifier::newUser($targetGlobalId));
-		$broadcast->setOrigin(Identifier::newLocalSite());
-
-		$broadcast->setAttributes(
-			[
-				'type' => $type,
-				'url' => $meta['url'],
-				'message' => json_encode($meta['message'])
-			]
-		);
-
-		return $broadcast;
+		return self::newMulti($type, $agent, [$target], $meta);
 	}
 
 	/**
 	 * Get a new instance for a broadcast to a single target.
 	 *
 	 * @param string $type    Notification Type
-	 * @param User   $agent   User that triggerred the creation of the notification.
-	 * @param array  $targets User that the notification is targetting.
+	 * @param User   $agent   User that triggered the creation of the notification.
+	 * @param array  $targets User that the notification is targeting.
 	 * @param array  $meta    Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return null
@@ -154,29 +141,6 @@ class NotificationBroadcast {
 
 		$broadcast = new self();
 
-		$lookup = CentralIdLookup::factory();
-		$agentGlobalId = $lookup->centralIdFromLocalUser($agent);
-
-		$targetIdentifiers = [];
-		foreach ($targets as $target) {
-			if (!($target instanceof User)) {
-				throw new MWException('Invalid target passed.');
-			}
-			$targetGlobalId = $lookup->centralIdFromLocalUser($target);
-			if (!$targetGlobalId) {
-				continue;
-			}
-			$targetIdentifiers[] = Identifier::newUser($targetGlobalId);
-		}
-
-		if (!$agentGlobalId || empty($targetIdentifiers)) {
-			return null;
-		}
-
-		$broadcast->setAgent(Identifier::newUser($agentGlobalId));
-		$broadcast->setTargets($targetIdentifiers);
-		$broadcast->setOrigin(Identifier::newLocalSite());
-
 		$broadcast->setAttributes(
 			[
 				'type' => $type,
@@ -184,6 +148,15 @@ class NotificationBroadcast {
 				'message' => json_encode($meta['message'])
 			]
 		);
+
+		// These need to come after setAttributes().
+		$broadcast->setAgent($agent);
+		$broadcast->setTargets($targets);
+		$broadcast->setOrigin(Identifier::newLocalSite());
+
+		if (!$broadcast->getAgent() || empty($broadcast->getTargets())) {
+			return null;
+		}
 
 		return $broadcast;
 	}
@@ -195,7 +168,7 @@ class NotificationBroadcast {
 	 *
 	 * @return boolean
 	 */
-	public static function isTypeConfigured(string $type): bool {
+	protected static function isTypeConfigured(string $type): bool {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
 		$types = $mainConfig->get('ReverbNotifications');
 		return isset($types[$type]);
@@ -208,35 +181,81 @@ class NotificationBroadcast {
 	 *
 	 * @return void
 	 */
-	public function setOrigin(SiteIdentifier $origin) {
+	protected function setOrigin(SiteIdentifier $origin) {
 		$this->origin = $origin;
 	}
 
 	/**
 	 * Set the identifier for the agent that created this notification.
 	 *
-	 * @param UserIdentifier $agent Notification Creator
+	 * @param User $agent Notification Creator
 	 *
-	 * @return void
+	 * @return boolean Success
 	 */
-	public function setAgent(UserIdentifier $agent) {
+	protected function setAgent(User $agent): bool {
+		if (!($agent instanceof User)) {
+			throw new MWException('Invalid agent passed.');
+		}
+
+		$lookup = CentralIdLookup::factory();
+		$agentGlobalId = $lookup->centralIdFromLocalUser($agent);
+
+		if (empty($agentGlobalId)) {
+			return false;
+		}
+
 		$this->agent = $agent;
+		$this->agentId = Identifier::newUser($agentGlobalId);
+		return true;
+	}
+
+	/**
+	 * Return all the agent for this broadcast.
+	 *
+	 * @return User|null
+	 */
+	public function getAgent(): ?User {
+		return $this->agent;
 	}
 
 	/**
 	 * Overwrite all targets.
 	 *
-	 * @param array $targets Notification Destinations
+	 * @param array $targets Array of User
 	 *
 	 * @return void
 	 */
-	public function setTargets(array $targets) {
-		foreach ($targets as $target) {
-			if (!($target instanceof UserIdentifier)) {
-				throw new MWException('Specified target is not an UserIdentifier.');
+	protected function setTargets(array $targets) {
+		$lookup = CentralIdLookup::factory();
+
+		$targetIdentifiers = [];
+		foreach ($targets as $key => $target) {
+			if (!($target instanceof User)) {
+				throw new MWException('Invalid target passed.');
+			}
+
+			$targetGlobalId = $lookup->centralIdFromLocalUser($target);
+			if (!$targetGlobalId) {
+				unset($targets[$key]);
+				continue;
+			}
+			$targetShouldBeNotified = $this->shouldNotify($target, $this->attributes['type'], 'web');
+			if ($targetShouldBeNotified) {
+				$targetIdentifiers[] = Identifier::newUser($targetGlobalId);
 			}
 		}
+
 		$this->targets = $targets;
+		$this->targetIds = $targetIdentifiers;
+	}
+
+	/**
+	 * Return all targets for this broadcast.
+	 *
+	 * @return array
+	 */
+	public function getTargets(): array {
+		return $this->targets;
 	}
 
 	/**
@@ -246,20 +265,18 @@ class NotificationBroadcast {
 	 *
 	 * @return void
 	 */
-	public function setAttributes(array $attributes) {
+	protected function setAttributes(array $attributes) {
 		$attributes = array_intersect_key($attributes, $this->attributes);
 		$this->attributes = array_merge($this->attributes, $attributes);
 	}
 
 	/**
-	 * Add a new target to the existing targets.
+	 * Get meta attributes for this broadcast.
 	 *
-	 * @param UserIdentifier $target Notification Destination
-	 *
-	 * @return void
+	 * @return array $attributes Meta Attributes
 	 */
-	public function addTarget(UserIdentifier $target) {
-		$this->targets[] = $target;
+	public function getAttributes(): array {
+		return $this->attributes;
 	}
 
 	/**
@@ -268,14 +285,21 @@ class NotificationBroadcast {
 	 * @return boolean Operation Success
 	 */
 	public function transmit(): bool {
+		$email = NotificationEmail::newFromBroadcast($this);
+		$email->send();
+
+		if (empty($this->targetIds)) {
+			return true;
+		}
+
 		try {
 			$notification = new NotificationBroadcastResource(
 				array_merge(
 					$this->attributes,
 					[
 						'origin-id'  => (string)$this->origin,
-						'agent-id'   => (string)$this->agent,
-						'target-ids' => array_map('strval', $this->targets)
+						'agent-id'   => (string)$this->agentId,
+						'target-ids' => array_map('strval', $this->targetIds)
 					]
 				)
 			);
@@ -285,6 +309,7 @@ class NotificationBroadcast {
 			$this->lastError = $e->getMessage();
 			return false;
 		}
+
 		return true;
 	}
 

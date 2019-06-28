@@ -155,6 +155,7 @@ class NotificationBundle extends ArrayObject {
 			foreach ($notificationTargetResources as $key => $resource) {
 				$notification = new Notification($resource->notification());
 				$notification->setDismissedAt(intval($resource->dismissed_at));
+				$notification->setUser($user);
 				$notifications[$notification->getId()] = $notification;
 			}
 
