@@ -109,6 +109,8 @@
 		notificationPanel.appendTo('body');
 		notificationButton.insertBefore(userBox);
 
+
+
 		// TODO: Allow hover state and click state. Some work needs to be done here for that to function.
 
 		notificationButton.on('hover mouseover', function(){
@@ -116,10 +118,12 @@
 		});
 		notificationButton.on('click', function(){
 			notificationPanel.toggle();
+			$(".reverb-np-arrow").toggle();
 		});
 		
 		$('#global-wrapper').on('click',function(){
 			notificationPanel.hide();
+			$(".reverb-np-arrow").hide();
 		});
 		
 		var panelTotal = 10;
@@ -458,6 +462,7 @@
 	var buildNotificationButton = function(data) {
 		var html = '<div class="netbar-box right reverb-notifications reverb-bell">'
 				 + '    <i class="fas fa-bell"></i>'
+				 + '	<div class="reverb-np-arrow"></div>'
 				 + '</div>'
 		return $(html);
 	}
