@@ -433,8 +433,8 @@ class Notification {
 	/**
 	 * Dismiss a notification based on the original resource ID.
 	 *
-	 * @param User   $user Target user that the notification originally targetted.
-	 * @param string $id   The ID from the original resource.
+	 * @param User    $user      Target user that the notification originally targetted.
+	 * @param string  $id        The ID from the original resource.
 	 * @param boolean $timestamp Unix timestamp of when the notification was dismissed.
 	 *
 	 * @return null
