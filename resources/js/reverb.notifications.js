@@ -180,6 +180,7 @@
 
 		api.get(data)
 		.done(function(data) {
+			console.log(data);
 			if (data.meta) {
 				meta = data.meta;
 			}
@@ -248,22 +249,28 @@
 	 */
 
 	// Handle marking events as read!
-	var markRead = function(id){
-		api.post({action:'notifications', do:'dismissNotification', notificationId: id, format:'json', formatversion: 2})
+	var markRead = function(id, unread){
+		unread = unread ? true : false;
+		var opts = {action:'notifications', do:'dismissNotification', notificationId: id, format:'json', formatversion: 2};
+		if (unread) {
+			opts.dismissedAt = 0;
+		}
+
+		api.post(opts)
 		.done(function(data) {
-
 			if (data.success) {
-				// If marked read, remove the little bubblyboi
-				$(".reverb-npnr-unread[data-id='"+id+"']").addClass('reverb-nrpr-read').removeClass('reverb-npnr-unread');
-				//$(".reverb-npn-row[data-id='"+id+"']").fadeOut();
-
-				meta.unread = meta.unread - 1;
-				meta.read = meta.read + 1;
+				if (unread) {
+					$(".reverb-npnrc[data-id='"+id+"']").addClass('reverb-npnr-unread').removeClass('reverb-npnr-read');
+					meta.unread = meta.unread + 1;
+					meta.read = meta.read - 1;
+				} else {
+					$(".reverb-npnrc[data-id='"+id+"']").addClass('reverb-npnr-read').removeClass('reverb-npnr-unread');
+					meta.unread = meta.unread - 1;
+					meta.read = meta.read + 1;
+				}
 				updateCounts();
-
-				
 			} else {
-				log('There was an issue dismissing id '+id);
+				log('There was an issue with api call for id '+id);
 			}
 		});
 
@@ -272,6 +279,11 @@
 	$(document).on('click', ".reverb-npnr-unread", function(){
 		var nId = $(this).closest(".reverb-npn-row").data("id");
 		markRead(nId);
+	})
+
+	$(document).on('click', ".reverb-npnr-read", function(){
+		var nId = $(this).closest(".reverb-npn-row").data("id");
+		markRead(nId,true);
 	})
 
 	/***
@@ -436,7 +448,7 @@
 		   html += '<div class="reverb-npnr-body">'+d.body+'</div>'
 		}
 		html += '      <div class="reverb-npnr-bottom">'
-		+ '            <span class="reverb-npnr-'+d.read+'" data-id="'+d.id+'"></span>'
+		+ '            <span class="reverb-npnr-'+d.read+' reverb-npnrc" data-id="'+d.id+'"></span>'
 		+ '            <span title="'+d.timestamp+'">' + d.created + '</span>'
 		+ '            <span class="reverb-npnrb-site">on <a href="'+d.site_url+'">'+d.site_name+'</span>'
 		+ '        </div>'
@@ -502,7 +514,8 @@
 		⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
 		⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿
 	*/
-
-   initPanel();
+	if (!notificationPage) {
+		initPanel();
+	}
 
 }); })();
