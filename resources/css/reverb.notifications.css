@@ -403,3 +403,7 @@ button.reverb-active-button {
 	left: 5px;
 	color: #36c;
 }
+
+.reverb-bell-notification-count {
+	display: none;
+}

@@ -77,8 +77,10 @@
 			$(".reverb-total-notifications").html(totalUnread);
 			if (totalUnread > 0) {
 				$('.reverb-bell').addClass('reverb-bell-unread');
+				$('.reverb-bell-notification-count').show();
 			} else {
 				$('.reverb-bell').removeClass('reverb-bell-unread');
+				$('.reverb-bell-notification-count').hide();
 			}
 		}
 	};
@@ -462,6 +464,7 @@
 	var buildNotificationButton = function(data) {
 		var html = '<div class="netbar-box right reverb-notifications reverb-bell">'
 				 + '    <i class="fas fa-bell"></i>'
+				 + '	<span class="reverb-total-notifications reverb-bell-notification-count"></span>'
 				 + '	<div class="reverb-np-arrow"></div>'
 				 + '</div>'
 		return $(html);
