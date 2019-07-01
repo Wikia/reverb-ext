@@ -163,6 +163,10 @@ class Hooks {
 								[
 									3,
 									1
+								],
+								[
+									4,
+									$title->getFullURL()
 								]
 							]
 						]
@@ -471,7 +475,7 @@ class Hooks {
 						],
 						[
 							4,
-							$agent->getName()
+							$title->getFullURL()
 						]
 					]
 				]
