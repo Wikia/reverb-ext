@@ -120,8 +120,13 @@ class ApiNotifications extends ApiBase {
 		$success = false;
 
 		$id = $this->params['notificationId'];
+		$timestamp = $this->params['dismissedAt'];
+		if ($timestamp === null) {
+			$timestamp = time();
+		}
+
 		if (!empty($id)) {
-			$success = Notification::dismissNotification($this->getUser(), (string)$id);
+			$success = Notification::dismissNotification($this->getUser(), (string)$id, $timestamp);
 		}
 
 		return [
@@ -203,6 +208,11 @@ class ApiNotifications extends ApiBase {
 			],
 			'notificationId' => [
 				ApiBase::PARAM_TYPE => 'string',
+				ApiBase::PARAM_REQUIRED => false,
+				ApiBase::PARAM_DFLT => null
+			],
+			'dismissedAt' => [
+				ApiBase::PARAM_TYPE => 'integer',
 				ApiBase::PARAM_REQUIRED => false,
 				ApiBase::PARAM_DFLT => null
 			]

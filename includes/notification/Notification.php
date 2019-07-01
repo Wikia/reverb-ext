@@ -435,10 +435,11 @@ class Notification {
 	 *
 	 * @param User   $user Target user that the notification originally targetted.
 	 * @param string $id   The ID from the original resource.
+	 * @param boolean $timestamp Unix timestamp of when the notification was dismissed.
 	 *
 	 * @return null
 	 */
-	public static function dismissNotification(User $user, string $id): bool {
+	public static function dismissNotification(User $user, string $id, int $timestamp): bool {
 		$lookup = CentralIdLookup::factory();
 		$globalId = $lookup->centralIdFromLocalUser($user);
 		$userIdentifier = Identifier::newUser($globalId);
@@ -449,7 +450,7 @@ class Notification {
 		$target = new NotificationTargetResource(
 			[
 				'target-id' => (string)$userIdentifier,
-				'dismissed-at' => time()
+				'dismissed-at' => $timestamp
 			]
 		);
 		$target->setId((string)$userIdentifier . ':' . $id);
