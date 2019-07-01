@@ -11,8 +11,28 @@
 namespace Reverb\Traits;
 
 use User;
+use GlobalVarConfig;
+use MediaWiki\MediaWikiServices;
 
 trait NotificationListTrait {
+	/**
+	 * Get ReverbNotifications
+	 *
+	 * @return void
+	 */
+	public static function getNotificationList() {
+		return self::getNotificationConfig()->get('ReverbNotifications');
+	}
+
+	/**
+	 * Get Preference Columns
+	 *
+	 * @return void
+	 */
+	public static function getNotifiers() {
+		return self::getNotificationConfig()->get('ReverbNotifiers');
+	}
+
 	/**
 	 * Get the User preference for notification
 	 *
@@ -23,12 +43,25 @@ trait NotificationListTrait {
 	 * @return boolean
 	 */
 	public static function shouldNotify(User $user, string $type, string $group): bool {
-		$sub = self::getSubCategoryFromType($type);
-		$name = self::getNotificationName($type);
 		if ($group == 'email' && $user->getOption('reverb-email-frequency') == 0) {
 			return false;
 		}
-		return $user->getBoolOption("reverb-{$sub}-{$group}-{$name}");
+		$type = self::replaceTypeWithUsePreference($type);
+		return $user->getBoolOption(self::getPreferenceKey($type, $group));
+	}
+
+	/**
+	 * Get the preference key
+	 *
+	 * @param string $type
+	 * @param string $group
+	 *
+	 * @return string
+	 */
+	public static function getPreferenceKey(string $type, string $group): string {
+		$sub = self::getSubCategoryFromType($type);
+		$name = self::getNotificationName($type);
+		return "reverb-{$sub}-{$group}-{$name}";
 	}
 
 	/**
@@ -42,7 +75,8 @@ trait NotificationListTrait {
 	public static function organizeNotificationList(User $user, array $notificationList): array {
 		$ordered = [];
 		foreach ($notificationList as $key => $notification) {
-			if (!self::isNotificationAllowedForUser($user, $notification)) {
+			if (!self::isNotificationAllowedForUser($user, $notification)
+			|| self::isUsingAnotherPreference($notification)) {
 				continue;
 			}
 			$value['key'] = $key;
@@ -69,6 +103,17 @@ trait NotificationListTrait {
 	}
 
 	/**
+	 * Determine if another preference is used to control this notification
+	 *
+	 * @param array $notification
+	 *
+	 * @return boolean
+	 */
+	public static function isUsingAnotherPreference(array $notification): bool {
+		return isset($notification['use-preference']);
+	}
+
+	/**
 	 * Get the category portion of a notification type
 	 *
 	 * @param string $type
@@ -76,7 +121,7 @@ trait NotificationListTrait {
 	 * @return string
 	 */
 	public static function getCategoryFromType(string $type): string {
-		return self::getParts($type, 1);
+		return self::getTypeParts($type, 1);
 	}
 
 	/**
@@ -91,6 +136,15 @@ trait NotificationListTrait {
 	}
 
 	/**
+	 * Get the Configuration container
+	 *
+	 * @return GlobalVarConfig
+	 */
+	private static function getNotificationConfig() {
+		return MediaWikiServices::getInstance()->getMainConfig();
+	}
+
+	/**
 	 * Get the sub category portion of a notification type
 	 *
 	 * @param string $type
@@ -98,7 +152,7 @@ trait NotificationListTrait {
 	 * @return string
 	 */
 	public static function getSubCategoryFromType(string $type): string {
-		return self::getParts($type, 2);
+		return self::getTypeParts($type, 2);
 	}
 
 	/**
@@ -109,7 +163,22 @@ trait NotificationListTrait {
 	 *
 	 * @return string
 	 */
-	private static function getParts(string $type, int $offset): string {
+	private static function getTypeParts(string $type, int $offset): string {
 		return implode("-", array_slice(explode('-', $type), 0, $offset));
+	}
+
+	/**
+	 * Replace type with the use-preference key
+	 *
+	 * @param string $type
+	 *
+	 * @return string
+	 */
+	private static function replaceTypeWithUsePreference(string $type): string {
+		$notifications = self::getNotificationList();
+		if (isset($notifications[$type]) && self::isUsingAnotherPreference($notifications[$type])) {
+			return $notifications[$type]["use-preference"];
+		}
+		return $type;
 	}
 }
