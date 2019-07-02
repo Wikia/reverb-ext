@@ -181,20 +181,20 @@ div.reverb-np-arrow {
 }
 
 .reverb-npnr-unread {
-	width: 10px;
-	height: 10px;
 	background-color: #f37f20;
-	border-radius: 25px;
-	float: right;
 }
 
 .reverb-npnr-read {
+	background-color: #303030;
+}
+
+.reverb-npnrc {
 	width: 10px;
 	height: 10px;
-	background-color: #202020;
-	border-radius: 25px;
 	float: right;
-  }
+	cursor: pointer;
+	border-radius: 25px;
+}
 
 .reverb-npnr-header {
 	font-family: Helvetica, sans-serif;
@@ -402,4 +402,8 @@ button.reverb-active-button {
 	top: 5px;
 	left: 5px;
 	color: #36c;
+}
+
+.reverb-bell-notification-count {
+	display: none;
 }
