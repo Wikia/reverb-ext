@@ -82,6 +82,7 @@
 				"mobile"
 			],
 			"scripts": [
+				"resources/js/reverb.notifications_page.js",
 				"resources/js/reverb.pagination.js"
 			],
 			"position": "bottom"

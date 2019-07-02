@@ -52,13 +52,13 @@
 	});
 	
 	// Check if we are inside the notification page.
-	// There may be a more "mediawiki" was of doing this...
-	var notificationPage = false;
-	if (window.location.pathname == "/Special:Notifications" ||
-		window.location.pathname == "/index.php" && window.location.search.indexOf('title=Special:Notifications') !== -1) {
-		notificationPage = true;
+	// This value is set to true if we are.
+	if (typeof reverbNotificationPage === "undefined") {
+		reverbNotificationPage = false;
 	}
-   
+
+	log('Notification Page: ' + reverbNotificationPage);
+
 	/**
 	 * Setup "control functions"
 	 */
@@ -67,13 +67,13 @@
 		var totalUnread = meta.unread;
 		var totalRead = meta.read;
 
-		var notificationPageOnly = npo ? npo : false;
+		var reverbNotificationPageOnly = npo ? npo : false;
 
 		$("#reverb-ru-all").html( mw.msg('special-button-all',total) );
 		$("#reverb-ru-read").html( mw.msg('special-button-read',totalRead) );
 		$("#reverb-ru-unread").html( mw.msg('special-button-unread',totalUnread) );
 
-		if (!notificationPageOnly) {
+		if (!reverbNotificationPageOnly) {
 			$(".reverb-total-notifications").html(totalUnread);
 			if (totalUnread > 0) {
 				$('.reverb-bell').addClass('reverb-bell-unread');
@@ -180,7 +180,6 @@
 
 		api.get(data)
 		.done(function(data) {
-			console.log(data);
 			if (data.meta) {
 				meta = data.meta;
 			}
@@ -299,7 +298,7 @@
 	 *    This is not the *only* code that effects special pages -- its just code that only effects special pages.                                                                                        
 	 */
 
-	if (notificationPage) {
+	if (reverbNotificationPage) {
 
 		var perPage = 10;
 		var activeFilters = {};
@@ -514,7 +513,7 @@
 		⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
 		⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿
 	*/
-	if (!notificationPage) {
+	if (!reverbNotificationPage) {
 		initPanel();
 	}
 
