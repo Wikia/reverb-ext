@@ -95,5 +95,16 @@
 	"reverb-pref-tooltip-user-account-groups-expiration-change": "The expiration for an user's temporary groups was changed or removed.",
 	"reverb-pref-tooltip-user-interest-page-linked": "An article that the user watches was linked to in another article.",
 	"reverb-pref-tooltip-user-interest-talk-page-edit": "The user's own personal talk page is edited.",
-	"reverb-pref-tooltip-user-interest-welcome": "Welcoming an user to a wiki."
+	"reverb-pref-tooltip-user-interest-welcome": "Welcoming an user to a wiki.",
+	"apihelp-notifications-getNotificationsForUser-example": "Get all notifications for the logged in user limited by the current page number and number of items per page.",
+	"apihelp-notifications-dismissNotification-example": "Make a POST request with the <strong>notification ID</strong> and the Unix Epoch formatted timestamp of the <strong>dismissed</strong> time.  Set <strong>dismissedAt</strong> to zero to mark a notification as unread.  Logged in users can only dismiss their own notifications.",
+	"apihelp-notifications-dismissAllNotifications-example": "Make a POST request to mark all notifications for the logged in user as read.",
+	"apihelp-notifications-param-do": "The end point action to perform such as <strong>getNotificationsForUser</strong>.",
+	"apihelp-notifications-param-page": "The page number starting point of notifications to retrieve.",
+	"apihelp-notifications-param-itemsPerPage": "The number of notifications to return per page retrieved.",
+	"apihelp-notifications-param-type": "The type of notifications to return in the response.  Accepts a comma delimited list of types.",
+	"apihelp-notifications-param-read": "Return only read notifications in the response.",
+	"apihelp-notifications-param-unread": "Return only unread notifications in the response.",
+	"apihelp-notifications-param-notificationId": "The notification ID passed to <strong>dismissNotification</strong> to be dismissed taken from the original response from <strong>getNotificationsForUser</strong>.",
+	"apihelp-notifications-param-dismissedAt": "The Unix Epoch formatted timestamp of when the notification was read.  To mark a notification as unread set this to 0."
 }

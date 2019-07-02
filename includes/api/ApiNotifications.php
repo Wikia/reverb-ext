@@ -226,7 +226,12 @@ class ApiNotifications extends ApiBase {
 	 */
 	protected function getExamplesMessages() {
 		return [
-			'action=notifications&do=getNotificationsForUser&page=0&itemsPerPage=50' => 'apihelp-notifications-example',
+			'action=notifications&do=getNotificationsForUser&page=0&itemsPerPage=50'
+				=> 'apihelp-notifications-getNotificationsForUser-example',
+			'action=notifications&do=dismissNotification&notificationId=1&dismissedAt=1562006555'
+				=> 'apihelp-notifications-dismissNotification-example',
+			'action=notifications&do=dismissAllNotifications'
+				=> 'apihelp-notifications-dismissAllNotifications-example'
 		];
 	}
 
