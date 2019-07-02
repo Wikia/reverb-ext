@@ -47,10 +47,8 @@ class Hooks {
 		global $wgDefaultUserOptions, $wgReverbNotifications;
 
 		foreach ($wgReverbNotifications as $notification => $notificationData) {
-			$sub = self::getSubCategoryFromType($notification);
-			$name = self::getNotificationName($notification);
-			$wgDefaultUserOptions["reverb-{$sub}-email-{$name}"] = false;
-			$wgDefaultUserOptions["reverb-{$sub}-web-{$name}"] = true;
+			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'email')] = false;
+			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'web')] = true;
 		}
 	}
 
@@ -163,6 +161,10 @@ class Hooks {
 								[
 									3,
 									1
+								],
+								[
+									4,
+									$title->getFullURL()
 								]
 							]
 						]
@@ -471,7 +473,7 @@ class Hooks {
 						],
 						[
 							4,
-							$agent->getName()
+							$title->getFullURL()
 						]
 					]
 				]
@@ -569,16 +571,15 @@ class Hooks {
 			'section' => 'reverb/reverb-email-options'
 		];
 
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig('reverb');
-
+		// Setup Check Matrix columns
 		$columns = [];
-		$reverbNotifiers = $config->get('ReverbNotifiers');
+		$reverbNotifiers = self::getNotifiers();
 		foreach ($reverbNotifiers as $notifierType => $notifierData) {
 			$formatMessage = wfMessage('reverb-pref-' . $notifierType)->escaped();
 			$columns[$formatMessage] = $notifierType;
 		}
 
-		$notifications = self::organizeNotificationList($user, $config->get('ReverbNotifications'));
+		$notifications = self::organizeNotificationList($user, self::getNotificationList());
 
 		foreach ($notifications as $group => $notificationType) {
 			$rows = [];
