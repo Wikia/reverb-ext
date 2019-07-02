@@ -51,12 +51,8 @@
 		}
 	});
 	
-	// Check if we are inside the notification page.
-	// This value is set to true if we are.
-	if (typeof reverbNotificationPage === "undefined") {
-		reverbNotificationPage = false;
-	}
 
+	reverbNotificationPage = (typeof window.reverbNotificationPage !== "undefined") ? true : false;	
 	log('Notification Page: ' + reverbNotificationPage);
 
 	/**

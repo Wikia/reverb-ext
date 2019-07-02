@@ -5,4 +5,4 @@
  * we are on the notifications page in a i18n compliant way.
  */
 
-var reverbNotificationPage = true;
+window.reverbNotificationPage = true;
