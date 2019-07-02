@@ -200,7 +200,7 @@
 			var icon = (n.icons.notification) ? n.icons.notification : ( (n.icons.subcategory && n.icons.subcategory) ? n.icons.subcategory : ((n.icons.category && n.icons.category) ? n.icons.category : false));
 			icon = icon ? icon : "fa-bullhorn";
 
-
+			console.log(n);
 
 			// Convert for javascript
 			var created_at = moment(n.created_at * 1000);

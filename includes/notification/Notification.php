@@ -343,7 +343,7 @@ class Notification {
 	public function getNotificationIcon(): ?string {
 		$icons = $this->getIconsConfig('notification');
 
-		return $icons['notification'][$this->getType()] ?? null;
+		return $icons[$this->getType()] ?? null;
 	}
 
 	/**
