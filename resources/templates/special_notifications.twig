@@ -10,10 +10,10 @@
 			<label for="filter_all" class="reverb-filter-label"> All
 		</div>
 		
-		{% for id, type in types %}
+		{% for group, types in groups %}
 			<div class="reverb-filter-row">
-				<input type="checkbox" id="filter_{{ id }}" class="reverb-filter-checkbox">
-				<label for="filter_{{ id }}" class="reverb-filter-label"> {{ wfMessage('special-sidebar-' ~ id, 'plain', '50') }} </label>
+				<input type="checkbox" id="filter_{{ group }}" data-types="{{ types|join(',') }}" class="reverb-filter-checkbox">
+				<label for="filter_{{ group }}" class="reverb-filter-label"> {{ wfMessage('special-sidebar-' ~ group, 'plain', '50') }} </label>
 			</div>
 		{% endfor %}
 		</div>

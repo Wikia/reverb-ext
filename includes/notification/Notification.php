@@ -399,6 +399,15 @@ class Notification {
 	}
 
 	/**
+	 * Return a visual grouping of notifications based on user preferences grouping.
+	 *
+	 * @return string
+	 */
+	public function getVisualGroup(): string {
+		return self::replaceTypeWithUsePreference($this->getType());
+	}
+
+	/**
 	 * Get an array representation of this object suitable for APIs or otherwise.
 	 *
 	 * @return array
@@ -414,6 +423,7 @@ class Notification {
 			],
 			'category' => $this->getCategory(),
 			'subcategory' => $this->getSubcategory(),
+			'grouping' => $this->getVisualGroup(),
 			'id' => $this->getId(),
 			'type' => $this->getType(),
 			'header_short' => $this->getHeader(),

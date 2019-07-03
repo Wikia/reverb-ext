@@ -168,7 +168,7 @@ class NotificationBroadcast {
 	 *
 	 * @return boolean
 	 */
-	protected static function isTypeConfigured(string $type): bool {
+	public static function isTypeConfigured(string $type): bool {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
 		$types = $mainConfig->get('ReverbNotifications');
 		return isset($types[$type]);
