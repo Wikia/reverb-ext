@@ -110,7 +110,7 @@ trait NotificationListTrait {
 	 * @return boolean
 	 */
 	public static function isUsingAnotherPreference(array $notification): bool {
-		return isset($notification['use-preference']);
+		return isset($notification['use_preference']);
 	}
 
 	/**
@@ -168,7 +168,7 @@ trait NotificationListTrait {
 	}
 
 	/**
-	 * Replace type with the use-preference key
+	 * Replace type with the use_preference key
 	 *
 	 * @param string $type
 	 *
@@ -177,7 +177,7 @@ trait NotificationListTrait {
 	private static function replaceTypeWithUsePreference(string $type): string {
 		$notifications = self::getNotificationList();
 		if (isset($notifications[$type]) && self::isUsingAnotherPreference($notifications[$type])) {
-			return $notifications[$type]["use-preference"];
+			return $notifications[$type]["use_preference"];
 		}
 		return $type;
 	}
