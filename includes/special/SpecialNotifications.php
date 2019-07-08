@@ -39,14 +39,23 @@ class SpecialNotifications extends SpecialPage {
 		$template = $twig->load('@Reverb/special_notifications.twig');
 
 		$config = MediaWikiServices::getInstance()->getMainConfig();
-		$types = $config->get("ReverbNotifications");
+		$typesRaw = $config->get("ReverbNotifications");
+
+		$groups = [];
+		foreach ($typesRaw as $type => $data) {
+			if (isset($data['use-preference'])) {
+				$groups[$data['use-preference']][] = $type;
+			} else {
+				$groups[$type][] = $type;
+			}
+		}
 
 		// Additional Scrips for the Notification Page
 		$this->output->addModules('ext.reverb.notifications.scripts.notificationPage');
 		$this->output->addModuleStyles('ext.reverb.notifications.styles.notificationPage');
 		$this->output->setPageTitle(wfMessage('notifications')->escaped());
 
-		$this->output->addHtml($template->render(['types' => $types]));
+		$this->output->addHtml($template->render(['groups' => $groups]));
 	}
 
 	/**

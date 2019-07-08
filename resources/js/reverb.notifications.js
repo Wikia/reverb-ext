@@ -322,12 +322,13 @@
 				$('#filter_all').get(0).checked = false;
 				var checked = $('.reverb-filter-checkbox:checked');
 				var filters = [];
-				for (var x in checked) {
-					if (checked[x].id) {
-						var filter = checked[x].id.toString().replace("filter_","");
+				$('.reverb-filter-checkbox:checked').each(function() {
+					var types = $(this).attr('data-types').toString();
+					if (types.length > 0) {
+						var filter = types;
 						filters.push(filter);
 					}
-				}
+				});
 
 				if (!checked.length) {
 					$("#filter_all").click();
@@ -361,18 +362,18 @@
 		var generateWithFilters = function(filters, noUpdateCount) {
 			activeFilters = filters;
 			noUpdateCount = noUpdateCount ? true : false;
-			loadNotifications(filters,function(data){
-					if (!noUpdateCount) {
+			loadNotifications(filters, function(data) {
+				if (!noUpdateCount) {
 					updateCounts(true);
+				}
+				if (data.notifications && data.notifications.length) {
+					$(".reverb-notification-page-paging").empty();
+					$(".reverb-notification-page-notifications").empty();
+					var notifications = buildNotificationsFromData(data,false);
+					for (var x in notifications) {
+						addNotification(notifications[x],'specialpage');
 					}
-					if (data.notifications && data.notifications.length) {
-						$(".reverb-notification-page-paging").empty();
-						$(".reverb-notification-page-notifications").empty();
-						var notifications = buildNotificationsFromData(data,false);
-						for (var x in notifications) {
-							addNotification(notifications[x],'specialpage');
-						}
-					
+
 					if (meta.total_all > meta.total_this_page) {
 						// Oh boy, we gotta do pagination guys
 						$(".reverb-notification-page-paging").pagination({
@@ -382,7 +383,7 @@
 							onPageClick: function(page,event) {
 								var newfilters = activeFilters;
 								newfilters.page = page-1;
-								loadNotifications(newfilters,function(data){
+								loadNotifications(newfilters, function(data) {
 									if (data.notifications && data.notifications.length) {
 										$(".reverb-notification-page-notifications").empty();
 										var notifications = buildNotificationsFromData(data,false);
@@ -403,9 +404,8 @@
 
 			});
 		}
-		generateWithFilters({page: 0, perpage: perPage});
-
-	
+		// Force filters reset back to "All" and repopulate.
+		$(".reverb-filter-checkbox").change();
 	}
 
 	/***
