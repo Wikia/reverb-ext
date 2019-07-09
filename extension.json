@@ -112,12 +112,12 @@
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
 		"GetNewMessagesAlert": "Reverb\\Hooks::onGetNewMessagesAlert",
+		"GetPreferences": "Reverb\\Hooks::onGetPreferences",
 		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
 		"LocalUserCreated": "Reverb\\Hooks::onLocalUserCreated",
 		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
 		"SpecialPageBeforeExecute": "Reverb\\Hooks::onSpecialPageBeforeExecute",
-		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged",
-		"GetPreferences": "Reverb\\Hooks::onGetPreferences"
+		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged"
 	},
 	"config": {
 		"ReverbApiEndPoint": {
