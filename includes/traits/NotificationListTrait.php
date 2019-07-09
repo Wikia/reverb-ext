@@ -99,7 +99,7 @@ trait NotificationListTrait {
 			return true;
 		}
 
-		return boolval(array_intersect($user->getGroups(), $notification['requires']));
+		return boolval(array_intersect($user->getEffectiveGroups(), $notification['requires']));
 	}
 
 	/**
