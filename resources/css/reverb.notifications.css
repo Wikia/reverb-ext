@@ -407,3 +407,7 @@ button.reverb-active-button {
 .reverb-bell-notification-count {
 	display: none;
 }
+
+.reverb-npn-row:last-child .reverb-npnr-right { 
+	border: 0; 
+}
