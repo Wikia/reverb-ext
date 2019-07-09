@@ -18,18 +18,18 @@ trait NotificationListTrait {
 	/**
 	 * Get ReverbNotifications
 	 *
-	 * @return void
+	 * @return array
 	 */
-	public static function getNotificationList() {
+	public static function getNotificationList(): array {
 		return self::getNotificationConfig()->get('ReverbNotifications');
 	}
 
 	/**
 	 * Get Preference Columns
 	 *
-	 * @return void
+	 * @return array
 	 */
-	public static function getNotifiers() {
+	public static function getNotifiers(): array {
 		return self::getNotificationConfig()->get('ReverbNotifiers');
 	}
 
