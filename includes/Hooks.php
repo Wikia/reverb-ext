@@ -559,18 +559,6 @@ class Hooks {
 			],
 		];
 
-		// Display information about the user's currently set email address
-		$emailAddress = $user->getEmail() && $user->isAllowed('viewmyprivateinfo')
-			? htmlspecialchars($user->getEmail()) : '';
-
-		$preferences['reverb-emailaddress'] = [
-			'type' => 'info',
-			'raw' => true,
-			'default' => $emailAddress,
-			'label-message' => 'reverb-pref-send-to',
-			'section' => 'reverb/reverb-email-options'
-		];
-
 		// Setup Check Matrix columns
 		$columns = [];
 		$reverbNotifiers = self::getNotifiers();
@@ -602,6 +590,11 @@ class Hooks {
 				'prefix' => 'reverb-' . $group . '-',
 				'tooltips' => $tooltips
 			];
+		}
+		foreach ($preferences as $index => $preference) {
+			if (isset($preference['section']) && $preference['section'] == 'personal/email') {
+				$preferences[$index]['section'] = 'reverb/reverb-email-options';
+			}
 		}
 	}
 }
