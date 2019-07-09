@@ -311,7 +311,7 @@
 				// This is the all checkbox. Lets uncheck every other box
 				$('.reverb-filter-checkbox').each(function () { 
 					if (this.id !== "filter_all") {
-						this.checked = false; 
+						this.checked = true; 
 					}
 				});
 				generateWithFilters({page: 0, perpage: perPage}, false);
@@ -322,7 +322,7 @@
 				$('#filter_all').get(0).checked = false;
 				var checked = $('.reverb-filter-checkbox:checked');
 				var filters = [];
-				$('.reverb-filter-checkbox:checked').each(function() {
+				checked.each(function() {
 					var types = $(this).attr('data-types').toString();
 					if (types.length > 0) {
 						var filter = types;
@@ -332,6 +332,11 @@
 
 				if (!checked.length) {
 					$("#filter_all").click();
+				} else {
+					if (checked.length == $('.reverb-filter-checkbox').length - 1) {
+						// if all are checked (except for all) then check all
+						$('#filter_all').get(0).checked = true;
+					}
 				}
 
 				generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
