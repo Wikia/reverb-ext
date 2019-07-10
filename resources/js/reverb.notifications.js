@@ -302,7 +302,7 @@
 		$("#reverb-mark-all-read").click(function(){
 			api.post({action:'notifications', do:'dismissAllNotifications', format:'json', formatversion: 2})
 			.done(function(data) {
-				generateWithFilters({page: 0, perpage: perPage}, true);
+				generateWithFilters({page: 0, perpage: perPage}, false);
 			});
 		});
 
@@ -338,6 +338,8 @@
 						$('#filter_all').get(0).checked = true;
 					}
 				}
+
+				console.log(filters);
 
 				generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
 				$(".reverb-active-button").removeClass('reverb-active-button');
