@@ -338,8 +338,6 @@
 					}
 				}
 
-				console.log(filters);
-
 				generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
 				$(".reverb-active-button").removeClass('reverb-active-button');
 				$("#reverb-ru-all").addClass('reverb-active-button');
