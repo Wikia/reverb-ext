@@ -152,9 +152,13 @@
 			});
 		} else {
 			// If we cant find the userbox, lets assume we are mobile.
-
 			var mheader = $("form.header");
-			buildMobileIcon().appendTo(mheader);
+			loadNotifications({page: 0, perpage: 1, unread: 1},function(data){
+				buildMobileIcon(data.meta.unread).appendTo(mheader);
+			});
+
+			
+			
 
 		}
 	}
@@ -496,9 +500,14 @@
 		return $(html);
 	}
 
-	var buildMobileIcon = function() {
+	var buildMobileIcon = function(unread) {
 		var url = mw.Title.newFromText('Notifications', -1 ).getUrl();
-		var html = '<div><a href="'+url+'" title="Notifications" class="mw-ui-icon mw-ui-icon-minerva-notifications mw-ui-icon-element user-button main-header-button" id="secondary-button"></a></div>'
+		if (unread) {
+			extra = ' reverb-mobile-bell-unread';
+		} else {
+			extra = '';
+		}
+		var html = '<div><a href="'+url+'" title="Notifications" class="mw-ui-icon mw-ui-icon-minerva-notifications mw-ui-icon-element user-button main-header-button'+extra+'" id="secondary-button"></a></div>'
 		return $(html);
 	}
 

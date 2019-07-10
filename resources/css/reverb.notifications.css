@@ -397,6 +397,11 @@ button.reverb-active-button {
 	color: #f37f20;
 }
 
+.reverb-mobile-bell-unread:before {
+    background-image: url(../images/bell-unread.svg) !important;
+}
+
+
 .reverb-icon {
 	position: relative;
 	top: 5px;
