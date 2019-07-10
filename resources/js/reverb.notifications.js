@@ -1,13 +1,13 @@
 
 (function(){ $.when( mw.loader.using(['mediawiki.api', 'mediawiki.jqueryMsg']), $.ready).then(function() {
 	/***
-	 *    ██████╗ ███████╗██╗   ██╗███████╗██████╗ ██████╗ 
+	 *    ██████╗ ███████╗██╗   ██╗███████╗██████╗ ██████╗
 	 *    ██╔══██╗██╔════╝██║   ██║██╔════╝██╔══██╗██╔══██╗
 	 *    ██████╔╝█████╗  ██║   ██║█████╗  ██████╔╝██████╔╝
 	 *    ██╔══██╗██╔══╝  ╚██╗ ██╔╝██╔══╝  ██╔══██╗██╔══██╗
 	 *    ██║  ██║███████╗ ╚████╔╝ ███████╗██║  ██║██████╔╝
-	 *    ╚═╝  ╚═╝╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═════╝ 
-	 *           We out here using jQuery in 2019.                              
+	 *    ╚═╝  ╚═╝╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═════╝
+	 *           We out here using jQuery in 2019.
 	 */
 
 	var devNotice = function(msg) {
@@ -50,15 +50,10 @@
 			userBox = nbx;
 		}
 	});
-	
-	// Check if we are inside the notification page.
-	// There may be a more "mediawiki" was of doing this...
-	var notificationPage = false;
-	if (window.location.pathname == "/Special:Notifications" ||
-		window.location.pathname == "/index.php" && window.location.search.indexOf('title=Special:Notifications') !== -1) {
-		notificationPage = true;
-	}
-   
+
+	reverbNotificationPage = (typeof window.reverbNotificationPage !== "undefined") ? true : false;
+	log('Notification Page: ' + reverbNotificationPage);
+
 	/**
 	 * Setup "control functions"
 	 */
@@ -67,13 +62,13 @@
 		var totalUnread = meta.unread;
 		var totalRead = meta.read;
 
-		var notificationPageOnly = npo ? npo : false;
+		var reverbNotificationPageOnly = npo ? npo : false;
 
 		$("#reverb-ru-all").html( mw.msg('special-button-all',total) );
 		$("#reverb-ru-read").html( mw.msg('special-button-read',totalRead) );
 		$("#reverb-ru-unread").html( mw.msg('special-button-unread',totalUnread) );
 
-		if (!notificationPageOnly) {
+		if (!reverbNotificationPageOnly) {
 			$(".reverb-total-notifications").html(totalUnread);
 			if (totalUnread > 0) {
 				$('.reverb-bell').addClass('reverb-bell-unread');
@@ -89,7 +84,7 @@
 		// hide if we are adding a notification
 		switch (target) {
 			case "dropdown":
-			default: 
+			default:
 				selector = '.reverb-npn';
 			break;
 			case "specialpage":
@@ -110,12 +105,12 @@
 		var notificationPanel = buildNotificationPanel({globalNotifications: false});
 		notificationPanel.appendTo('body');
 		notificationButton.insertBefore(userBox);
-		
+
 		$('.netbar-box.has-drop').on('mouseover', function(){
 			notificationPanel.hide();
 			$(".reverb-np-arrow").hide();
 		});
-	
+
 		$(document).on('mouseup',function(e){
 			var target = $(e.target);
 			if (notificationButton.is(e.target) || notificationPanel.is(e.target) || target.hasClass('reverb-ddt')) {
@@ -126,7 +121,7 @@
 				$(".reverb-np-arrow").hide();
 			}
 		})
-		
+
 		var panelTotal = 10;
 
 		loadNotifications({page: 0, perpage: panelTotal, unread: 1},function(data){
@@ -161,9 +156,9 @@
 		}
 
 		var data = {
-			action:'notifications', 
-			do:'getNotificationsForUser', 
-			page: f.page, 
+			action:'notifications',
+			do:'getNotificationsForUser',
+			page: f.page,
 			itemsPerPage: f.perpage,
 			format:'json'
 		};
@@ -197,14 +192,12 @@
 			var header = n.header_short ? n.header_short : false;
 			var longheader = n.header_long ? n.header_long : (n.header_short ? n.header_short : false);
 
-			// Setup message body 
+			// Setup message body
 			var message = n.user_note ? n.user_note : "";
 
 			// Try Notification, then Subcategory, then Category...
 			var icon = (n.icons.notification) ? n.icons.notification : ( (n.icons.subcategory && n.icons.subcategory) ? n.icons.subcategory : ((n.icons.category && n.icons.category) ? n.icons.category : false));
 			icon = icon ? icon : "fa-bullhorn";
-
-
 
 			// Convert for javascript
 			var created_at = moment(n.created_at * 1000);
@@ -235,16 +228,16 @@
 		return notifications;
 	}
 
-   
+
 	/***
-	 *    ███████╗██╗   ██╗███████╗███╗   ██╗████████╗    ██╗  ██╗ █████╗ ███╗   ██╗██████╗ ██╗     ██╗███╗   ██╗ ██████╗ 
-	 *    ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝    ██║  ██║██╔══██╗████╗  ██║██╔══██╗██║     ██║████╗  ██║██╔════╝ 
+	 *    ███████╗██╗   ██╗███████╗███╗   ██╗████████╗    ██╗  ██╗ █████╗ ███╗   ██╗██████╗ ██╗     ██╗███╗   ██╗ ██████╗
+	 *    ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝    ██║  ██║██╔══██╗████╗  ██║██╔══██╗██║     ██║████╗  ██║██╔════╝
 	 *    █████╗  ██║   ██║█████╗  ██╔██╗ ██║   ██║       ███████║███████║██╔██╗ ██║██║  ██║██║     ██║██╔██╗ ██║██║  ███╗
 	 *    ██╔══╝  ╚██╗ ██╔╝██╔══╝  ██║╚██╗██║   ██║       ██╔══██║██╔══██║██║╚██╗██║██║  ██║██║     ██║██║╚██╗██║██║   ██║
 	 *    ███████╗ ╚████╔╝ ███████╗██║ ╚████║   ██║       ██║  ██║██║  ██║██║ ╚████║██████╔╝███████╗██║██║ ╚████║╚██████╔╝
-	 *    ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝       ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ 
+	 *    ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝       ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝
 	 *    Like we could actually handle anything. What a joke.
-	 *                                                                                                                    
+	 *
 	 */
 
 	// Handle marking events as read!
@@ -288,17 +281,17 @@
 	/***
 	 *    ███████╗██████╗ ███████╗ ██████╗██╗ █████╗ ██╗         ██████╗  █████╗  ██████╗ ███████╗
 	 *    ██╔════╝██╔══██╗██╔════╝██╔════╝██║██╔══██╗██║         ██╔══██╗██╔══██╗██╔════╝ ██╔════╝
-	 *    ███████╗██████╔╝█████╗  ██║     ██║███████║██║         ██████╔╝███████║██║  ███╗█████╗  
-	 *    ╚════██║██╔═══╝ ██╔══╝  ██║     ██║██╔══██║██║         ██╔═══╝ ██╔══██║██║   ██║██╔══╝  
+	 *    ███████╗██████╔╝█████╗  ██║     ██║███████║██║         ██████╔╝███████║██║  ███╗█████╗
+	 *    ╚════██║██╔═══╝ ██╔══╝  ██║     ██║██╔══██║██║         ██╔═══╝ ██╔══██║██║   ██║██╔══╝
 	 *    ███████║██║     ███████╗╚██████╗██║██║  ██║███████╗    ██║     ██║  ██║╚██████╔╝███████╗
 	 *    ╚══════╝╚═╝     ╚══════╝ ╚═════╝╚═╝╚═╝  ╚═╝╚══════╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
-	 *    The below code is only focused on the special pages, and will only get executed if it is 
+	 *    The below code is only focused on the special pages, and will only get executed if it is
 	 *    detected that we are on a special page.
-	 * 
-	 *    This is not the *only* code that effects special pages -- its just code that only effects special pages.                                                                                        
+	 *
+	 *    This is not the *only* code that effects special pages -- its just code that only effects special pages.
 	 */
 
-	if (notificationPage) {
+	if (reverbNotificationPage) {
 
 		var perPage = 10;
 		var activeFilters = {};
@@ -315,9 +308,9 @@
 		$(".reverb-filter-checkbox").change(function() {
 			if (this.id == "filter_all") {
 				// This is the all checkbox. Lets uncheck every other box
-				$('.reverb-filter-checkbox').each(function () { 
+				$('.reverb-filter-checkbox').each(function () {
 					if (this.id !== "filter_all") {
-						this.checked = false; 
+						this.checked = true;
 					}
 				});
 				generateWithFilters({page: 0, perpage: perPage}, false);
@@ -328,7 +321,7 @@
 				$('#filter_all').get(0).checked = false;
 				var checked = $('.reverb-filter-checkbox:checked');
 				var filters = [];
-				$('.reverb-filter-checkbox:checked').each(function() {
+				checked.each(function() {
 					var types = $(this).attr('data-types').toString();
 					if (types.length > 0) {
 						var filter = types;
@@ -338,6 +331,11 @@
 
 				if (!checked.length) {
 					$("#filter_all").click();
+				} else {
+					if (checked.length == $('.reverb-filter-checkbox').length - 1) {
+						// if all are checked (except for all) then check all
+						$('#filter_all').get(0).checked = true;
+					}
 				}
 
 				generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
@@ -421,8 +419,8 @@
 	 *       ██║   ██╔══╝  ██║╚██╔╝██║██╔═══╝ ██║     ██╔══██║   ██║   ██╔══╝  ╚════██║
 	 *       ██║   ███████╗██║ ╚═╝ ██║██║     ███████╗██║  ██║   ██║   ███████╗███████║
 	 *       ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝
-	 *  Imagine we are using template engines instead of just writing html into javascript. 
-	 *                                                                                 
+	 *  Imagine we are using template engines instead of just writing html into javascript.
+	 *
 	 */
 
 	var buildViewMore = function(more) {
@@ -481,7 +479,7 @@
 	}
 
 	/*
-		Developer: 
+		Developer:
 			Let's replace echo with a nice
 			alternative using modern tech
 			and make it scalable across
@@ -489,13 +487,13 @@
 
 		MediaWiki:
 			ResourceLoader is a steaming
-			pile of crap and doesn't 
+			pile of crap and doesn't
 			support any modern JavaScript
 			so you just need to use jQuery.
 
 		ResourceLoader:
 			Don't even think about using
-			ES6 stuff either! 
+			ES6 stuff either!
 
 		Developer:
 		⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⣠⣤⣶⣶
@@ -513,7 +511,7 @@
 		⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
 		⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿
 	*/
-	if (!notificationPage) {
+	if (!reverbNotificationPage) {
 		initPanel();
 	}
 
