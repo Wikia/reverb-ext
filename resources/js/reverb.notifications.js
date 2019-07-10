@@ -39,17 +39,24 @@
 	 *  Identify user box to place notifications directly next to it.
 	 *  Also remove any echo notification boxes that may exist.
 	 */
-	var userBox;
-	$('.netbar-box').each(function(){
-		nbx = $(this);
-		if (nbx.hasClass('echo')) {
-			//nbx.hide();
-			lastRemoved = nbx;
+	
+
+
+	var getUserBox = function() {
+		var userBox;
+		$('.netbar-box').each(function(){
+			nbx = $(this);
+			if (nbx.hasClass('user')) {
+				userBox = nbx;
+			}
+		});
+		if (typeof userBox == 'undefined') {
+			userBox = false;
 		}
-		if (nbx.hasClass('user')) {
-			userBox = nbx;
-		}
-	});
+		return userBox;
+	}
+	
+
 
 	reverbNotificationPage = (typeof window.reverbNotificationPage !== "undefined") ? true : false;
 	log('Notification Page: ' + reverbNotificationPage);
@@ -101,44 +108,55 @@
 
 	var initPanel = function() {
 		log('Injecting HTML.');
-		var notificationButton = buildNotificationButton();
-		var notificationPanel = buildNotificationPanel({globalNotifications: false});
-		notificationPanel.appendTo('body');
-		notificationButton.insertBefore(userBox);
+		var userBox = getUserBox();
+		if (userBox) {
+			var notificationButton = buildNotificationButton();
+			var notificationPanel = buildNotificationPanel({globalNotifications: false});
+			notificationPanel.appendTo('body');
+			notificationButton.insertBefore(userBox);
 
-		$('.netbar-box.has-drop').on('mouseover', function(){
-			notificationPanel.hide();
-			$(".reverb-np-arrow").hide();
-		});
+			console.log(userBox);
 
-		$(document).on('mouseup',function(e){
-			var target = $(e.target);
-			if (notificationButton.is(e.target) || notificationPanel.is(e.target) || target.hasClass('reverb-ddt')) {
-				notificationPanel.show();
-				$(".reverb-np-arrow").show();
-			} else {
+			$('.netbar-box.has-drop').on('mouseover', function(){
 				notificationPanel.hide();
 				$(".reverb-np-arrow").hide();
-			}
-		})
+			});
 
-		var panelTotal = 10;
-
-		loadNotifications({page: 0, perpage: panelTotal, unread: 1},function(data){
-			updateCounts();
-			if (data.notifications && data.notifications.length) {
-				var notifications = buildNotificationsFromData(data,true);
-				for (var x in notifications) {
-					addNotification(notifications[x]);
+			$(document).on('mouseup',function(e){
+				var target = $(e.target);
+				if (notificationButton.is(e.target) || notificationPanel.is(e.target) || target.hasClass('reverb-ddt')) {
+					notificationPanel.show();
+					$(".reverb-np-arrow").show();
+				} else {
+					notificationPanel.hide();
+					$(".reverb-np-arrow").hide();
 				}
+			})
 
-				if (meta.unread > panelTotal) {
-				   addNotification(
-						buildViewMore( meta.unread - panelTotal )
-					)
+			var panelTotal = 10;
+
+			loadNotifications({page: 0, perpage: panelTotal, unread: 1},function(data){
+				updateCounts();
+				if (data.notifications && data.notifications.length) {
+					var notifications = buildNotificationsFromData(data,true);
+					for (var x in notifications) {
+						addNotification(notifications[x]);
+					}
+
+					if (meta.unread > panelTotal) {
+					addNotification(
+							buildViewMore( meta.unread - panelTotal )
+						)
+					}
 				}
-			}
-		});
+			});
+		} else {
+			// If we cant find the userbox, lets assume we are mobile.
+
+			var mheader = $("form.header");
+			buildMobileIcon().appendTo(mheader);
+
+		}
 	}
 
 	var loadNotifications = function(filters, cb) {
@@ -475,6 +493,12 @@
 				 + '	<span class="reverb-total-notifications reverb-bell-notification-count reverb-ddt"></span>'
 				 + '	<div class="reverb-np-arrow"></div>'
 				 + '</div>'
+		return $(html);
+	}
+
+	var buildMobileIcon = function() {
+		var url = mw.Title.newFromText('Notifications', -1 ).getUrl();
+		var html = '<div><a href="'+url+'" title="Notifications" class="mw-ui-icon mw-ui-icon-minerva-notifications mw-ui-icon-element user-button main-header-button" id="secondary-button"></a></div>'
 		return $(html);
 	}
 
