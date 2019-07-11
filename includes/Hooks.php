@@ -20,6 +20,7 @@ use MWNamespace;
 use OutputPage;
 use Reverb\Notification\NotificationBroadcast;
 use Revision;
+use RevisionReviewForm;
 use SkinTemplate;
 use SpecialPage;
 use Status;
@@ -594,6 +595,79 @@ class Hooks {
 		foreach ($preferences as $index => $preference) {
 			if (isset($preference['section']) && $preference['section'] == 'personal/email') {
 				$preferences[$index]['section'] = 'reverb/reverb-email-options';
+			}
+		}
+	}
+
+	/**
+	 * Handle when FlaggedRevs reverts an edit.
+	 *
+	 * @param RevisionReviewForm $reviewForm The FlaggedRevs review form class.
+	 * @param boolean|string     $status     Success or message key string error.
+	 *
+	 * @return boolean True
+	 */
+	public static function onFlaggedRevsRevisionReviewFormAfterDoSubmit(RevisionReviewForm $reviewForm, $status) {
+		if ($reviewForm->getAction() === 'reject' && $status === true) {
+			// revid -> userid
+			$affectedRevisions = [];
+			$revQuery = Revision::getQueryInfo();
+			$article = new WikiPage($reviewForm->getPage());
+			$newRev = Revision::newFromTitle($reviewForm->getPage(), $reviewForm->getOldId());
+			$oldRev = Revision::newFromTitle($reviewForm->getPage(), $reviewForm->getRefId());
+			$revisions = wfGetDB(DB_REPLICA)->select(
+				$revQuery['tables'],
+				['rev_id', 'rev_user' => $revQuery['fields']['rev_user']],
+				[
+					'rev_id <= ' . $newRev->getId(),
+					'rev_timestamp <= ' . $newRev->getTimestamp(),
+					'rev_id > ' . $oldRev->getId(),
+					'rev_timestamp > ' . $oldRev->getTimestamp(),
+					'rev_page' => $article->getId(),
+				],
+				__METHOD__,
+				[],
+				$revQuery['joins']
+			);
+			foreach ($revisions as $row) {
+				$user = User::newFromId($row->rev_user);
+				if ($user !== null) {
+					$affectedRevisions[$row->rev_id] = $user;
+				}
+			}
+
+			$broadcast = NotificationBroadcast::newMulti(
+				'article-edit-revert',
+				$reviewForm->getUser(),
+				$affectedRevisions,
+				[
+					'url' => $reviewForm->getPage()->getFullURL(),
+					'message' => [
+						[
+							'user_note',
+							''
+						],
+						[
+							1,
+							$reviewForm->getUser()->getName()
+						],
+						[
+							2,
+							$reviewForm->getPage()->getFullText()
+						],
+						[
+							3,
+							1
+						],
+						[
+							4,
+							$reviewForm->getPage()->getFullURL()
+						]
+					]
+				]
+			);
+			if ($broadcast) {
+				$broadcast->transmit();
 			}
 		}
 	}
