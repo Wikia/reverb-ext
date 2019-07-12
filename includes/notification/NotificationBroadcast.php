@@ -181,7 +181,7 @@ class NotificationBroadcast {
 	 *
 	 * @return void
 	 */
-	protected function setOrigin(SiteIdentifier $origin) {
+	public function setOrigin(SiteIdentifier $origin) {
 		$this->origin = $origin;
 	}
 
@@ -192,7 +192,7 @@ class NotificationBroadcast {
 	 *
 	 * @return boolean Success
 	 */
-	protected function setAgent(User $agent): bool {
+	public function setAgent(User $agent): bool {
 		if (!($agent instanceof User)) {
 			throw new MWException('Invalid agent passed.');
 		}
@@ -225,7 +225,7 @@ class NotificationBroadcast {
 	 *
 	 * @return void
 	 */
-	protected function setTargets(array $targets) {
+	public function setTargets(array $targets) {
 		$lookup = CentralIdLookup::factory();
 
 		$targetIdentifiers = [];
@@ -265,7 +265,7 @@ class NotificationBroadcast {
 	 *
 	 * @return void
 	 */
-	protected function setAttributes(array $attributes) {
+	public function setAttributes(array $attributes) {
 		$attributes = array_intersect_key($attributes, $this->attributes);
 		$this->attributes = array_merge($this->attributes, $attributes);
 	}

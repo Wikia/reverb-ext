@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Reverb;
 
 use Content;
+use EmailNotification;
 use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MWNamespace;
@@ -532,9 +533,9 @@ class Hooks {
 	 *
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/GetNewMessagesAlert
 	 *
-	 * @return boolean Suppress entirely.
+	 * @return boolean False, suppress entirely.
 	 */
-	public static function onGetNewMessagesAlert(&$newMessagesAlert, $newtalks, $user, $out) {
+	public static function onGetNewMessagesAlert(&$newMessagesAlert, $newtalks, $user, $out): bool {
 		return false;
 	}
 
@@ -547,9 +548,13 @@ class Hooks {
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/GetPreferences
 	 *
 	 * @throws MWException
-	 * @return bool true in all cases
+	 * @return boolean True in all cases.
 	 */
-	public static function onGetPreferences($user, &$preferences) {
+	public static function onGetPreferences($user, &$preferences): bool {
+		// Remove these preferences since they are handled by Reverb.
+		$remove = ['enotifusertalkpages' => false, 'enotifwatchlistpages' => false];
+		$preferences = array_diff_key($preferences, $remove);
+
 		$preferences['reverb-email-frequency'] = [
 			'type' => 'select',
 			'label-message' => 'reverb-pref-send-me',
@@ -597,6 +602,8 @@ class Hooks {
 				$preferences[$index]['section'] = 'reverb/reverb-email-options';
 			}
 		}
+
+		return true;
 	}
 
 	/**
@@ -607,7 +614,7 @@ class Hooks {
 	 *
 	 * @return boolean True
 	 */
-	public static function onFlaggedRevsRevisionReviewFormAfterDoSubmit(RevisionReviewForm $reviewForm, $status) {
+	public static function onFlaggedRevsRevisionReviewFormAfterDoSubmit(RevisionReviewForm $reviewForm, $status): bool {
 		if ($reviewForm->getAction() === 'reject' && $status === true) {
 			// revid -> userid
 			$affectedRevisions = [];
@@ -670,5 +677,105 @@ class Hooks {
 				$broadcast->transmit();
 			}
 		}
+
+		return true;
+	}
+
+	/**
+	 * Abort all talk page emails since that is handled by Reverb now.
+	 *
+	 * @param User  $targetUser The user of the edited talk page.
+	 * @param Title $title      The talk page title that was edited.
+	 *
+	 * @return boolean False
+	 */
+	public static function onAbortTalkPageEmailNotification(User $targetUser, Title $title): bool {
+		return false;
+	}
+
+	/**
+	 * Function Documentation
+	 *
+	 * @param User              $watchingUser      The owner of the watch page.
+	 * @param Title             $title             The title of the edited page.
+	 * @param EmailNotification $emailNotification Useless, everything is protected with no getters.
+	 *
+	 * @return boolean False
+	 */
+	public static function onSendWatchlistEmailNotification(
+		User $watchingUser,
+		Title $title,
+		EmailNotification $emailNotification
+	): bool {
+		// Fake user as the agent.
+		$agent = User::newSystemUser(
+			'@FakeReverbUser',
+			[
+				'validate' => false,
+				'create' => false,
+				'steal' => false
+			]
+		);
+
+		$broadcast = new NotificationBroadcast();
+		$broadcast->setAttributes(
+			[
+				'type' => 'article-edit-watch',
+				'url' => SpecialPage::getTitleFor('Watchlist')->getFullUrl(),
+				'message' => json_encode(
+					[
+						[
+							'user_note',
+							''
+						],
+						[
+							1,
+							$title->getFullUrl()
+						],
+						[
+							2,
+							$title->getFullText()
+						]
+					]
+				)
+			]
+		);
+
+		// These need to come after setAttributes().
+		$broadcast->setTargets([$watchingUser]);
+		$broadcast->setOrigin(Identifier::newLocalSite());
+
+		wfDebug(__METHOD__.' Attempting to transmit: '.(string) $broadcast->transmit());
+		if (!empty($broadcast->getTargets())) {
+			$broadcast->transmit();
+		}
+
+		/*$broadcast = NotificationBroadcast::newSingle(
+			'article-edit-watch',
+			$agent,
+			$watchingUser,
+			[
+				'url' => Special::getTitleFor('Watchlist')->getFullUrl(),
+				'message' => [
+					[
+						'user_note',
+						''
+					],
+					[
+						1,
+						$title->getFullUrl()
+					],
+					[
+						2,
+						$title->getFullText()
+					]
+				]
+			]
+		);
+		if ($broadcast) {
+			$broadcast->transmit();
+		}*/
+
+		return false;
 	}
 }
