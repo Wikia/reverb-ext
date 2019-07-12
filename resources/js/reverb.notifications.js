@@ -275,10 +275,12 @@
 			if (data.success) {
 				if (unread) {
 					$(".reverb-npnrc[data-id='"+id+"']").addClass('reverb-npnr-unread').removeClass('reverb-npnr-read');
+					$(".reverb-npn-row[data-id='"+id+"']").addClass('reverb-npn-row-unread');
 					meta.unread = meta.unread + 1;
 					meta.read = meta.read - 1;
 				} else {
 					$(".reverb-npnrc[data-id='"+id+"']").addClass('reverb-npnr-read').removeClass('reverb-npnr-unread');
+					$(".reverb-npn-row[data-id='"+id+"']").removeClass('reverb-npn-row-unread');
 					meta.unread = meta.unread - 1;
 					meta.read = meta.read + 1;
 				}
@@ -456,8 +458,9 @@
 	}
 
 	var buildNotification = function(d) {
+		var extra = d.read == "unread" ? " reverb-npn-row-unread" : "";
 		var html = ''
-		+ '<div class="reverb-npn-row" data-id="'+d.id+'">'
+		+ '<div class="reverb-npn-row'+extra+'" data-id="'+d.id+'">'
 		+ '    <div class="reverb-npnr-left">'
 		+ '        <i class="fa '+d.icon+' fa-lg reverb-icon"></i>'
 		+ '    </div>'

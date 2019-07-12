@@ -139,9 +139,14 @@ div.reverb-np-arrow {
 }
 
 .reverb-npn-row, .reverb-notification-page-row {
-	padding: 10px 0px;
+	padding: 0px 0px 10px 0px;
 	display: flex;
 	justify-content: flex-start;
+}
+
+.reverb-npn-row-unread .reverb-npnr-left, 
+.reverb-npn-row-unread .reverb-npnr-right {
+	background: #393939;
 }
 
 .reverb-npn-row-global {
@@ -166,12 +171,13 @@ div.reverb-np-arrow {
 }
 
 .reverb-npnr-left {
-	padding: 0px 15px 0px 5px;
+	padding: 10px 15px 0px 5px;
 }
 
 .reverb-npnr-right {
 	flex: 1;
-	margin-right: 5px;
+	padding-right: 7px;
+	padding-top: 10px;
 	padding-bottom: 10px;
 	border-bottom: 1px solid #4f4f4f;
 }
