@@ -8,9 +8,9 @@
  * @license MIT
  **/
 
-require_once dirname(__DIR__, 3) . "/maintenance/Maintenance.php";
-
 namespace Reverb\Maintenance;
+
+require_once dirname(__DIR__, 3) . "/maintenance/Maintenance.php";
 
 use Maintenance;
 
@@ -35,6 +35,9 @@ class CopyEchoPreferences extends Maintenance {
 	public function execute() {
 		// @TODO: Waiting on Sam's WIP merge request for ClaimWiki.
 		$preferenceMap = [
+			'echo-subscriptions-email-mention' => false,
+			'echo-subscriptions-web-mention' => false,
+			'echo-subscriptions-web-emailuser' => false,
 			'echo-cross-wiki-notifications' => false,
 			'echo-email-frequency' => 'reverb-email-frequency',
 			'echo-subscriptions-email-article-linked' => 'reverb-user-interest-email-page-linked',
@@ -45,12 +48,13 @@ class CopyEchoPreferences extends Maintenance {
 			'echo-subscriptions-email-profile-report' => 'reverb-user-moderation-email-profile-comment-report',
 			'echo-subscriptions-email-reverted' => 'reverb-article-edit-email-revert',
 			'echo-subscriptions-email-thank-you-edit' => 'reverb-article-edit-email-thanks',
-			'echo-subscriptions-email-tools' => 'reverb-site-management-email-tools',
+			'echo-subscriptions-email-dynamicsettings-tools' => 'reverb-site-management-email-tools',
 			'echo-subscriptions-email-user-rights' => 'reverb-user-account-email-groups-changed',
-			'echo-subscriptions-email-user-rights-expiry-change' => 'reverb-user-account-email-groups-expiration-change',
+			'echo-subscriptions-email-user-rights-expiry-change' =>
+				'reverb-user-account-email-groups-expiration-change',
 			'echo-subscriptions-email-welcome' => 'reverb-user-interest-email-welcome',
 			'echo-subscriptions-email-wiki-claims' => '',
-			'echo-subscriptions-email-wiki-edit' => 'reverb-site-management-email-wiki-edit',
+			'echo-subscriptions-email-dynamicsettings-wiki-edit' => 'reverb-site-management-email-wiki-edit',
 			'echo-subscriptions-web-article-linked' => 'reverb-user-interest-web-page-linked',
 			'echo-subscriptions-web-edit-thank' => 'reverb-user-interest-web-thanks',
 			'echo-subscriptions-web-edit-user-talk' => 'reverb-user-interest-web-talk-page-edit',
@@ -59,13 +63,15 @@ class CopyEchoPreferences extends Maintenance {
 			'echo-subscriptions-web-profile-report' => 'reverb-user-moderation-web-profile-comment-report',
 			'echo-subscriptions-web-reverted' => 'reverb-article-edit-web-revert',
 			'echo-subscriptions-web-thank-you-edit' => 'reverb-article-edit-web-thanks',
-			'echo-subscriptions-web-tools' => 'reverb-site-management-web-tools',
+			'echo-subscriptions-web-dynamicsettings-tools' => 'reverb-site-management-web-tools',
 			'echo-subscriptions-web-user-rights' => 'reverb-user-account-web-groups-changed',
 			'echo-subscriptions-web-user-rights-expiry-change' => 'reverb-user-account-web-groups-expiration-change',
 			'echo-subscriptions-web-welcome' => 'reverb-user-interest-web-welcome ',
 			'echo-subscriptions-web-wiki-claims' => '',
-			'echo-subscriptions-web-wiki-edit' => 'reverb-site-management-web-wiki-edit'
+			'echo-subscriptions-web-dynamicsettings-wiki-edit' => 'reverb-site-management-web-wiki-edit'
 		];
+
+		$db = wfGetDB(DB_MASTER);
 
 		$results = $db->select(
 			['user_properties'],
@@ -80,7 +86,7 @@ class CopyEchoPreferences extends Maintenance {
 
 		while ($row = $results->fetchRow()) {
 			if (!isset($preferenceMap[$row['up_property']])) {
-				$this->output("Skipping unknown preference {$row['up_property']}");
+				$this->output("Skipping unknown preference {$row['up_property']}\n");
 				continue;
 			}
 
@@ -89,20 +95,28 @@ class CopyEchoPreferences extends Maintenance {
 				continue;
 			}
 
-			$success = false;
+			$insert = [
+				'up_user' => $row['up_user'],
+				'up_property' => $preferenceMap[$row['up_property']],
+				'up_value' => $row['up_value']
+			];
 
+			$success = false;
 			if ($this->hasOption('final')) {
-				$success = $db->update(
-					'wiki_sites',
-					$row,
-					['md5_key' => $md5Key],
+				$success = $db->upsert(
+					'user_properties',
+					[
+						'up_user' => $row['up_user']
+					] + $insert,
+					['PRIMARY'],
+					$insert,
 					__METHOD__
 				);
 			}
-			$this->output("Updating {$md5Key}... " . var_export($success, true) . "\n");
+			$this->output("Insert " . json_encode($insert) . "... " . var_export($success, true) . "\n");
 		}
 	}
 }
 
-$maintClass = "CopyEchoPreferences";
+$maintClass = 'Reverb\Maintenance\CopyEchoPreferences';
 require_once RUN_MAINTENANCE_IF_MAIN;
