@@ -111,6 +111,7 @@
 	"Hooks": {
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
+		"FlaggedRevsRevisionReviewFormAfterDoSubmit": "Reverb\\Hooks::onFlaggedRevsRevisionReviewFormAfterDoSubmit",
 		"GetNewMessagesAlert": "Reverb\\Hooks::onGetNewMessagesAlert",
 		"GetPreferences": "Reverb\\Hooks::onGetPreferences",
 		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
