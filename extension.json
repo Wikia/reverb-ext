@@ -109,6 +109,7 @@
 		"reverb-email-frequency": 1
 	},
 	"Hooks": {
+		"AbortEmailNotification": "Reverb\\Hooks::onAbortEmailNotification",
 		"AbortTalkPageEmailNotification": "Reverb\\Hooks::onAbortTalkPageEmailNotification",
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",

@@ -19,6 +19,7 @@ use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
+use RecentChange;
 use Reverb\Notification\NotificationBroadcast;
 use Revision;
 use RevisionReviewForm;
@@ -552,7 +553,8 @@ class Hooks {
 	 */
 	public static function onGetPreferences($user, &$preferences): bool {
 		// Remove these preferences since they are handled by Reverb.
-		$remove = ['enotifusertalkpages' => false, 'enotifwatchlistpages' => false];
+		// 'enotifwatchlistpages' => false
+		$remove = ['enotifusertalkpages' => false];
 		$preferences = array_diff_key($preferences, $remove);
 
 		$preferences['reverb-email-frequency'] = [
@@ -694,7 +696,7 @@ class Hooks {
 	}
 
 	/**
-	 * Function Documentation
+	 * Redirect watch list emails to Reverb notifications.
 	 *
 	 * @param User              $watchingUser      The owner of the watch page.
 	 * @param Title             $title             The title of the edited page.
@@ -707,50 +709,21 @@ class Hooks {
 		Title $title,
 		EmailNotification $emailNotification
 	): bool {
-		// Fake user as the agent.
-		$agent = User::newSystemUser(
-			'@FakeReverbUser',
-			[
-				'validate' => false,
-				'create' => false,
-				'steal' => false
-			]
+		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+
+		$agentName = $cache->get(
+			$cache->makeKey(
+				'ReverbWatchlist',
+				'edited:' . md5($title->getFullText())
+			)
 		);
 
-		$broadcast = new NotificationBroadcast();
-		$broadcast->setAttributes(
-			[
-				'type' => 'article-edit-watch',
-				'url' => SpecialPage::getTitleFor('Watchlist')->getFullUrl(),
-				'message' => json_encode(
-					[
-						[
-							'user_note',
-							''
-						],
-						[
-							1,
-							$title->getFullUrl()
-						],
-						[
-							2,
-							$title->getFullText()
-						]
-					]
-				)
-			]
-		);
-
-		// These need to come after setAttributes().
-		$broadcast->setTargets([$watchingUser]);
-		$broadcast->setOrigin(Identifier::newLocalSite());
-
-		wfDebug(__METHOD__ . ' Attempting to transmit: ' . (string)$broadcast->transmit());
-		if (!empty($broadcast->getTargets())) {
-			$broadcast->transmit();
+		$agent = User::newFromName($agentName);
+		if (!$agent) {
+			return false;
 		}
 
-		/*$broadcast = NotificationBroadcast::newSingle(
+		$broadcast = NotificationBroadcast::newSingle(
 			'article-edit-watch',
 			$agent,
 			$watchingUser,
@@ -763,10 +736,18 @@ class Hooks {
 					],
 					[
 						1,
-						$title->getFullUrl()
+						Title::newFromText($agent->getName(), NS_USER)->getFullURL()
 					],
 					[
 						2,
+						$agent->getName()
+					],
+					[
+						3,
+						$title->getFullUrl()
+					],
+					[
+						4,
 						$title->getFullText()
 					]
 				]
@@ -774,8 +755,32 @@ class Hooks {
 		);
 		if ($broadcast) {
 			$broadcast->transmit();
-		}*/
+		}
 
 		return false;
+	}
+
+	/**
+	 * Save editor information for watch list notifications.
+	 *
+	 * @param User         $editor       The owner of the watch page.
+	 * @param Title        $title        The title of the edited page.
+	 * @param RecentChange $recentChange Useless, everything is protected with no getters.
+	 *
+	 * @return boolean True
+	 */
+	public static function onAbortEmailNotification(User $editor, Title $title, RecentChange $recentChange): bool {
+		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+
+		$cache->set(
+			$cache->makeKey(
+				'ReverbWatchlist',
+				'edited:' . md5($title->getFullText())
+			),
+			$editor->getName(),
+			time() + 86400
+		);
+
+		return true;
 	}
 }
