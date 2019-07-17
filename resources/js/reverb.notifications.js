@@ -565,8 +565,8 @@
 		⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
 		⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿
 	*/
-	if (!reverbNotificationPage) {
+	//if (!reverbNotificationPage) {
 		initPanel();
-	}
+	//}
 
 }); })();
