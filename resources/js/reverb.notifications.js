@@ -327,43 +327,63 @@
 			});
 		});
 
-		$(".reverb-filter-checkbox").change(function() {
-			if (this.id == "filter_all") {
-				// This is the all checkbox. Lets uncheck every other box
-				$('.reverb-filter-checkbox').each(function () {
-					if (this.id !== "filter_all") {
-						this.checked = true;
-					}
-				});
-				generateWithFilters({page: 0, perpage: perPage}, false);
-				$(".reverb-active-button").removeClass('reverb-active-button');
-				$("#reverb-ru-all").addClass('reverb-active-button');
-			} else {
-				// A different filter was clicked.
-				$('#filter_all').get(0).checked = false;
-				var checked = $('.reverb-filter-checkbox:checked');
-				var filters = [];
-				checked.each(function() {
-					var types = $(this).attr('data-types').toString();
-					if (types.length > 0) {
-						var filter = types;
-						filters.push(filter);
-					}
-				});
-
-				if (!checked.length) {
-					$("#filter_all").click();
+		$(".reverb-filter-checkbox").change(function(e) {
+			// check original event to verify human interaction
+			
+				console.log(this);
+				if (this.id == "filter_all" && this.checked) {
+					
+						// This is the all checkbox. Lets check every other box
+						$('.reverb-filter-checkbox').each(function () {
+							if (this.id !== "filter_all") {
+								this.checked = true;
+							}
+						});
+						generateWithFilters({page: 0, perpage: perPage}, false);
+						$(".reverb-active-button").removeClass('reverb-active-button');
+						$("#reverb-ru-all").addClass('reverb-active-button');
+				
 				} else {
-					if (checked.length == $('.reverb-filter-checkbox').length - 1) {
-						// if all are checked (except for all) then check all
-						$('#filter_all').get(0).checked = true;
+
+					if (e.originalEvent !== undefined) {
+
+						if (this.id == "filter_all") {
+							// we uncheked all, so uncheck everything else
+							$('.reverb-filter-checkbox').each(function () {
+									this.checked = false;
+							});
+						}
+						// A different filter was clicked.
+						$('#filter_all').get(0).checked = false;
+						var checked = $('.reverb-filter-checkbox:checked');
+						var filters = [];
+						checked.each(function() {
+							var types = $(this).attr('data-types').toString();
+							if (types.length > 0) {
+								var filter = types;
+								filters.push(filter);
+							}
+						});
+						console.log(checked);
+						if (!checked.length) {
+							//$("#filter_all").click();
+							$(".reverb-notification-page-paging").empty();
+							$(".reverb-notification-page-notifications").empty();
+							addNotification(buildNoNotifications(),'specialpage');
+						} else {
+							if (checked.length == $('.reverb-filter-checkbox').length - 1) {
+								// if all are checked (except for all) then check all
+								$('#filter_all').get(0).checked = true;
+							}
+							
+							generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
+							$(".reverb-active-button").removeClass('reverb-active-button');
+							$("#reverb-ru-all").addClass('reverb-active-button');
+						}
+
+						
 					}
 				}
-
-				generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
-				$(".reverb-active-button").removeClass('reverb-active-button');
-				$("#reverb-ru-all").addClass('reverb-active-button');
-			}
 		});
 
 		$("#reverb-ru-all").click(function(){
