@@ -745,7 +745,7 @@ class Hooks {
 		$broadcast->setTargets([$watchingUser]);
 		$broadcast->setOrigin(Identifier::newLocalSite());
 
-		wfDebug(__METHOD__.' Attempting to transmit: '.(string) $broadcast->transmit());
+		wfDebug(__METHOD__ . ' Attempting to transmit: ' . (string)$broadcast->transmit());
 		if (!empty($broadcast->getTargets())) {
 			$broadcast->transmit();
 		}
