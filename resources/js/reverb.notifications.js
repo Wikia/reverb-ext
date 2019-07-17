@@ -115,8 +115,6 @@
 			notificationPanel.appendTo('body');
 			notificationButton.insertBefore(userBox);
 
-			console.log(userBox);
-
 			$('.netbar-box.has-drop').on('mouseover', function(){
 				notificationPanel.hide();
 				$(".reverb-np-arrow").hide();
@@ -124,7 +122,7 @@
 
 			$(document).on('mouseup',function(e){
 				var target = $(e.target);
-				if (notificationButton.is(e.target) || notificationPanel.is(e.target) || target.hasClass('reverb-ddt')) {
+				if (notificationButton.is(e.target) || notificationPanel.is(e.target) || target.hasClass('reverb-ddt') || target.parents('.reverb-np').length > 0) {
 					notificationPanel.show();
 					$(".reverb-np-arrow").show();
 				} else {
