@@ -68,7 +68,8 @@ class CopyEchoPreferences extends Maintenance {
 			'echo-subscriptions-web-user-rights-expiry-change' => 'reverb-user-account-web-groups-expiration-change',
 			'echo-subscriptions-web-welcome' => 'reverb-user-interest-web-welcome ',
 			'echo-subscriptions-web-wiki-claims' => '',
-			'echo-subscriptions-web-dynamicsettings-wiki-edit' => 'reverb-site-management-web-wiki-edit'
+			'echo-subscriptions-web-dynamicsettings-wiki-edit' => 'reverb-site-management-web-wiki-edit',
+			'enotifwatchlistpages' => 'reverb-article-edit-email-watch'
 		];
 
 		$db = wfGetDB(DB_MASTER);
@@ -79,7 +80,7 @@ class CopyEchoPreferences extends Maintenance {
 				'*'
 			],
 			[
-				"up_property LIKE 'echo-%'"
+				"up_property LIKE 'echo-%' OR up_property = 'enotifwatchlistpages'"
 			],
 			__METHOD__
 		);
