@@ -2,7 +2,7 @@
 	<div class="reverb-notification-page-left">
 		<div class="reverb-filter-title">
 			<span class="reverb-pull-right"><i class="fa fa-sliders-h"></i></span>
-			 {{ wfMessage('filter-by-type', 'plain') }}
+			 {{ wfMessage('filter-by-type') }}
 		</div>
 
 		<div class="reverb-filter-row">
@@ -13,18 +13,18 @@
 		{% for group, types in groups %}
 			<div class="reverb-filter-row">
 				<input type="checkbox" id="filter_{{ group }}" data-types="{{ types|join(',') }}" class="reverb-filter-checkbox">
-				<label for="filter_{{ group }}" class="reverb-filter-label"> {{ wfMessage('special-sidebar-' ~ group, 'plain', '50') }} </label>
+				<label for="filter_{{ group }}" class="reverb-filter-label"> {{ wfMessage('special-sidebar-' ~ group, '50') }} </label>
 			</div>
 		{% endfor %}
 		</div>
 	<div class="reverb-notification-page-right">
 		<div class="reverb-button-bar">
 			<span class="reverb-pull-right">
-				<button id="reverb-mark-all-read">{{ wfMessage('special-button-mark-all-read', 'plain') }}</button>
+				<button id="reverb-mark-all-read">{{ wfMessage('special-button-mark-all-read') }}</button>
 			</span>
-			<button id="reverb-ru-all" class="reverb-active-button">{{ wfMessage('special-button-all', 'plain', '0') }}</button>
-			<button id="reverb-ru-read">{{ wfMessage('special-button-read', 'plain', '0') }}</button>
-			<button id="reverb-ru-unread">{{ wfMessage('special-button-unread', 'plain', '0') }}</button>
+			<button id="reverb-ru-all" class="reverb-active-button">{{ wfMessage('special-button-all', '0') }}</button>
+			<button id="reverb-ru-read">{{ wfMessage('special-button-read', '0') }}</button>
+			<button id="reverb-ru-unread">{{ wfMessage('special-button-unread', '0') }}</button>
 		</div>
 		<div class="reverb-notification-page-paging reverb-npp-top"></div>
 		<!--
