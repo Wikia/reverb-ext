@@ -715,8 +715,13 @@ class Hooks {
 			'edited:' . md5($title->getFullText())
 		);
 
-		$agentName = $cache->get($cacheKey);
-		$agent = User::newFromName($agentName);
+		$meta = $cache->get($cacheKey);
+		$meta = json_decode($meta, true);
+		if (empty($meta)) {
+			return false;
+		}
+
+		$agent = User::newFromName($meta['name']);
 		if (!$agent) {
 			return false;
 		}
@@ -747,6 +752,10 @@ class Hooks {
 					[
 						4,
 						$title->getFullText()
+					],
+					[
+						5,
+						$title->getFullUrl(['oldid' => $meta['oldid']])
 					]
 				]
 			]
@@ -778,7 +787,7 @@ class Hooks {
 				'ReverbWatchlist',
 				'edited:' . md5($title->getFullText())
 			),
-			$editor->getName(),
+			json_encode(['name' => $editor->getName(), 'oldid' => $recentChange->mAttribs['rc_this_oldid']]),
 			time() + 86400
 		);
 

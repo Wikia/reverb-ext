@@ -71,7 +71,7 @@ trait NotificationListTrait {
 	 *
 	 * @return array
 	 */
-	public function getDefaultPreference($options) {
+	public static function getDefaultPreference($options) {
 		$email = $options['defaults']['email'] ?? false;
 		$web = $options['defaults']['web'] ?? true;
 
