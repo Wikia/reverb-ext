@@ -48,10 +48,10 @@ class Hooks {
 	 */
 	public static function registerExtension() {
 		global $wgDefaultUserOptions, $wgReverbNotifications;
-
 		foreach ($wgReverbNotifications as $notification => $notificationData) {
-			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'email')] = false;
-			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'web')] = true;
+			[$email, $web] = self::getDefaultPreference($notificationData);
+			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'email')] = $email;
+			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'web')] = $web;
 		}
 	}
 
