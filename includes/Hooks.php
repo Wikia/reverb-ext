@@ -711,13 +711,12 @@ class Hooks {
 	): bool {
 		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 
-		$agentName = $cache->get(
-			$cache->makeKey(
-				'ReverbWatchlist',
-				'edited:' . md5($title->getFullText())
-			)
+		$cacheKey = $cache->makeKey(
+			'ReverbWatchlist',
+			'edited:' . md5($title->getFullText())
 		);
 
+		$agentName = $cache->get($cacheKey);
 		$agent = User::newFromName($agentName);
 		if (!$agent) {
 			return false;
@@ -728,7 +727,7 @@ class Hooks {
 			$agent,
 			$watchingUser,
 			[
-				'url' => Special::getTitleFor('Watchlist')->getFullUrl(),
+				'url' => SpecialPage::getTitleFor('Watchlist')->getFullUrl(),
 				'message' => [
 					[
 						'user_note',
@@ -756,6 +755,7 @@ class Hooks {
 		if ($broadcast) {
 			$broadcast->transmit();
 		}
+		$cache->delete($cacheKey);
 
 		return false;
 	}
@@ -772,6 +772,8 @@ class Hooks {
 	public static function onAbortEmailNotification(User $editor, Title $title, RecentChange $recentChange): bool {
 		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 
+		// We can get the revision information here to pass on, but onSendWatchlistEmailNotification can only retrieve
+		// the agent user name.  In the future we could bundle all of the users and display a 'X users edited...'.
 		$cache->set(
 			$cache->makeKey(
 				'ReverbWatchlist',
