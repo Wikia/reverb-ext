@@ -39,17 +39,24 @@
 	 *  Identify user box to place notifications directly next to it.
 	 *  Also remove any echo notification boxes that may exist.
 	 */
-	var userBox;
-	$('.netbar-box').each(function(){
-		nbx = $(this);
-		if (nbx.hasClass('echo')) {
-			//nbx.hide();
-			lastRemoved = nbx;
+	
+
+
+	var getUserBox = function() {
+		var userBox;
+		$('.netbar-box').each(function(){
+			nbx = $(this);
+			if (nbx.hasClass('user')) {
+				userBox = nbx;
+			}
+		});
+		if (typeof userBox == 'undefined') {
+			userBox = false;
 		}
-		if (nbx.hasClass('user')) {
-			userBox = nbx;
-		}
-	});
+		return userBox;
+	}
+	
+
 
 	reverbNotificationPage = (typeof window.reverbNotificationPage !== "undefined") ? true : false;
 	log('Notification Page: ' + reverbNotificationPage);
@@ -101,44 +108,53 @@
 
 	var initPanel = function() {
 		log('Injecting HTML.');
-		var notificationButton = buildNotificationButton();
-		var notificationPanel = buildNotificationPanel({globalNotifications: false});
-		notificationPanel.appendTo('body');
-		notificationButton.insertBefore(userBox);
+		var userBox = getUserBox();
+		if (userBox) {
+			var notificationButton = buildNotificationButton();
+			var notificationPanel = buildNotificationPanel({globalNotifications: false});
+			notificationPanel.appendTo('body');
+			notificationButton.insertBefore(userBox);
 
-		$('.netbar-box.has-drop').on('mouseover', function(){
-			notificationPanel.hide();
-			$(".reverb-np-arrow").hide();
-		});
-
-		$(document).on('mouseup',function(e){
-			var target = $(e.target);
-			if (notificationButton.is(e.target) || notificationPanel.is(e.target) || target.hasClass('reverb-ddt')) {
-				notificationPanel.show();
-				$(".reverb-np-arrow").show();
-			} else {
+			$('.netbar-box.has-drop').on('mouseover', function(){
 				notificationPanel.hide();
 				$(".reverb-np-arrow").hide();
-			}
-		})
+			});
 
-		var panelTotal = 10;
-
-		loadNotifications({page: 0, perpage: panelTotal, unread: 1},function(data){
-			updateCounts();
-			if (data.notifications && data.notifications.length) {
-				var notifications = buildNotificationsFromData(data,true);
-				for (var x in notifications) {
-					addNotification(notifications[x]);
+			$(document).on('mouseup',function(e){
+				var target = $(e.target);
+				if (notificationButton.is(e.target) || notificationPanel.is(e.target) || target.hasClass('reverb-ddt') || target.parents('.reverb-np').length > 0) {
+					notificationPanel.show();
+					$(".reverb-np-arrow").show();
+				} else {
+					notificationPanel.hide();
+					$(".reverb-np-arrow").hide();
 				}
+			})
 
-				if (meta.unread > panelTotal) {
-				   addNotification(
-						buildViewMore( meta.unread - panelTotal )
-					)
+			var panelTotal = 10;
+
+			loadNotifications({page: 0, perpage: panelTotal, unread: 1},function(data){
+				updateCounts();
+				if (data.notifications && data.notifications.length) {
+					var notifications = buildNotificationsFromData(data,true);
+					for (var x in notifications) {
+						addNotification(notifications[x]);
+					}
+
+					if (meta.unread > panelTotal) {
+					addNotification(
+							buildViewMore( meta.unread - panelTotal )
+						)
+					}
 				}
-			}
-		});
+			})
+		} else {
+			// If we cant find the userbox, lets assume we are mobile.
+			var mheader = $("form.header");
+			loadNotifications({page: 0, perpage: 1, unread: 1},function(data){
+				buildMobileIcon(data.meta.unread).appendTo(mheader);
+			});
+		}
 	}
 
 	var loadNotifications = function(filters, cb) {
@@ -253,10 +269,12 @@
 			if (data.success) {
 				if (unread) {
 					$(".reverb-npnrc[data-id='"+id+"']").addClass('reverb-npnr-unread').removeClass('reverb-npnr-read');
+					$(".reverb-npn-row[data-id='"+id+"']").addClass('reverb-npn-row-unread');
 					meta.unread = meta.unread + 1;
 					meta.read = meta.read - 1;
 				} else {
 					$(".reverb-npnrc[data-id='"+id+"']").addClass('reverb-npnr-read').removeClass('reverb-npnr-unread');
+					$(".reverb-npn-row[data-id='"+id+"']").removeClass('reverb-npn-row-unread');
 					meta.unread = meta.unread - 1;
 					meta.read = meta.read + 1;
 				}
@@ -301,46 +319,63 @@
 		$("#reverb-mark-all-read").click(function(){
 			api.post({action:'notifications', do:'dismissAllNotifications', format:'json', formatversion: 2})
 			.done(function(data) {
-				generateWithFilters({page: 0, perpage: perPage}, true);
+				generateWithFilters({page: 0, perpage: perPage}, false);
 			});
 		});
 
-		$(".reverb-filter-checkbox").change(function() {
-			if (this.id == "filter_all") {
-				// This is the all checkbox. Lets uncheck every other box
-				$('.reverb-filter-checkbox').each(function () {
-					if (this.id !== "filter_all") {
-						this.checked = true;
-					}
-				});
-				generateWithFilters({page: 0, perpage: perPage}, false);
-				$(".reverb-active-button").removeClass('reverb-active-button');
-				$("#reverb-ru-all").addClass('reverb-active-button');
+		$(".reverb-filter-checkbox").change(function(e) {
+			// check original event to verify human interaction
+			if (this.id == "filter_all" && this.checked) {
+				
+					// This is the all checkbox. Lets check every other box
+					$('.reverb-filter-checkbox').each(function () {
+						if (this.id !== "filter_all") {
+							this.checked = true;
+						}
+					});
+					generateWithFilters({page: 0, perpage: perPage}, false);
+					$(".reverb-active-button").removeClass('reverb-active-button');
+					$("#reverb-ru-all").addClass('reverb-active-button');
+			
 			} else {
-				// A different filter was clicked.
-				$('#filter_all').get(0).checked = false;
-				var checked = $('.reverb-filter-checkbox:checked');
-				var filters = [];
-				checked.each(function() {
-					var types = $(this).attr('data-types').toString();
-					if (types.length > 0) {
-						var filter = types;
-						filters.push(filter);
-					}
-				});
 
-				if (!checked.length) {
-					$("#filter_all").click();
-				} else {
-					if (checked.length == $('.reverb-filter-checkbox').length - 1) {
-						// if all are checked (except for all) then check all
-						$('#filter_all').get(0).checked = true;
+				if (e.originalEvent !== undefined) {
+
+					if (this.id == "filter_all") {
+						// we uncheked all, so uncheck everything else
+						$('.reverb-filter-checkbox').each(function () {
+								this.checked = false;
+						});
 					}
+					// A different filter was clicked.
+					$('#filter_all').get(0).checked = false;
+					var checked = $('.reverb-filter-checkbox:checked');
+					var filters = [];
+					checked.each(function() {
+						var types = $(this).attr('data-types').toString();
+						if (types.length > 0) {
+							var filter = types;
+							filters.push(filter);
+						}
+					});
+					if (!checked.length) {
+						//$("#filter_all").click();
+						$(".reverb-notification-page-paging").empty();
+						$(".reverb-notification-page-notifications").empty();
+						addNotification(buildNoNotifications(),'specialpage');
+					} else {
+						if (checked.length == $('.reverb-filter-checkbox').length - 1) {
+							// if all are checked (except for all) then check all
+							$('#filter_all').get(0).checked = true;
+						}
+						
+						generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
+						$(".reverb-active-button").removeClass('reverb-active-button');
+						$("#reverb-ru-all").addClass('reverb-active-button');
+					}
+
+					
 				}
-
-				generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
-				$(".reverb-active-button").removeClass('reverb-active-button');
-				$("#reverb-ru-all").addClass('reverb-active-button');
 			}
 		});
 
@@ -434,8 +469,9 @@
 	}
 
 	var buildNotification = function(d) {
+		var extra = d.read == "unread" ? " reverb-npn-row-unread" : "";
 		var html = ''
-		+ '<div class="reverb-npn-row" data-id="'+d.id+'">'
+		+ '<div class="reverb-npn-row'+extra+'" data-id="'+d.id+'">'
 		+ '    <div class="reverb-npnr-left">'
 		+ '        <i class="fa '+d.icon+' fa-lg reverb-icon"></i>'
 		+ '    </div>'
@@ -478,6 +514,17 @@
 		return $(html);
 	}
 
+	var buildMobileIcon = function(unread) {
+		var url = mw.Title.newFromText('Notifications', -1 ).getUrl();
+		if (unread) {
+			extra = ' reverb-mobile-bell-unread';
+		} else {
+			extra = '';
+		}
+		var html = '<div><a href="'+url+'" title="Notifications" class="mw-ui-icon mw-ui-icon-minerva-notifications mw-ui-icon-element user-button main-header-button'+extra+'" id="secondary-button"></a></div>'
+		return $(html);
+	}
+
 	/*
 		Developer:
 			Let's replace echo with a nice
@@ -511,8 +558,8 @@
 		⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
 		⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿
 	*/
-	if (!reverbNotificationPage) {
+	//if (!reverbNotificationPage) {
 		initPanel();
-	}
+	//}
 
 }); })();
