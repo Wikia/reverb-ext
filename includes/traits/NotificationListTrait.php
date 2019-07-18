@@ -65,6 +65,20 @@ trait NotificationListTrait {
 	}
 
 	/**
+	 * Get the default preference for notification
+	 *
+	 * @param array $options
+	 *
+	 * @return array
+	 */
+	public function getDefaultPreference($options) {
+		$email = $options['defaults']['email'] ?? false;
+		$web = $options['defaults']['web'] ?? true;
+
+		return [$email, $web];
+	}
+
+	/**
 	 * Handle category list organization
 	 *
 	 * @param User  $user
