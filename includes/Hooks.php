@@ -14,10 +14,12 @@ declare(strict_types=1);
 namespace Reverb;
 
 use Content;
+use EmailNotification;
 use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
+use RecentChange;
 use Reverb\Notification\NotificationBroadcast;
 use Revision;
 use RevisionReviewForm;
@@ -46,10 +48,10 @@ class Hooks {
 	 */
 	public static function registerExtension() {
 		global $wgDefaultUserOptions, $wgReverbNotifications;
-
 		foreach ($wgReverbNotifications as $notification => $notificationData) {
-			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'email')] = false;
-			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'web')] = true;
+			[$email, $web] = self::getDefaultPreference($notificationData);
+			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'email')] = $email;
+			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'web')] = $web;
 		}
 	}
 
@@ -532,9 +534,9 @@ class Hooks {
 	 *
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/GetNewMessagesAlert
 	 *
-	 * @return boolean Suppress entirely.
+	 * @return boolean False, suppress entirely.
 	 */
-	public static function onGetNewMessagesAlert(&$newMessagesAlert, $newtalks, $user, $out) {
+	public static function onGetNewMessagesAlert(&$newMessagesAlert, $newtalks, $user, $out): bool {
 		return false;
 	}
 
@@ -547,9 +549,13 @@ class Hooks {
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/GetPreferences
 	 *
 	 * @throws MWException
-	 * @return bool true in all cases
+	 * @return boolean True in all cases.
 	 */
-	public static function onGetPreferences($user, &$preferences) {
+	public static function onGetPreferences($user, &$preferences): bool {
+		// Remove these preferences since they are handled by Reverb.
+		$remove = ['enotifusertalkpages' => false, 'enotifwatchlistpages' => false];
+		$preferences = array_diff_key($preferences, $remove);
+
 		$preferences['reverb-email-frequency'] = [
 			'type' => 'select',
 			'label-message' => 'reverb-pref-send-me',
@@ -597,6 +603,8 @@ class Hooks {
 				$preferences[$index]['section'] = 'reverb/reverb-email-options';
 			}
 		}
+
+		return true;
 	}
 
 	/**
@@ -607,7 +615,7 @@ class Hooks {
 	 *
 	 * @return boolean True
 	 */
-	public static function onFlaggedRevsRevisionReviewFormAfterDoSubmit(RevisionReviewForm $reviewForm, $status) {
+	public static function onFlaggedRevsRevisionReviewFormAfterDoSubmit(RevisionReviewForm $reviewForm, $status): bool {
 		if ($reviewForm->getAction() === 'reject' && $status === true) {
 			// revid -> userid
 			$affectedRevisions = [];
@@ -670,5 +678,119 @@ class Hooks {
 				$broadcast->transmit();
 			}
 		}
+
+		return true;
+	}
+
+	/**
+	 * Abort all talk page emails since that is handled by Reverb now.
+	 *
+	 * @param User  $targetUser The user of the edited talk page.
+	 * @param Title $title      The talk page title that was edited.
+	 *
+	 * @return boolean False
+	 */
+	public static function onAbortTalkPageEmailNotification(User $targetUser, Title $title): bool {
+		return false;
+	}
+
+	/**
+	 * Redirect watch list emails to Reverb notifications.
+	 *
+	 * @param User              $watchingUser      The owner of the watch page.
+	 * @param Title             $title             The title of the edited page.
+	 * @param EmailNotification $emailNotification Useless, everything is protected with no getters.
+	 *
+	 * @return boolean False
+	 */
+	public static function onSendWatchlistEmailNotification(
+		User $watchingUser,
+		Title $title,
+		EmailNotification $emailNotification
+	): bool {
+		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+
+		$cacheKey = $cache->makeKey(
+			'ReverbWatchlist',
+			'edited:' . md5($title->getFullText())
+		);
+
+		$meta = $cache->get($cacheKey);
+		$meta = json_decode($meta, true);
+		if (empty($meta)) {
+			return false;
+		}
+
+		$agent = User::newFromName($meta['name']);
+		if (!$agent) {
+			return false;
+		}
+
+		$broadcast = NotificationBroadcast::newSingle(
+			'article-edit-watch',
+			$agent,
+			$watchingUser,
+			[
+				'url' => SpecialPage::getTitleFor('Watchlist')->getFullUrl(),
+				'message' => [
+					[
+						'user_note',
+						''
+					],
+					[
+						1,
+						Title::newFromText($agent->getName(), NS_USER)->getFullURL()
+					],
+					[
+						2,
+						$agent->getName()
+					],
+					[
+						3,
+						$title->getFullUrl()
+					],
+					[
+						4,
+						$title->getFullText()
+					],
+					[
+						5,
+						$title->getFullUrl(['oldid' => $meta['oldid']])
+					]
+				]
+			]
+		);
+		if ($broadcast) {
+			$broadcast->transmit();
+		}
+		$cache->delete($cacheKey);
+
+		return false;
+	}
+
+	/**
+	 * Save editor information for watch list notifications.
+	 *
+	 * @param User         $editor       The owner of the watch page.
+	 * @param Title        $title        The title of the edited page.
+	 * @param RecentChange $recentChange Useless, everything is protected with no getters.
+	 *
+	 * @return boolean True
+	 */
+	public static function onAbortEmailNotification(User $editor, Title $title, RecentChange $recentChange): bool {
+		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+
+		// We can get the revision information here to pass on, but onSendWatchlistEmailNotification can only retrieve
+		// the agent user name.  In the future we could bundle all of the users and display a 'X users edited...'.
+		$cache->set(
+			$cache->makeKey(
+				'ReverbWatchlist',
+				'edited:' . md5($title->getFullText())
+			),
+			json_encode(['name' => $editor->getName(), 'oldid' => $recentChange->mAttribs['rc_this_oldid']]),
+			time() + 86400
+		);
+
+		return true;
 	}
 }
