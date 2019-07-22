@@ -161,6 +161,10 @@ class Hooks {
 								[
 									4,
 									$title->getFullURL()
+								],
+								[
+									5,
+									$title->getFullURL(['type' => 'revision', 'oldid' => $undidRevId, 'diff' => $wikiPage->getRevision()->getId()])
 								]
 							]
 						]
@@ -708,8 +712,12 @@ class Hooks {
 		);
 
 		$meta = $cache->get($cacheKey);
-		$meta = json_decode($meta, true);
-		if (empty($meta)) {
+		if (is_string($meta)) {
+			$meta = json_decode((string)$meta, true);
+			if (empty($meta)) {
+				return false;
+			}
+		} else {
 			return false;
 		}
 
