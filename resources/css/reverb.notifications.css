@@ -58,7 +58,6 @@ div.reverb-np-arrow {
 	display: none;
 }
 
-
 .reverb-np-header {
 	font-size: 16px;
 	font-weight: bold;
@@ -148,7 +147,6 @@ div.reverb-np-arrow {
 .reverb-npn-row-unread .reverb-npnr-right {
 	background: #393939;
 }
-
 
 .reverb-npn-row-global {
 	border-bottom: 1px solid #4f4f4f;
@@ -309,8 +307,6 @@ div.reverb-np-arrow {
 	border-bottom: 1px solid #4f4f4f;
 }
 
-
-
 input[type=checkbox].reverb-filter-checkbox {
 	position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
 }
@@ -342,8 +338,6 @@ label.reverb-filter-label {
 	user-select: none;
 	width: 100%;
 }
-
-
 
 .reverb-button-bar {
 	padding: 0px 0px 20px 0px;
@@ -415,7 +409,6 @@ button.reverb-active-button {
 	Hydra Light and Minerva custom colors
 */
 
-
 .skin-hydra label.reverb-filter-label {
 	background-image:url(../images/checkbox-light.png);
 }
@@ -434,14 +427,12 @@ button.reverb-active-button {
 	color: #0c81c9;
 }
 
-
 .skin-hydra .reverb-npn-row-unread .reverb-npnr-left, 
 .skin-hydra .reverb-npn-row-unread .reverb-npnr-right,
 .skin-minerva .reverb-npn-row-unread .reverb-npnr-left, 
 .skin-minerva .reverb-npn-row-unread .reverb-npnr-right {
 	background: #e6e4e4;
 }
-
 
 .skin-minerva .reverb-notification-page-left {
 	display: none;
