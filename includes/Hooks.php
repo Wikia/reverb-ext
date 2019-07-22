@@ -35,13 +35,6 @@ class Hooks {
 	use NotificationListTrait;
 
 	/**
-	 * Store last reverted revision
-	 *
-	 * @var Revision
-	 */
-	protected static $lastRevertedRevision;
-
-	/**
 	 * Handle extension defaults
 	 *
 	 * @return void
@@ -444,7 +437,6 @@ class Hooks {
 	): bool {
 		$notifyUser = $oldRevision->getRevisionRecord()->getUser();
 		$latestRevision = $wikiPage->getRevision();
-		self::$lastRevertedRevision = $latestRevision;
 
 		// Skip anonymous users and null edits.
 		if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($agent)
