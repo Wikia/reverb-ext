@@ -373,8 +373,6 @@
 						$(".reverb-active-button").removeClass('reverb-active-button');
 						$("#reverb-ru-all").addClass('reverb-active-button');
 					}
-
-					
 				}
 			}
 		});
