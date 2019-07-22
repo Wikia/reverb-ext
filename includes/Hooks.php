@@ -164,7 +164,13 @@ class Hooks {
 								],
 								[
 									5,
-									$title->getFullURL(['type' => 'revision', 'oldid' => $undidRevId, 'diff' => $wikiPage->getRevision()->getId()])
+									$title->getFullURL(
+										[
+											'type' => 'revision',
+											'oldid' => $undidRevId,
+											'diff' => $wikiPage->getRevision()->getId()
+										]
+									)
 								]
 							]
 						]
@@ -473,6 +479,16 @@ class Hooks {
 						[
 							4,
 							$title->getFullURL()
+						],
+						[
+							5,
+							$title->getFullURL(
+								[
+									'type' => 'revision',
+									'oldid' => $oldRevision->getId(),
+									'diff' => $latestRevision->getId()
+								]
+							)
 						]
 					]
 				]
@@ -666,6 +682,16 @@ class Hooks {
 						[
 							4,
 							$reviewForm->getPage()->getFullURL()
+						],
+						[
+							5,
+							$title->getFullURL(
+								[
+									'type' => 'revision',
+									'oldid' => $oldRev->getId(),
+									'diff' => $newRev->getId()
+								]
+							)
 						]
 					]
 				]
