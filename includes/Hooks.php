@@ -35,13 +35,6 @@ class Hooks {
 	use NotificationListTrait;
 
 	/**
-	 * Store last reverted revision
-	 *
-	 * @var Revision
-	 */
-	protected static $lastRevertedRevision;
-
-	/**
 	 * Handle extension defaults
 	 *
 	 * @return void
@@ -168,6 +161,16 @@ class Hooks {
 								[
 									4,
 									$title->getFullURL()
+								],
+								[
+									5,
+									$title->getFullURL(
+										[
+											'type' => 'revision',
+											'oldid' => $undidRevId,
+											'diff' => $wikiPage->getRevision()->getId()
+										]
+									)
 								]
 							]
 						]
@@ -444,7 +447,6 @@ class Hooks {
 	): bool {
 		$notifyUser = $oldRevision->getRevisionRecord()->getUser();
 		$latestRevision = $wikiPage->getRevision();
-		self::$lastRevertedRevision = $latestRevision;
 
 		// Skip anonymous users and null edits.
 		if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($agent)
@@ -477,6 +479,16 @@ class Hooks {
 						[
 							4,
 							$title->getFullURL()
+						],
+						[
+							5,
+							$title->getFullURL(
+								[
+									'type' => 'revision',
+									'oldid' => $oldRevision->getId(),
+									'diff' => $latestRevision->getId()
+								]
+							)
 						]
 					]
 				]
@@ -670,6 +682,16 @@ class Hooks {
 						[
 							4,
 							$reviewForm->getPage()->getFullURL()
+						],
+						[
+							5,
+							$title->getFullURL(
+								[
+									'type' => 'revision',
+									'oldid' => $oldRev->getId(),
+									'diff' => $newRev->getId()
+								]
+							)
 						]
 					]
 				]
@@ -716,8 +738,12 @@ class Hooks {
 		);
 
 		$meta = $cache->get($cacheKey);
-		$meta = json_decode($meta, true);
-		if (empty($meta)) {
+		if (is_string($meta)) {
+			$meta = json_decode((string)$meta, true);
+			if (empty($meta)) {
+				return false;
+			}
+		} else {
 			return false;
 		}
 
