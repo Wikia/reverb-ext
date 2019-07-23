@@ -53,7 +53,6 @@ class CopyEchoPreferences extends Maintenance {
 			'echo-subscriptions-email-user-rights-expiry-change' =>
 				'reverb-user-account-email-groups-expiration-change',
 			'echo-subscriptions-email-welcome' => 'reverb-user-interest-email-welcome',
-			'echo-subscriptions-email-wiki-claims' => '',
 			'echo-subscriptions-email-dynamicsettings-wiki-edit' => 'reverb-site-management-email-wiki-edit',
 			'echo-subscriptions-web-article-linked' => 'reverb-user-interest-web-page-linked',
 			'echo-subscriptions-web-edit-thank' => 'reverb-user-interest-web-thanks',
@@ -67,7 +66,6 @@ class CopyEchoPreferences extends Maintenance {
 			'echo-subscriptions-web-user-rights' => 'reverb-user-account-web-groups-changed',
 			'echo-subscriptions-web-user-rights-expiry-change' => 'reverb-user-account-web-groups-expiration-change',
 			'echo-subscriptions-web-welcome' => 'reverb-user-interest-web-welcome ',
-			'echo-subscriptions-web-wiki-claims' => '',
 			'echo-subscriptions-web-dynamicsettings-wiki-edit' => 'reverb-site-management-web-wiki-edit',
 			'enotifwatchlistpages' => 'reverb-article-edit-email-watch'
 		];
