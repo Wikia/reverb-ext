@@ -58,7 +58,6 @@ div.reverb-np-arrow {
 	display: none;
 }
 
-
 .reverb-np-header {
 	font-size: 16px;
 	font-weight: bold;
@@ -139,9 +138,14 @@ div.reverb-np-arrow {
 }
 
 .reverb-npn-row, .reverb-notification-page-row {
-	padding: 10px 0px;
+	padding: 0px 0px 10px 0px;
 	display: flex;
 	justify-content: flex-start;
+}
+
+.reverb-npn-row-unread .reverb-npnr-left, 
+.reverb-npn-row-unread .reverb-npnr-right {
+	background: #393939;
 }
 
 .reverb-npn-row-global {
@@ -166,12 +170,13 @@ div.reverb-np-arrow {
 }
 
 .reverb-npnr-left {
-	padding: 0px 15px 0px 5px;
+	padding: 10px 15px 0px 5px;
 }
 
 .reverb-npnr-right {
 	flex: 1;
-	margin-right: 5px;
+	padding-right: 7px;
+	padding-top: 10px;
 	padding-bottom: 10px;
 	border-bottom: 1px solid #4f4f4f;
 }
@@ -302,8 +307,6 @@ div.reverb-np-arrow {
 	border-bottom: 1px solid #4f4f4f;
 }
 
-
-
 input[type=checkbox].reverb-filter-checkbox {
 	position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
 }
@@ -336,10 +339,6 @@ label.reverb-filter-label {
 	width: 100%;
 }
 
-.skin-hydra label.reverb-filter-label {
-	background-image:url(../images/checkbox-light.png);
-}
-
 .reverb-button-bar {
 	padding: 0px 0px 20px 0px;
 	border-bottom: 1px solid #fff;
@@ -360,17 +359,6 @@ label.reverb-filter-label {
 
 button.reverb-active-button {
 	color: #f37f20;
-}
-
-.skin-hydra .reverb-button-bar  button {
-	border-color: #0c81c9;
-	background-color: #d9d9d9;
-	color: #000;
-}
-
-.skin-hydra .reverb-button-bar  button:hover, 
-.skin-hydra  .reverb-button-bar  button.reverb-selected {
-	color: #0c81c9;
 }
 
 
@@ -397,6 +385,11 @@ button.reverb-active-button {
 	color: #f37f20;
 }
 
+.reverb-mobile-bell-unread:before {
+    background-image: url(../images/bell-unread.svg) !important;
+}
+
+
 .reverb-icon {
 	position: relative;
 	top: 5px;
@@ -410,4 +403,49 @@ button.reverb-active-button {
 
 .reverb-npn-row:last-child .reverb-npnr-right { 
 	border: 0; 
+}
+
+/**
+	Hydra Light and Minerva custom colors
+*/
+
+.skin-hydra label.reverb-filter-label {
+	background-image:url(../images/checkbox-light.png);
+}
+
+.skin-hydra .reverb-button-bar  button,
+.skin-minerva .reverb-button-bar  button {
+	border-color: #0c81c9;
+	background-color: #d9d9d9;
+	color: #000;
+}
+
+.skin-hydra .reverb-button-bar  button:hover, 
+.skin-hydra  .reverb-button-bar  button.reverb-selected,
+.skin-minerva .reverb-button-bar  button:hover, 
+.skin-minerva  .reverb-button-bar  button.reverb-selected {
+	color: #0c81c9;
+}
+
+.skin-hydra .reverb-npn-row-unread .reverb-npnr-left, 
+.skin-hydra .reverb-npn-row-unread .reverb-npnr-right,
+.skin-minerva .reverb-npn-row-unread .reverb-npnr-left, 
+.skin-minerva .reverb-npn-row-unread .reverb-npnr-right {
+	background: #e6e4e4;
+}
+
+.skin-minerva .reverb-notification-page-left {
+	display: none;
+}
+
+.skin-minerva .reverb-notification-page-right {
+	margin-left: 0px;
+}
+
+.skin-minerva #reverb-mark-all-read {
+	display: none;
+}
+
+.skin-minerva .reverb-button-bar {
+	text-align: center;
 }
