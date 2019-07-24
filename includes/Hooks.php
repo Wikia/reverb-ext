@@ -72,7 +72,7 @@ class Hooks {
 	 */
 	public static function onPageContentSaveComplete(
 		WikiPage &$wikiPage,
-		User &$user,
+		User &$agent,
 		Content $content,
 		string $summary,
 		bool $isMinor,
@@ -98,14 +98,16 @@ class Hooks {
 			$notifyUser = User::newFromName($title->getText());
 			// If the recipient is a valid non-anonymous user and hasn't turned off their
 			// notifications, generate a talk page post Echo notification.
-			if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($user)) {
+			if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($agent)) {
 				// If this is a minor edit, only notify if the agent doesn't have talk page
 				// minor edit notification blocked.
-				if (!$revision->isMinor() || !$user->isAllowed('nominornewtalk')) {
+				if (!$revision->isMinor() || !$agent->isAllowed('nominornewtalk')) {
 					// @TODO: Fix user note.
+					$agentPage = Title::newFromText($agent->getName(), NS_USER);
+					$notifyUserTalk = Title::newFromText($notifyUser->getName(), NS_USER_TALK);
 					$broadcast = NotificationBroadcast::newSingle(
 						'user-interest-talk-page-edit',
-						$user,
+						$agent,
 						$notifyUser,
 						[
 							'url' => $title->getFullURL(),
@@ -116,7 +118,19 @@ class Hooks {
 								],
 								[
 									1,
-									$user->getName()
+									$agentPage->getFullURL()
+								],
+								[
+									2,
+									$agent->getName()
+								],
+								[
+									3,
+									$notifyUserTalk->getFullURL()
+								],
+								[
+									4,
+									$agent->getName()
 								]
 							]
 						]
@@ -133,11 +147,11 @@ class Hooks {
 			$undidRevision = Revision::newFromId($undidRevId);
 			if ($undidRevision && $undidRevision->getTitle()->equals($title)) {
 				$notifyUser = $undidRevision->getRevisionRecord()->getUser();
-				if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($user)) {
+				if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($agent)) {
 					// @TODO: Fix user note and count reverted revisions.
 					$broadcast = NotificationBroadcast::newSingle(
 						'article-edit-revert',
-						$user,
+						$agent,
 						$notifyUser,
 						[
 							'url' => $title->getFullURL(),
@@ -148,7 +162,7 @@ class Hooks {
 								],
 								[
 									1,
-									$user->getName()
+									$agent->getName()
 								],
 								[
 									2,
