@@ -52,7 +52,7 @@ class Hooks {
 	 * Handler for PageContentSaveComplete hook
 	 *
 	 * @param WikiPage $wikiPage   WikiPage modified
-	 * @param User     $user       User performing the modification
+	 * @param User     $agent      User performing the modification
 	 * @param Content  $content    New content, as a Content object
 	 * @param string   $summary    Edit summary/comment
 	 * @param boolean  $isMinor    Whether or not the edit was marked as minor
