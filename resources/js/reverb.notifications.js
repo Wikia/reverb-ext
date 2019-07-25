@@ -295,17 +295,6 @@
 			markRead(nId,true);
 		}
 	})
-	
-	/*
-	$(document).on('click', ".reverb-npnr-unread", function(){
-		var nId = $(this).closest(".reverb-npn-row").data("id");
-		markRead(nId);
-	})
-
-	$(document).on('click', ".reverb-npnr-read", function(){
-		var nId = $(this).closest(".reverb-npn-row").data("id");
-		markRead(nId,true);
-	})*/
 
 	/***
 	 *    ███████╗██████╗ ███████╗ ██████╗██╗ █████╗ ██╗         ██████╗  █████╗  ██████╗ ███████╗
