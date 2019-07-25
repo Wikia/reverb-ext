@@ -283,7 +283,6 @@
 				log('There was an issue with api call for id '+id);
 			}
 		});
-
 	}
 
 	$(document).on('click', ".reverb-npnr-hitbox", function(){
@@ -313,7 +312,6 @@
 
 		var perPage = 10;
 		var activeFilters = {};
-
 
 		// Mark All as Read button
 		$("#reverb-mark-all-read").click(function(){
@@ -441,8 +439,11 @@
 
 			});
 		}
-		// Force filters reset back to "All" and repopulate.
-		$(".reverb-filter-checkbox").change();
+
+		var initialSpecialPageData = function() {
+			// Force filters reset back to "All" and repopulate.
+			$(".reverb-filter-checkbox").change();
+		}
 	}
 
 	/***
@@ -523,6 +524,23 @@
 		return $(html);
 	}
 
+	/***
+	 *    ██╗  ██╗██╗ ██████╗██╗  ██╗    ██╗████████╗     ██████╗ ███████╗███████╗
+	 *    ██║ ██╔╝██║██╔════╝██║ ██╔╝    ██║╚══██╔══╝    ██╔═══██╗██╔════╝██╔════╝
+	 *    █████╔╝ ██║██║     █████╔╝     ██║   ██║       ██║   ██║█████╗  █████╗  
+	 *    ██╔═██╗ ██║██║     ██╔═██╗     ██║   ██║       ██║   ██║██╔══╝  ██╔══╝  
+	 *    ██║  ██╗██║╚██████╗██║  ██╗    ██║   ██║       ╚██████╔╝██║     ██║     
+	 *    ╚═╝  ╚═╝╚═╝ ╚═════╝╚═╝  ╚═╝    ╚═╝   ╚═╝        ╚═════╝ ╚═╝     ╚═╝     
+	 *    Now that we wrote a bunch of logic, lets kick off our actions.                                                                      
+	 */
+	
+	initPanel();
+	if (reverbNotificationPage) {
+		// kick off special page initialization after the panel is created,
+		// otherwise the panel breaks the read / unread counters.
+		initialSpecialPageData();
+	}
+
 	/*
 		Developer:
 			Let's replace echo with a nice
@@ -556,8 +574,4 @@
 		⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
 		⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿
 	*/
-	//if (!reverbNotificationPage) {
-		initPanel();
-	//}
-
 }); })();
