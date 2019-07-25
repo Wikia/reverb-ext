@@ -116,7 +116,7 @@ class NotificationBroadcast {
 	}
 
 	/**
-	 * Get a new instance for a broadcast to a single target.
+	 * Get a new instance for a broadcast to multiple targets.
 	 *
 	 * @param string $type    Notification Type
 	 * @param User   $agent   User that triggered the creation of the notification.
@@ -155,6 +155,66 @@ class NotificationBroadcast {
 		$broadcast->setOrigin(Identifier::newLocalSite());
 
 		if (!$broadcast->getAgent() || empty($broadcast->getTargets())) {
+			return null;
+		}
+
+		return $broadcast;
+	}
+
+	/**
+	 * Get a new instance for a broadcast to a single target for the system user.
+	 *
+	 * @param string $type   Notification Type
+	 * @param User   $target User that the notification is targeting.
+	 * @param array  $meta   Meta data attributes such as 'url' and 'message' parameters for building language strings.
+	 *
+	 * @return null
+	 */
+	public static function newSystemSingle(
+		string $type,
+		User $target,
+		array $meta
+	): ?self {
+		return self::newSystemMulti($type, $agent, [$target], $meta);
+	}
+
+	/**
+	 * Get a new instance for a broadcast to multiple targets for the system user.
+	 *
+	 * @param string $type    Notification Type
+	 * @param array  $targets User that the notification is targeting.
+	 * @param array  $meta    Meta data attributes such as 'url' and 'message' parameters for building language strings.
+	 *
+	 * @return null
+	 */
+	public static function newSystemMulti(
+		string $type,
+		array $targets,
+		array $meta
+	): ?self {
+		if (!self::isTypeConfigured($type)) {
+			throw new MWException('The notification type passed is not defined.');
+		}
+
+		if (!isset($meta['url']) || empty($meta['url'])) {
+			throw new MWException('No canonical URL passed for broadcast.');
+		}
+
+		$broadcast = new self();
+
+		$broadcast->setAttributes(
+			[
+				'type' => $type,
+				'url' => $meta['url'],
+				'message' => json_encode($meta['message'])
+			]
+		);
+
+		// These need to come after setAttributes().
+		$broadcast->setTargets($targets);
+		$broadcast->setOrigin(Identifier::newLocalSite());
+
+		if (empty($broadcast->getTargets())) {
 			return null;
 		}
 
