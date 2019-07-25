@@ -106,7 +106,7 @@
 	 * Inject fake notification data until we have real data.
 	 */
 
-	var initPanel = function() {
+	var initNotifications = function() {
 		log('Injecting HTML.');
 		var userBox = getUserBox();
 		if (userBox) {
@@ -135,6 +135,9 @@
 
 			loadNotifications({page: 0, perpage: panelTotal, unread: 1},function(data){
 				updateCounts();
+				if (reverbNotificationPage) {
+					initialSpecialPageData();
+				}
 				if (data.notifications && data.notifications.length) {
 					var notifications = buildNotificationsFromData(data,true);
 					for (var x in notifications) {
@@ -152,6 +155,9 @@
 			// If we cant find the userbox, lets assume we are mobile.
 			var mheader = $("form.header");
 			loadNotifications({page: 0, perpage: 1, unread: 1},function(data){
+				if (reverbNotificationPage) {
+					initialSpecialPageData();
+				}
 				buildMobileIcon(data.meta.unread).appendTo(mheader);
 			});
 		}
@@ -397,6 +403,12 @@
 		var generateWithFilters = function(filters, noUpdateCount) {
 			activeFilters = filters;
 			noUpdateCount = noUpdateCount ? true : false;
+			var showingRead = false;
+
+			if (typeof filters.read !== "undefined" && filters.read) {
+				showingRead = true;
+			}
+
 			loadNotifications(filters, function(data) {
 				if (!noUpdateCount) {
 					updateCounts(true);
@@ -434,7 +446,7 @@
 					// We need to display a "no items" section.
 					$(".reverb-notification-page-paging").empty();
 					$(".reverb-notification-page-notifications").empty();
-					addNotification(buildNoNotifications(),'specialpage');
+					addNotification(buildNoNotifications(showingRead),'specialpage');
 				}
 
 			});
@@ -462,8 +474,9 @@
 		return $(html);
 	}
 
-	var buildNoNotifications = function() {
-		var html = '<div class="reverb-no-notifications">'+l('no-unread')+'</div>';
+	var buildNoNotifications = function(showingRead) {
+		var langStr = showingRead ? 'no-read' : 'no-unread';
+		var html = '<div class="reverb-no-notifications">'+l(langStr)+'</div>';
 		return $(html);
 	}
 
@@ -534,12 +547,7 @@
 	 *    Now that we wrote a bunch of logic, lets kick off our actions.                                                                      
 	 */
 	
-	initPanel();
-	if (reverbNotificationPage) {
-		// kick off special page initialization after the panel is created,
-		// otherwise the panel breaks the read / unread counters.
-		initialSpecialPageData();
-	}
+	initNotifications();
 
 	/*
 		Developer:
