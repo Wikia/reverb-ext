@@ -286,14 +286,14 @@
 
 	}
 
-	$(document).on('click', ".reverb-npnr-unread", function(){
+	$(document).on('click', ".reverb-npnr-hitbox", function(){
 		var nId = $(this).closest(".reverb-npn-row").data("id");
-		markRead(nId);
-	})
-
-	$(document).on('click', ".reverb-npnr-read", function(){
-		var nId = $(this).closest(".reverb-npn-row").data("id");
-		markRead(nId,true);
+		var button = $(this).find('.reverb-npnrc')[0];
+		if ($(button).hasClass('reverb-npnr-unread')) {
+			markRead(nId);
+		} else {
+			markRead(nId,true);
+		}
 	})
 
 	/***
@@ -479,7 +479,7 @@
 		   html += '<div class="reverb-npnr-body">'+d.body+'</div>'
 		}
 		html += '      <div class="reverb-npnr-bottom">'
-		+ '            <span class="reverb-npnr-'+d.read+' reverb-npnrc" data-id="'+d.id+'"></span>'
+		+ '            <span class="reverb-npnr-hitbox"><span class="reverb-npnr-'+d.read+' reverb-npnrc" data-id="'+d.id+'"></span></span>'
 		+ '            <span title="'+d.timestamp+'">' + d.created + '</span>'
 		+ '            <span class="reverb-npnrb-site">on <a href="'+d.site_url+'">'+d.site_name+'</span>'
 		+ '        </div>'

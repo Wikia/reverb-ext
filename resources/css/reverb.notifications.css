@@ -193,11 +193,21 @@ div.reverb-np-arrow {
 	background-color: #303030;
 }
 
+.reverb-npnr-hitbox {
+	float: right;
+	width: 20px;
+	height: 20px;
+	position: relative;
+	cursor: pointer;
+}
+
 .reverb-npnrc {
+	float: right;
 	width: 10px;
 	height: 10px;
-	float: right;
-	cursor: pointer;
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
 	border-radius: 25px;
 }
 
