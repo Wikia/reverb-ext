@@ -175,7 +175,7 @@ class NotificationBroadcast {
 		User $target,
 		array $meta
 	): ?self {
-		return self::newSystemMulti($type, $agent, [$target], $meta);
+		return self::newSystemMulti($type, [$target], $meta);
 	}
 
 	/**
