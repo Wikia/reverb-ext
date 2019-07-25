@@ -106,7 +106,7 @@
 	 * Inject fake notification data until we have real data.
 	 */
 
-	var initPanel = function() {
+	var initNotifications = function() {
 		log('Injecting HTML.');
 		var userBox = getUserBox();
 		if (userBox) {
@@ -135,6 +135,9 @@
 
 			loadNotifications({page: 0, perpage: panelTotal, unread: 1},function(data){
 				updateCounts();
+				if (reverbNotificationPage) {
+					initialSpecialPageData();
+				}
 				if (data.notifications && data.notifications.length) {
 					var notifications = buildNotificationsFromData(data,true);
 					for (var x in notifications) {
@@ -152,6 +155,9 @@
 			// If we cant find the userbox, lets assume we are mobile.
 			var mheader = $("form.header");
 			loadNotifications({page: 0, perpage: 1, unread: 1},function(data){
+				if (reverbNotificationPage) {
+					initialSpecialPageData();
+				}
 				buildMobileIcon(data.meta.unread).appendTo(mheader);
 			});
 		}
@@ -283,7 +289,6 @@
 				log('There was an issue with api call for id '+id);
 			}
 		});
-
 	}
 
 	$(document).on('click', ".reverb-npnr-hitbox", function(){
@@ -313,7 +318,6 @@
 
 		var perPage = 10;
 		var activeFilters = {};
-
 
 		// Mark All as Read button
 		$("#reverb-mark-all-read").click(function(){
@@ -399,6 +403,12 @@
 		var generateWithFilters = function(filters, noUpdateCount) {
 			activeFilters = filters;
 			noUpdateCount = noUpdateCount ? true : false;
+			var showingRead = false;
+
+			if (typeof filters.read !== "undefined" && filters.read) {
+				showingRead = true;
+			}
+
 			loadNotifications(filters, function(data) {
 				if (!noUpdateCount) {
 					updateCounts(true);
@@ -436,13 +446,16 @@
 					// We need to display a "no items" section.
 					$(".reverb-notification-page-paging").empty();
 					$(".reverb-notification-page-notifications").empty();
-					addNotification(buildNoNotifications(),'specialpage');
+					addNotification(buildNoNotifications(showingRead),'specialpage');
 				}
 
 			});
 		}
-		// Force filters reset back to "All" and repopulate.
-		$(".reverb-filter-checkbox").change();
+
+		var initialSpecialPageData = function() {
+			// Force filters reset back to "All" and repopulate.
+			$(".reverb-filter-checkbox").change();
+		}
 	}
 
 	/***
@@ -461,8 +474,9 @@
 		return $(html);
 	}
 
-	var buildNoNotifications = function() {
-		var html = '<div class="reverb-no-notifications">'+l('no-unread')+'</div>';
+	var buildNoNotifications = function(showingRead) {
+		var langStr = showingRead ? 'no-read' : 'no-unread';
+		var html = '<div class="reverb-no-notifications">'+l(langStr)+'</div>';
 		return $(html);
 	}
 
@@ -523,6 +537,18 @@
 		return $(html);
 	}
 
+	/***
+	 *    ██╗  ██╗██╗ ██████╗██╗  ██╗    ██╗████████╗     ██████╗ ███████╗███████╗
+	 *    ██║ ██╔╝██║██╔════╝██║ ██╔╝    ██║╚══██╔══╝    ██╔═══██╗██╔════╝██╔════╝
+	 *    █████╔╝ ██║██║     █████╔╝     ██║   ██║       ██║   ██║█████╗  █████╗  
+	 *    ██╔═██╗ ██║██║     ██╔═██╗     ██║   ██║       ██║   ██║██╔══╝  ██╔══╝  
+	 *    ██║  ██╗██║╚██████╗██║  ██╗    ██║   ██║       ╚██████╔╝██║     ██║     
+	 *    ╚═╝  ╚═╝╚═╝ ╚═════╝╚═╝  ╚═╝    ╚═╝   ╚═╝        ╚═════╝ ╚═╝     ╚═╝     
+	 *    Now that we wrote a bunch of logic, lets kick off our actions.                                                                      
+	 */
+	
+	initNotifications();
+
 	/*
 		Developer:
 			Let's replace echo with a nice
@@ -556,8 +582,4 @@
 		⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
 		⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿
 	*/
-	//if (!reverbNotificationPage) {
-		initPanel();
-	//}
-
 }); })();
