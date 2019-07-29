@@ -96,6 +96,16 @@
 				"resources/css/reverb.pagination.css"
 			],
 			"position": "bottom"
+		},
+		"ext.reverb.preferences": {
+			"targets": [
+				"desktop",
+				"mobile"
+			],
+			"scripts": [
+				"resources/js/reverb.preferences.js"
+			],
+			"position": "bottom"
 		}
 	},
 	"ResourceFileModulePaths": {
@@ -113,6 +123,7 @@
 		"AbortTalkPageEmailNotification": "Reverb\\Hooks::onAbortTalkPageEmailNotification",
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
+		"BeforeInitialize": "Reverb\\Hooks::onBeforeInitialize",
 		"FlaggedRevsRevisionReviewFormAfterDoSubmit": "Reverb\\Hooks::onFlaggedRevsRevisionReviewFormAfterDoSubmit",
 		"GetNewMessagesAlert": "Reverb\\Hooks::onGetNewMessagesAlert",
 		"GetPreferences": "Reverb\\Hooks::onGetPreferences",
