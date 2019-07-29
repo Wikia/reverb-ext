@@ -15,6 +15,7 @@ namespace Reverb\Notification;
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use MediaWiki\MediaWikiServices;
 use Reverb\Traits\NotificationListTrait;
+use Reverb\TwiggyWiring;
 use SpecialPage;
 use User;
 
@@ -115,7 +116,7 @@ class NotificationEmail {
 	 * @return string
 	 */
 	private function getWrappedBody(Notification $notification, User $user): string {
-		$twig = MediaWikiServices::getInstance()->getService('TwiggyService');
+		$twig = TwiggyWiring::init();
 		$template = $twig->load('@Reverb/notification_email.twig');
 
 		$config = MediaWikiServices::getInstance()->getMainConfig();

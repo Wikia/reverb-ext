@@ -25,6 +25,7 @@
 	"AutoloadClasses": {
 		"Reverb\\Api\\ApiNotifications": "includes/api/ApiNotifications.php",
 		"Reverb\\Hooks": "includes/Hooks.php",
+		"Reverb\\TwiggyWiring": "includes/TwiggyWiring.php",
 		"Reverb\\Identifier\\Identifier": "includes/identifier/Identifier.php",
 		"Reverb\\Identifier\\InvalidIdentifierException": "includes/identifier/InvalidIdentifierException.php",
 		"Reverb\\Identifier\\SiteIdentifier": "includes/identifier/SiteIdentifier.php",
