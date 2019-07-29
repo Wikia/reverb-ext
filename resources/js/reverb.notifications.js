@@ -327,6 +327,11 @@
 			});
 		});
 
+		// Make firefox work like a good web browser.
+		$('.reverb-filter-checkbox').each(function(){
+			this.checked = true;
+		})
+
 		$(".reverb-filter-checkbox").change(function(e) {
 			// check original event to verify human interaction
 			if (this.id == "filter_all" && this.checked) {
