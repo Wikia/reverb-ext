@@ -12,8 +12,9 @@ declare(strict_types=1);
 
 namespace Reverb\Special;
 
-use SpecialPage;
 use MediaWiki\MediaWikiServices;
+use Reverb\TwiggyWiring;
+use SpecialPage;
 
 class SpecialNotifications extends SpecialPage {
 	/**
