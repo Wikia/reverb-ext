@@ -604,8 +604,8 @@ class Hooks {
 			'help-message' => 'reverb-pref-email-options-toggle-help',
 			'section' => 'reverb/reverb-email-options-toggle',
 			'options' => [
-				wfMessage('reverb-pref-email-frequency-never')->plain() => 0,
-				wfMessage('reverb-pref-email-frequency-immediately')->plain() => 1
+				wfMessage('reverb-pref-email-frequency-immediately')->plain() => 1,
+				wfMessage('reverb-pref-email-frequency-never')->plain() => 0
 			],
 		];
 
