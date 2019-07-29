@@ -532,12 +532,13 @@ class Hooks {
 	/**
 	 * Handle setting up profile page handlers.
 	 *
-	 * @param  Title   $title
-	 * @param  Article $article
-	 * @param  object  $output
-	 * @param  User    $user
-	 * @param  object  $request
-	 * @param  object  $mediaWiki
+	 * @param Title   $title
+	 * @param Article $article
+	 * @param object  $output
+	 * @param User    $user
+	 * @param object  $request
+	 * @param object  $mediaWiki 
+	 *
 	 * @return void
 	 */
 	public static function onBeforeInitialize(&$title, &$article, &$output, &$user, $request, $mediaWiki) {
