@@ -404,7 +404,6 @@ class Hooks {
 					continue;
 				}
 
-				// @TODO: Fix note, but do we desire this note system?  This breaks localization.
 				$broadcast = NotificationBroadcast::newSingle(
 					'user-interest-page-linked',
 					$agent,
