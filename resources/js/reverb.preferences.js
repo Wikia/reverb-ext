@@ -4,7 +4,7 @@
 		$(selector).each(function(){
 			var name = $(this).attr('id');
 			if (name.indexOf('email') !== -1) {
-			   $(this).attr("disabled", true);
+				$(this).attr("disabled", true);
 			}
 		});
 	}
@@ -17,7 +17,7 @@
 			$(selector).each(function(){
 				var name = $(this).attr('id');
 				if (name.indexOf('email') !== -1) {
-				   $(this).attr("disabled", true);
+					$(this).attr("disabled", true);
 				}
 			});
 		}
