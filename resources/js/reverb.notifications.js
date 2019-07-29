@@ -495,7 +495,7 @@
 		html += '      <div class="reverb-npnr-bottom">'
 		+ '            <span class="reverb-npnr-hitbox"><span class="reverb-npnr-'+d.read+' reverb-npnrc" data-id="'+d.id+'"></span></span>'
 		+ '            <span title="'+d.timestamp+'">' + d.created + '</span>'
-		+ '            <span class="reverb-npnrb-site">on <a href="'+d.site_url+'">'+d.site_name+'</span>'
+		+ '            <span class="reverb-npnrb-site">on <a href="'+d.site_url+'/Special:Notifications">'+d.site_name+'</span>'
 		+ '        </div>'
 		+ '    </div>'
 		+ '</div>';
