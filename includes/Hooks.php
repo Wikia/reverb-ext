@@ -532,10 +532,10 @@ class Hooks {
 	/**
 	 * Handle setting up profile page handlers.
 	 *
-	 * @param  Title   &$title
-	 * @param  Article &$article
-	 * @param  object  &$output
-	 * @param  User    &$user
+	 * @param  Title   $title
+	 * @param  Article $article
+	 * @param  object  $output
+	 * @param  User    $user
 	 * @param  object  $request
 	 * @param  object  $mediaWiki
 	 * @return void
@@ -600,7 +600,6 @@ class Hooks {
 
 		$preferences['reverb-email-frequency'] = [
 			'type' => 'radio',
-			//'label-message' => 'reverb-pref-send-me',
 			'help-message' => 'reverb-pref-email-options-toggle-help',
 			'section' => 'reverb/reverb-email-options-toggle',
 			'options' => [
