@@ -526,8 +526,25 @@ class Hooks {
 	public static function onBeforePageDisplay(OutputPage &$output, SkinTemplate &$skin) {
 		$output->addModuleStyles('ext.reverb.notifications.styles');
 		$output->addModules('ext.reverb.notifications.scripts');
-
 		return true;
+	}
+
+	/**
+	 * Handle setting up profile page handlers.
+	 *
+	 * @param Title   $title
+	 * @param Article $article
+	 * @param object  $output
+	 * @param User    $user
+	 * @param object  $request
+	 * @param object  $mediaWiki
+	 *
+	 * @return void
+	 */
+	public static function onBeforeInitialize(&$title, &$article, &$output, &$user, $request, $mediaWiki) {
+		if ($title->equals(SpecialPage::getTitleFor("Preferences"))) {
+			$output->addModules('ext.reverb.preferences');
+		}
 	}
 
 	/**
@@ -583,9 +600,9 @@ class Hooks {
 		$preferences = array_diff_key($preferences, $remove);
 
 		$preferences['reverb-email-frequency'] = [
-			'type' => 'select',
-			'label-message' => 'reverb-pref-send-me',
-			'section' => 'reverb/reverb-email-options',
+			'type' => 'radio',
+			'help-message' => 'reverb-pref-email-options-toggle-help',
+			'section' => 'reverb/reverb-email-options-toggle',
 			'options' => [
 				wfMessage('reverb-pref-email-frequency-never')->plain() => 0,
 				wfMessage('reverb-pref-email-frequency-immediately')->plain() => 1
@@ -629,7 +646,6 @@ class Hooks {
 				$preferences[$index]['section'] = 'reverb/reverb-email-options';
 			}
 		}
-
 		return true;
 	}
 

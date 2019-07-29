@@ -77,6 +77,8 @@
 	"reverb-email-preferences-footer": "To control which notification emails we send <a href='$1'>change your preferences</a>.",
 	"prefs-reverb": "Notifications",
 	"prefs-reverb-email-options": "Email options",
+	"prefs-reverb-email-options-toggle": "Notification Emails",
+	"prefs-reverb-email-options-toggle-help": "This option will globally determine if you receive emails for all notifications, and will override any below settings.",
 	"prefs-reverb-article-edit": "Article Edit Notifications",
 	"prefs-reverb-user-account": "User Account Notifications",
 	"prefs-reverb-user-interest": "User Interest Notifications",
