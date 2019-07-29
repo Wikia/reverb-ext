@@ -414,12 +414,7 @@ class Hooks {
 						'message' => [
 							[
 								'user_note',
-								wfMessage(
-									'user-note-user-interest-page-linked',
-									$linksUpdate->getTitle()->getFullText(),
-									$linkToTitle->getFullText(),
-									$agent->getName()
-								)->parse()
+								''
 							],
 							[
 								1,
@@ -428,6 +423,22 @@ class Hooks {
 							[
 								2,
 								$linkToTitle->getFullText()
+							],
+							[
+								3,
+								$linksUpdate->getTitle()->getFullURL()
+							],
+							[
+								4,
+								$linkToTitle->getFullURL()
+							],
+							[
+								5,
+								Title::newFromText($agent->getName(), NS_USER)->getFullURL()
+							],
+							[
+								6,
+								$agent->getName()
 							]
 						]
 					]
