@@ -537,7 +537,7 @@ class Hooks {
 	 * @param object  $output
 	 * @param User    $user
 	 * @param object  $request
-	 * @param object  $mediaWiki 
+	 * @param object  $mediaWiki
 	 *
 	 * @return void
 	 */
