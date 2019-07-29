@@ -21,6 +21,7 @@ use MWNamespace;
 use OutputPage;
 use RecentChange;
 use Reverb\Notification\NotificationBroadcast;
+use Reverb\Traits\NotificationListTrait;
 use Revision;
 use RevisionReviewForm;
 use SkinTemplate;
@@ -29,7 +30,6 @@ use Status;
 use Title;
 use User;
 use WikiPage;
-use Reverb\Traits\NotificationListTrait;
 
 class Hooks {
 	use NotificationListTrait;
@@ -566,8 +566,7 @@ class Hooks {
 	 * @return void
 	 */
 	public static function onSpecialPageBeforeExecute(SpecialPage $special, $subPage) {
-		$twig = MediaWikiServices::getInstance()->getService('TwiggyService');
-		$twig->setTemplateLocation('Reverb', __DIR__ . '/../resources/templates');
+		TwiggyWiring::init();
 	}
 
 	/**
