@@ -138,6 +138,9 @@
 		"ReverbApiEndPoint": {
 			"value": "http://127.0.0.1:8101/v1"
 		},
+		"ReverbApiKey": {
+			"value": ""
+		},
 		"ReverbNotifications": {
 			"value": {
 				"user-interest-welcome": {

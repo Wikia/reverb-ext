@@ -19,11 +19,13 @@ return [
 	'ReverbApiClient' => function (MediaWikiServices $services) {
 		$mainConfig = $services->getMainConfig();
 		$endPoint = $mainConfig->get('ReverbApiEndPoint');
+		$apiKey = $mainConfig->get('ReverbApiKey');
 
 		return (new ClientFactory)->make(
 			HttpClientDiscovery::find(),
 			MessageFactoryDiscovery::find(),
-			$endPoint
+			$endPoint,
+			$apiKey
 		);
 	}
 ];
