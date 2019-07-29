@@ -82,6 +82,6 @@ class SpecialNotifications extends SpecialPage {
 	 * @return string
 	 */
 	protected function getGroupName(): string {
-		return 'user';
+		return 'users';
 	}
 }
