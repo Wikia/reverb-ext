@@ -15,9 +15,9 @@ namespace Reverb;
 
 use Content;
 use EmailNotification;
-use LinksUpdate;
+// use LinksUpdate;
 use MediaWiki\MediaWikiServices;
-use MWNamespace;
+// use MWNamespace;
 use OutputPage;
 use RecentChange;
 use Reverb\Notification\NotificationBroadcast;
@@ -370,13 +370,13 @@ class Hooks {
 	 * @return boolean True
 	 */
 	public static function onLinksUpdateAfterInsert(LinksUpdate $linksUpdate, string $table, array $insertions): bool {
-		global $wgRequest;
+		// global $wgRequest;
 		return true;
 		// @FIXME: This doesn't work in 1.27+
 		// Rollback or undo should not trigger link notification
 		// @TODO: Implement a better solution so it doesn't depend on the checking of
 		// a specific set of request variables
-		if ($wgRequest->getVal('wpUndidRevision') || $wgRequest->getVal('action') == 'rollback') {
+		/*if ($wgRequest->getVal('wpUndidRevision') || $wgRequest->getVal('action') == 'rollback') {
 			return true;
 		}
 
@@ -448,7 +448,7 @@ class Hooks {
 			}
 		}
 
-		return true;
+		return true;*/
 	}
 
 	/**
