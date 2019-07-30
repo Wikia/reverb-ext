@@ -371,7 +371,7 @@ class Hooks {
 	 */
 	public static function onLinksUpdateAfterInsert(LinksUpdate $linksUpdate, string $table, array $insertions): bool {
 		global $wgRequest;
-
+		return true;
 		// @FIXME: This doesn't work in 1.27+
 		// Rollback or undo should not trigger link notification
 		// @TODO: Implement a better solution so it doesn't depend on the checking of
