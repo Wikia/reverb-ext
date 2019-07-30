@@ -1,7 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
-			"AttemptToCallNil",
+			"AttemptToCallNil"
 		]
 	},
 	"reverb_description": "Система уведомлений для MediaWiki и сервиса уведомлений Reverb.",
@@ -9,9 +9,8 @@
 	"apihelp-notifications-summary": "Получение уведомлений для текущего участника.",
 	"long-header-user-interest-talk-page-edit": "[$1 $2] {{GENDER:$2|оставил|оставила}} сообщение на [$3 {{GENDER:$4|вашей}} странице обсуждения].",
 	"short-header-user-interest-talk-page-edit": "[$1 $2] {{GENDER:$2|оставил|оставила}} [$3 {{GENDER:$4|вам}} сообщение.]",
-	"long-header-user-interest-page-linked": "Создана ссылка со страницы <strong>$1<\/strong> на страницу <strong>$2<\/strong>.",
-	"short-header-user-interest-page-linked": "Создана ссылка со страницы <strong>$1<\/strong>.",
-	"user-note-user-interest-page-linked": "$3 {{gender:$3|добавил|добавила}} ссылку на страницу <strong>$2<\/strong> со страницы <strong>$1<\/strong>",
+	"long-header-user-interest-page-linked": "[$5 $6] {{gender:$6|добавил|добавила}} ссылку на страницу [$3 $1] со страницы [$4 $2].",
+	"short-header-user-interest-page-linked": "[$5 $6] {{gender:$6|добавил|добавила}} ссылку на страницу [$3 $1] со страницы [$4 $2].",
 	"short-header-user-account-groups-changed": "{{GENDER:$1|Ваши}} права участника были {{GENDER:$1|изменены}}.",
 	"long-header-user-account-groups-changed": "{{GENDER:$1|Ваши}} права участника были {{GENDER:$1|изменены}}.",
 	"user-note-user-account-groups-changed-added": "Вы были добавлены в следующие группы: $1",
@@ -47,6 +46,8 @@
 	"reverb-email-preferences-footer": "Чтобы изменить, какие уведомления мы присылаем вам по электронной почте, <a href='$1'>измените свои настройки</a>.",
 	"prefs-reverb": "Уведомления",
 	"prefs-reverb-email-options": "Настройки электронной почты",
+	"prefs-reverb-email-options-toggle": "Отправлять уведомления по эл. почте",
+	"prefs-reverb-email-options-toggle-help": "Эта глобальная настройка определит, будете ли вы получать уведомления по электронной почте, переопределяя все другие настройки, приведённые ниже.",
 	"prefs-reverb-article-edit": "Уведомления, связанные с правками страниц",
 	"prefs-reverb-user-account": "Уведомления, связанные с учётной записью участника",
 	"prefs-reverb-user-interest": "Уведомления, связанные c интересами участника",
