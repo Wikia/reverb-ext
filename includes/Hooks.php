@@ -15,9 +15,9 @@ namespace Reverb;
 
 use Content;
 use EmailNotification;
-// use LinksUpdate;
+use LinksUpdate;
 use MediaWiki\MediaWikiServices;
-// use MWNamespace;
+use MWNamespace;
 use OutputPage;
 use RecentChange;
 use Reverb\Notification\NotificationBroadcast;
