@@ -29,6 +29,7 @@ use SpecialPage;
 use Status;
 use Title;
 use User;
+use UserArrayFromResult;
 use WikiPage;
 
 class Hooks {
@@ -370,13 +371,13 @@ class Hooks {
 	 * @return boolean True
 	 */
 	public static function onLinksUpdateAfterInsert(LinksUpdate $linksUpdate, string $table, array $insertions): bool {
-		// global $wgRequest;
-		return true;
+		global $wgRequest;
+
 		// @FIXME: This doesn't work in 1.27+
 		// Rollback or undo should not trigger link notification
 		// @TODO: Implement a better solution so it doesn't depend on the checking of
 		// a specific set of request variables
-		/*if ($wgRequest->getVal('wpUndidRevision') || $wgRequest->getVal('action') == 'rollback') {
+		if ($wgRequest->getVal('wpUndidRevision') || $wgRequest->getVal('action') == 'rollback') {
 			return true;
 		}
 
@@ -397,6 +398,7 @@ class Hooks {
 
 		$revid = $linksUpdate->getRevision() ? $linksUpdate->getRevision()->getId() : null;
 
+		$db = wfGetDB(DB_REPLICA);
 		foreach ($insertions as $page) {
 			if (MWNamespace::isContent($page['pl_namespace'])) {
 				$linkToTitle = Title::makeTitle($page['pl_namespace'], $page['pl_title']);
@@ -404,10 +406,27 @@ class Hooks {
 					continue;
 				}
 
-				$broadcast = NotificationBroadcast::newSingle(
-					'user-interest-page-linked',
+				$userIds = $db->selectFieldValues(
+					'watchlist',
+					'wl_user',
+					[
+						'wl_user != ' . intval($agent->getId()),
+						'wl_namespace' => $page['pl_namespace'],
+						'wl_title' => $page['pl_title']
+					],
+					__METHOD__
+				);
+
+				$targets = UserArrayFromResult::newFromIDs($userIds);
+				$notifyUsers = [];
+				foreach ($targets as $target) {
+					$notifyUsers[] = $target;
+				}
+
+				$broadcast = NotificationBroadcast::newMulti(
+					'article-edit-page-linked',
 					$agent,
-					$notifyUser,
+					$notifyUsers,
 					[
 						'url' => $linkToTitle->getFullURL(),
 						'message' => [
@@ -448,7 +467,7 @@ class Hooks {
 			}
 		}
 
-		return true;*/
+		return true;
 	}
 
 	/**

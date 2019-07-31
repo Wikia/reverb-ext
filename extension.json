@@ -151,7 +151,7 @@
 				"user-interest-talk-page-edit": {
 					"importance": 9
 				},
-				"user-interest-page-linked": {
+				"article-edit-page-linked": {
 					"importance": 1
 				},
 				"article-edit-watch": {
@@ -186,7 +186,7 @@
 				"notification": {
 					"user-interest-welcome": "fa-user-circle",
 					"user-interest-talk-page-edit": "fa-users",
-					"user-interest-page-linked": "fa-users",
+					"article-edit-page-linked": "fa-users",
 					"article-edit-revert": "fa-history",
 					"article-edit-thanks": "fa-thumbs-up",
 					"user-account-groups-expiration-change": "fa-users",
