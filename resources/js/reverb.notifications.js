@@ -475,7 +475,7 @@
 	 */
 
 	var buildViewMore = function(more) {
-		var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="/Special:Notifications">'+l('view-additional-unread',more)+' <i class="fa fa-arrow-right"></i></button></div>';
+		var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="/Special:Notifications">'+mw.message('view-additional-unread', more).text()+' <i class="fa fa-arrow-right"></i></button></div>';
 		return $(html);
 	}
 
