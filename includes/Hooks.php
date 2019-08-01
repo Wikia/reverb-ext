@@ -803,9 +803,12 @@ class Hooks {
 		}
 
 		// The getPerformer() function that generates this name does not validate to allow IP addresses through.
-		$agent = User::newFromName($meta['name'], false);
+		$agent = User::newFromName($meta['name']);
 		if (!$agent) {
 			$agent = null;
+			$name = $meta['name'];
+		} else {
+			$name = $agent->getName();
 		}
 
 		$broadcast = NotificationBroadcast::new(
@@ -821,11 +824,11 @@ class Hooks {
 					],
 					[
 						1,
-						self::getAgentPage($agent->getName())->getFullURL()
+						self::getAgentPage($name)->getFullURL()
 					],
 					[
 						2,
-						$agent->getName()
+						$name
 					],
 					[
 						3,
