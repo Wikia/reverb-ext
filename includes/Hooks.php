@@ -802,9 +802,10 @@ class Hooks {
 			return false;
 		}
 
-		$agent = User::newFromName($meta['name']);
+		// The getPerformer() function that generates this name does not validate to allow IP addresses through.
+		$agent = User::newFromName($meta['name'], false);
 		if (!$agent) {
-			return false;
+			$agent = null;
 		}
 
 		$broadcast = NotificationBroadcast::new(
@@ -836,7 +837,14 @@ class Hooks {
 					],
 					[
 						5,
-						$title->getFullUrl(['oldid' => $meta['oldid']])
+						$title->getFullUrl(
+							[
+								'type' => 'revision',
+								'oldid' => $meta['oldid'],
+								'diff' => $meta['oldid'],
+								'curid' => $meta['curid']
+							]
+						)
 					]
 				]
 			]
@@ -868,7 +876,13 @@ class Hooks {
 				'ReverbWatchlist',
 				'edited:' . md5($title->getFullText())
 			),
-			json_encode(['name' => $editor->getName(), 'oldid' => $recentChange->mAttribs['rc_this_oldid']]),
+			json_encode(
+				[
+					'name' => $editor->getName(),
+					'oldid' => $recentChange->mAttribs['rc_this_oldid'],
+					'curid' => $recentChange->mAttribs['rc_cur_id']
+				]
+			),
 			time() + 86400
 		);
 
