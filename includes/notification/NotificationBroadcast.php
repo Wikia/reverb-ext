@@ -100,9 +100,10 @@ class NotificationBroadcast {
 	 * Get a new instance for a broadcast to a single target for the system user.
 	 *
 	 * @param string     $type    Notification Type
-	 * @param User|null  $agent   User that triggered the creation of the notification or null to indicate the system user.
+	 * @param User|null  $agent   User that triggered the creation of the notification.
+	 *                            Null to indicate the system user.  An user with no ID will automatically set null.
 	 * @param User|array $targets User or Users that the notification is targeting.
-	 * @param array      $meta    Meta data attributes such as 'url' and 'message' parameters for building language strings.
+	 * @param array      $meta    Meta data attributes such as 'url' and 'message' parameters.
 	 *
 	 * @return self|null
 	 */
@@ -112,9 +113,14 @@ class NotificationBroadcast {
 		$targets,
 		array $meta
 	): ?self {
+		if (!$agent->getId()) {
+			$agent = null;
+		}
+
 		if ($targets instanceof User) {
 			$targets = [$targets];
 		}
+
 		if ($agent === null) {
 			return self::newSystemMulti($type, $targets, $meta);
 		}

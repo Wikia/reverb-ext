@@ -104,14 +104,9 @@ class Hooks {
 				// minor edit notification blocked.
 				if (!$revision->isMinor() || !$agent->isAllowed('nominornewtalk')) {
 					$notifyUserTalk = Title::newFromText($notifyUser->getName(), NS_USER_TALK);
-					if (!$agent->getId()) {
-						$agentPage = SpecialPage::getTitleFor('Contributions', $agent->getName());
-					} else {
-						$agentPage = Title::newFromText($agent->getName(), NS_USER);
-					}
 					$broadcast = NotificationBroadcast::new(
 						'user-interest-talk-page-edit',
-						($agent->getId() ? $agent : null),
+						$agent,
 						$notifyUser,
 						[
 							'url' => $title->getFullURL(),
@@ -122,7 +117,7 @@ class Hooks {
 								],
 								[
 									1,
-									$agentPage->getFullURL()
+									self::getAgentPage($agent->getName())->getFullURL()
 								],
 								[
 									2,
@@ -154,7 +149,7 @@ class Hooks {
 				if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($agent)) {
 					$broadcast = NotificationBroadcast::new(
 						'article-edit-revert',
-						($agent->getId() ? $agent : null),
+						$agent,
 						$notifyUser,
 						[
 							'url' => $title->getFullURL(),
@@ -425,7 +420,7 @@ class Hooks {
 					$notifyUsers[] = $target;
 				}
 
-				$broadcast = NotificationBroadcast::newMulti(
+				$broadcast = NotificationBroadcast::new(
 					'article-edit-page-linked',
 					$agent,
 					$notifyUsers,
@@ -454,7 +449,7 @@ class Hooks {
 							],
 							[
 								5,
-								Title::newFromText($agent->getName(), NS_USER)->getFullURL()
+								self::getAgentPage($agent->getName())->getFullURL()
 							],
 							[
 								6,
@@ -812,7 +807,7 @@ class Hooks {
 			return false;
 		}
 
-		$broadcast = NotificationBroadcast::newSingle(
+		$broadcast = NotificationBroadcast::new(
 			'article-edit-watch',
 			$agent,
 			$watchingUser,
@@ -825,7 +820,7 @@ class Hooks {
 					],
 					[
 						1,
-						Title::newFromText($agent->getName(), NS_USER)->getFullURL()
+						self::getAgentPage($agent->getName())->getFullURL()
 					],
 					[
 						2,
@@ -878,5 +873,21 @@ class Hooks {
 		);
 
 		return true;
+	}
+
+	/**
+	 * Get the user page(User:Example or Special:Contributions/127.0.0.1) for the given User object.
+	 *
+	 * @param User $agent The User
+	 *
+	 * @return Title MediaWiki Title of the desired user page.
+	 */
+	private function getAgentPage(User $agent): Title {
+		if (!$agent->getId()) {
+			$agentPage = SpecialPage::getTitleFor('Contributions', $agent->getName());
+		} else {
+			$agentPage = Title::newFromText($agent->getName(), NS_USER);
+		}
+		return $agentPage;
 	}
 }
