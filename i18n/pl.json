@@ -1,14 +1,13 @@
-
 {
 	"@metadata": {
 		"authors": [
 			"Rail"
 		]
 	},
-	"reverb_description": "System powiadomie dla MediaWiki i usługi powiadomień Reverb",
+	"reverb_description": "System powiadomień dla MediaWiki i usługi powiadomień Reverb",
 	"apihelp-notifications-example": "Get the first page of notifications available.  Pages are singular and should not be multiplied by the number of items per page.",
 	"apihelp-notifications-summary": "Retrieve notifications for the current user.",
-	"long-header-user-interest-talk-page-edit": "[$1 $2] {{GENDER:$2|zostawił|zostawiła|zostawił(a)}} wiadomość na [$3 {{GENDER:$4|twojej}} stronie dyskusji].",
+	"long-header-user-interest-talk-page-edit": "[$1 $2] {{GENDER:$2|zostawił|zostawiła|zostawił(a)}} wiadomość na [$3 {{GENDER:$4|Twojej}} stronie dyskusji].",
 	"short-header-user-interest-talk-page-edit": "[$1 $2] {{GENDER:$2|zostawił|zostawiła|zostawił(a)}} [$3 {{GENDER:$4|ci}} wiadomość.]",
 	"long-header-article-edit-page-linked": "[$5 $6] {{GENDER:$6|dodał|dodała|dodał(a)}} link [$3 $1] do [$4 $2].",
 	"short-header-article-edit-page-linked": "[$5 $6] {{GENDER:$6|dodał|dodała|dodał(a)}} link [$3 $1] do [$4 $2].",
@@ -16,8 +15,8 @@
 	"long-header-user-account-groups-changed": "{{GENDER:$1|Twoje}} uprawnienia zostały {{GENDER:$1|zmienione}}.",
 	"user-note-user-account-groups-changed-added": "Dodano cię do: $1",
 	"user-note-user-account-groups-changed-removed": "Nie należysz już do: $1",
-	"short-header-user-account-groups-expiration-change": "Czas wygaśnięcia {{GENDER:$1|twojej}} przynaleźności do {{PLURAL:$2|następującej grupy|następujących grup}} został {{GENDER:$1|zmieniony}}: $2.",
-	"long-header-user-account-groups-expiration-change": "Czas wygaśnięcia {{GENDER:$1|twojej}} przynaleźności do {{PLURAL:$2|następującej grupy|następujących grup}} został {{GENDER:$1|zmieniony}}: $2.",
+	"short-header-user-account-groups-expiration-change": "Czas wygaśnięcia {{GENDER:$1|twojej}} przynależności do {{PLURAL:$2|następującej grupy|następujących grup}} został {{GENDER:$1|zmieniony}}: $2.",
+	"long-header-user-account-groups-expiration-change": "Czas wygaśnięcia {{GENDER:$1|twojej}} przynależności do {{PLURAL:$2|następującej grupy|następujących grup}} został {{GENDER:$1|zmieniony}}: $2.",
 	"short-header-user-interest-welcome": "{{GENDER:$2|Witaj}} na {{grammar:MS.lp|{{SITENAME}}}}, $1!",
 	"long-header-user-interest-welcome": "{{GENDER:$2|Witaj}} na {{grammar:MS.lp|{{SITENAME}}}}, $1! Cieszymy się że tu jesteś.",
 	"special-button-all": "Wszystkie ($1)",
@@ -66,12 +65,12 @@
 	"reverb-pref-title-article-edit-page-linked": "Link do obserwowanej strony",
 	"reverb-pref-title-user-interest-talk-page-edit": "Edycje strony dyskusji",
 	"reverb-pref-title-user-interest-welcome": "Wiadomości powitalne",
-	"reverb-pref-tooltip-article-edit-revert": "Zawsze gdy edycja użytklownika jest wycofywana lub rewertowana.",
+	"reverb-pref-tooltip-article-edit-revert": "Zawsze gdy edycja użytkownika jest wycofywana lub rewertowana.",
 	"reverb-pref-tooltip-article-edit-thanks": "Okazjonalna wiadomość gratulująca osiągnięcia wykładniczego poziomu w edycjach. [1, 10, 100, 1000, 10000, 100000, 1000000]",
 	"reverb-pref-tooltip-user-account-groups-changed": "Grupy, do których należy użytkownik zostały zmienione.",
 	"reverb-pref-tooltip-user-account-groups-expiration-change": "Czas wygaśnięcia tymczasowej przynależności użytkownika do grup został zmieniony lub usunięty.",
 	"reverb-pref-tooltip-article-edit-page-linked": "Link do artykułu obserwowanego przez użytkownika został dodany do innego artykułu.",
-	"reverb-pref-tooltip-user-interest-talk-page-edit": "Osobista strona dyskusji użytkownika została zaedytowana.",
+	"reverb-pref-tooltip-user-interest-talk-page-edit": "Osobista strona dyskusji użytkownika została poddana edycji.",
 	"reverb-pref-tooltip-user-interest-welcome": "Powitanie użytkownika na wiki.",
 	"apihelp-notifications-getNotificationsForUser-example": "Get all notifications for the logged in user limited by the current page number and number of items per page.",
 	"apihelp-notifications-dismissNotification-example": "Make a POST request with the <strong>notification ID</strong> and the Unix Epoch formatted timestamp of the <strong>dismissed</strong> time.  Set <strong>dismissedAt</strong> to zero to mark a notification as unread.  Logged in users can only dismiss their own notifications.",
