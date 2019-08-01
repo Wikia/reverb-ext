@@ -743,7 +743,7 @@ class Hooks {
 						],
 						[
 							5,
-							$title->getFullURL(
+							$reviewForm->getPage()->getFullURL(
 								[
 									'type' => 'revision',
 									'oldid' => $oldRev->getId(),
