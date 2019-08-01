@@ -97,6 +97,31 @@ class NotificationBroadcast {
 	}
 
 	/**
+	 * Get a new instance for a broadcast to a single target for the system user.
+	 *
+	 * @param string     $type    Notification Type
+	 * @param User|null  $agent   User that triggered the creation of the notification or null to indicate the system user.
+	 * @param User|array $targets User or Users that the notification is targeting.
+	 * @param array      $meta    Meta data attributes such as 'url' and 'message' parameters for building language strings.
+	 *
+	 * @return self|null
+	 */
+	public static function new(
+		string $type,
+		?User $agent,
+		$targets,
+		array $meta
+	): ?self {
+		if ($targets instanceof User) {
+			$targets = [$targets];
+		}
+		if ($agent === null) {
+			return self::newSystemMulti($type, $targets, $meta);
+		}
+		return self::newMulti($type, $agent, $targets, $meta);
+	}
+
+	/**
 	 * Get a new instance for a broadcast to a single target.
 	 *
 	 * @param string $type   Notification Type
@@ -104,7 +129,7 @@ class NotificationBroadcast {
 	 * @param User   $target User that the notification is targeting.
 	 * @param array  $meta   Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
-	 * @return null
+	 * @return self|null
 	 */
 	public static function newSingle(
 		string $type,
@@ -120,10 +145,10 @@ class NotificationBroadcast {
 	 *
 	 * @param string $type    Notification Type
 	 * @param User   $agent   User that triggered the creation of the notification.
-	 * @param array  $targets User that the notification is targeting.
+	 * @param array  $targets Users that the notification is targeting.
 	 * @param array  $meta    Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
-	 * @return null
+	 * @return self|null
 	 */
 	public static function newMulti(
 		string $type,
@@ -168,7 +193,7 @@ class NotificationBroadcast {
 	 * @param User   $target User that the notification is targeting.
 	 * @param array  $meta   Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
-	 * @return null
+	 * @return self|null
 	 */
 	public static function newSystemSingle(
 		string $type,
@@ -185,7 +210,7 @@ class NotificationBroadcast {
 	 * @param array  $targets User that the notification is targeting.
 	 * @param array  $meta    Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
-	 * @return null
+	 * @return self|null
 	 */
 	public static function newSystemMulti(
 		string $type,

@@ -103,12 +103,15 @@ class Hooks {
 				// If this is a minor edit, only notify if the agent doesn't have talk page
 				// minor edit notification blocked.
 				if (!$revision->isMinor() || !$agent->isAllowed('nominornewtalk')) {
-					// @TODO: Fix user note.
-					$agentPage = Title::newFromText($agent->getName(), NS_USER);
 					$notifyUserTalk = Title::newFromText($notifyUser->getName(), NS_USER_TALK);
-					$broadcast = NotificationBroadcast::newSingle(
+					if (!$agent->getId()) {
+						$agentPage = SpecialPage::getTitleFor('Contributions', $agent->getName());
+					} else {
+						$agentPage = Title::newFromText($agent->getName(), NS_USER);
+					}
+					$broadcast = NotificationBroadcast::new(
 						'user-interest-talk-page-edit',
-						$agent,
+						($agent->getId() ? $agent : null),
 						$notifyUser,
 						[
 							'url' => $title->getFullURL(),
@@ -149,10 +152,9 @@ class Hooks {
 			if ($undidRevision && $undidRevision->getTitle()->equals($title)) {
 				$notifyUser = $undidRevision->getRevisionRecord()->getUser();
 				if ($notifyUser && $notifyUser->getId() && !$notifyUser->equals($agent)) {
-					// @TODO: Fix user note and count reverted revisions.
-					$broadcast = NotificationBroadcast::newSingle(
+					$broadcast = NotificationBroadcast::new(
 						'article-edit-revert',
-						$agent,
+						($agent->getId() ? $agent : null),
 						$notifyUser,
 						[
 							'url' => $title->getFullURL(),
