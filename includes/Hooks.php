@@ -550,6 +550,10 @@ class Hooks {
 	 * @return boolean True
 	 */
 	public static function onBeforePageDisplay(OutputPage &$output, SkinTemplate &$skin) {
+		if ($output->getUser()->isAnon()) {
+			return true;
+		}
+
 		$output->addModuleStyles('ext.reverb.notifications.styles');
 		$output->addModules('ext.reverb.notifications.scripts');
 		return true;
