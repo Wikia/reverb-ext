@@ -782,13 +782,17 @@ class Hooks {
 	 * @param Title             $title             The title of the edited page.
 	 * @param EmailNotification $emailNotification Useless, everything is protected with no getters.
 	 *
-	 * @return boolean False
+	 * @return boolean Continue with default email handling
 	 */
 	public static function onSendWatchlistEmailNotification(
 		User $watchingUser,
 		Title $title,
 		EmailNotification $emailNotification
 	): bool {
+		if (!self::shouldHandleWatchlist()) {
+			return true;
+		}
+
 		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 
 		$cacheKey = $cache->makeKey(
@@ -860,9 +864,13 @@ class Hooks {
 	 * @param Title        $title        The title of the edited page.
 	 * @param RecentChange $recentChange Useless, everything is protected with no getters.
 	 *
-	 * @return boolean True
+	 * @return boolean Continue with email notification
 	 */
 	public static function onAbortEmailNotification(User $editor, Title $title, RecentChange $recentChange): bool {
+		if (!self::shouldHandleWatchlist()) {
+			return true;
+		}
+
 		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 
 		// We can get the revision information here to pass on, but onSendWatchlistEmailNotification can only retrieve
@@ -886,12 +894,22 @@ class Hooks {
 	 *
 	 * @return Title MediaWiki Title of the desired user page.
 	 */
-	private function getAgentPage(User $agent): Title {
+	private static function getAgentPage(User $agent): Title {
 		if (!$agent->getId()) {
 			$agentPage = SpecialPage::getTitleFor('Contributions', $agent->getName());
 		} else {
 			$agentPage = Title::newFromText($agent->getName(), NS_USER);
 		}
 		return $agentPage;
+	}
+
+	/**
+	 * Get whether watchlist handling is enabled.
+	 *
+	 * @return bool Enabled
+	 */
+	private static function shouldHandleWatchlist(): bool {
+		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
+		return $mainConfig->get('ReverbEnableWatchlistHandling');
 	}
 }
