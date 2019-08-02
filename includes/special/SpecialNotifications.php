@@ -36,6 +36,8 @@ class SpecialNotifications extends SpecialPage {
 	 * @return void [Outputs to screen]
 	 */
 	public function execute($subpage) {
+		$this->requireLogin();
+
 		$twig = TwiggyWiring::init();
 		$template = $twig->load('@Reverb/special_notifications.twig');
 
