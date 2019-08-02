@@ -72,6 +72,8 @@ class NotificationEmail {
 	 * @return bool Success
 	 */
 	public function send(): bool {
+		global $wgNoReplyAddress;
+
 		$attributes = $this->broadcast->getAttributes();
 
 		$resource = new NotificationResource();
@@ -92,7 +94,7 @@ class NotificationEmail {
 					'html' => $htmlBody
 				];
 
-				$status = $user->sendMail(strip_tags($header), $body);
+				$status = $user->sendMail(strip_tags($header), $body, null, $wgNoReplyAddress);
 				if ($status->isGood()) {
 					$success++;
 				}
