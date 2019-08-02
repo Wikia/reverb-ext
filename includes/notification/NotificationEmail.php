@@ -85,7 +85,7 @@ class NotificationEmail {
 		foreach ($targets as $user) {
 			if ($this->shouldNotify($user, $attributes['type'], 'email')) {
 				$notification->setUser($user);
-				$header = (string)$notification->getHeader(true);
+				$header = (string)$notification->getHeader();
 				$htmlBody = $this->getWrappedBody($notification, $user);
 				$body = [
 					'text' => $htmlBody,
