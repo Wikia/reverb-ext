@@ -255,7 +255,8 @@ class HooksTest extends TestCase {
 	 * @return void
 	 */
 	public function testOnBeforePageDisplay() {
-		$this->markTestIncomplete('Update OutputPage mock to include RequestContext/User; make two tests for logged-in vs logged-out.');
+		$this->markTestIncomplete('Update OutputPage mock to include RequestContext/User; '
+			. 'make two tests for logged-in vs logged-out.');
 
 		$hooks = $this->createHooks();
 		extract($this->getMocks());
