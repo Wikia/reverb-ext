@@ -117,7 +117,7 @@ class Hooks {
 								],
 								[
 									1,
-									self::getAgentPage($agent->getName())->getFullURL()
+									self::getAgentPage($agent)->getFullURL()
 								],
 								[
 									2,
@@ -449,7 +449,7 @@ class Hooks {
 							],
 							[
 								5,
-								self::getAgentPage($agent->getName())->getFullURL()
+								self::getAgentPage($agent)->getFullURL()
 							],
 							[
 								6,
@@ -828,7 +828,7 @@ class Hooks {
 					],
 					[
 						1,
-						self::getAgentPage($agent->getName())->getFullURL()
+						self::getAgentPage($agent)->getFullURL()
 					],
 					[
 						2,
