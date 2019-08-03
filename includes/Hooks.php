@@ -624,9 +624,11 @@ class Hooks {
 	 * @return boolean True in all cases.
 	 */
 	public static function onGetPreferences($user, &$preferences): bool {
-		// Remove these preferences since they are handled by Reverb.
-		$remove = ['enotifusertalkpages' => false, 'enotifwatchlistpages' => false];
-		$preferences = array_diff_key($preferences, $remove);
+		if (self::shouldHandleWatchlist()) {
+			// Remove these preferences since they are handled by Reverb.
+			$remove = ['enotifusertalkpages' => false, 'enotifwatchlistpages' => false];
+			$preferences = array_diff_key($preferences, $remove);
+		}
 
 		$preferences['reverb-email-frequency'] = [
 			'type' => 'radio',
