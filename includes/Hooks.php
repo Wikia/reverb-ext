@@ -825,7 +825,7 @@ class Hooks {
 		$redis = RedisCache::getClient('cache');
 
 		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullText());
-		$metas = (array) $redis->sMembers($cacheKey);
+		$metas = (array)$redis->sMembers($cacheKey);
 
 		// If the cache is bad or something else goes wrong let MediaWiki handle it.
 		foreach ($metas as $meta) {
