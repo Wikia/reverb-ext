@@ -700,24 +700,9 @@ class Hooks {
 		bool &$result,
 		array $oldUserOptions
 	): bool {
-		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
-		$wgDefaultUserOptions = $mainConfig->get('DefaultUserOptions');
-
-		$emailTalkPageEditKey = self::getPreferenceKey('user-interest-talk-page-edit', 'email');
-		if (isset($formData[$emailTalkPageEditKey])) {
-			$user->setOption('enotifusertalkpages', $formData[$emailTalkPageEditKey]);
-		} else {
-			$user->setOption('enotifusertalkpages', $wgDefaultUserOptions[$emailTalkPageEditKey]);
-		}
-
-		if (self::shouldHandleWatchlist()) {
-			$emailEditWatchKey = self::getPreferenceKey('article-edit-watch', 'email');
-			if (isset($formData[$emailEditWatchKey])) {
-				$user->setOption('enotifwatchlistpages', $formData[$emailEditWatchKey]);
-			} else {
-				$user->setOption('enotifwatchlistpages', $wgDefaultUserOptions[$emailEditWatchKey]);
-			}
-		}
+		// These need to be set to true to get to certain code paths that trigger code paths in Reverb.
+		$user->setOption('enotifusertalkpages', true);
+		$user->setOption('enotifwatchlistpages', true);
 
 		return true;
 	}
@@ -840,70 +825,73 @@ class Hooks {
 		$redis = RedisCache::getClient('cache');
 
 		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullText());
-		$meta = $redis->get($cacheKey);
+		$metas = (array) $redis->sMembers($cacheKey);
 
 		// If the cache is bad or something else goes wrong let MediaWiki handle it.
-		if (is_string($meta)) {
-			$meta = json_decode((string)$meta, true);
-			if (empty($meta)) {
-				return true;
+		foreach ($metas as $meta) {
+			if (is_string($meta)) {
+				$meta = json_decode((string)$meta, true);
+				if (empty($meta)) {
+					continue;
+				}
+			} else {
+					continue;
 			}
-		} else {
-			return true;
-		}
 
-		// The getPerformer() function that generates this name does not validate to allow IP addresses through.
-		$agent = User::newFromName($meta['name']);
-		if (!$agent) {
-			$agent = null;
-			$name = $meta['name'];
-		} else {
-			$name = $agent->getName();
-		}
+			// The getPerformer() function that generates this name does not validate to allow IP addresses through.
+			$agent = User::newFromName($meta['name']);
+			if (!$agent) {
+				$agent = null;
+				$name = $meta['name'];
+			} else {
+				$name = $agent->getName();
+			}
 
-		$broadcast = NotificationBroadcast::new(
-			'article-edit-watch',
-			$agent,
-			$watchingUser,
-			[
-				'url' => SpecialPage::getTitleFor('Watchlist')->getFullUrl(),
-				'message' => [
-					[
-						'user_note',
-						''
-					],
-					[
-						1,
-						self::getAgentPage($agent)->getFullURL()
-					],
-					[
-						2,
-						$name
-					],
-					[
-						3,
-						$title->getFullUrl()
-					],
-					[
-						4,
-						$title->getFullText()
-					],
-					[
-						5,
-						$title->getFullUrl(
-							[
-								'type' => 'revision',
-								'oldid' => $meta['prev_oldid'],
-								'diff' => $meta['next_oldid']
-							]
-						)
+			$broadcast = NotificationBroadcast::new(
+				'article-edit-watch',
+				$agent,
+				$watchingUser,
+				[
+					'url' => SpecialPage::getTitleFor('Watchlist')->getFullUrl(),
+					'message' => [
+						[
+							'user_note',
+							''
+						],
+						[
+							1,
+							self::getAgentPage($agent)->getFullURL()
+						],
+						[
+							2,
+							$name
+						],
+						[
+							3,
+							$title->getFullUrl()
+						],
+						[
+							4,
+							$title->getFullText()
+						],
+						[
+							5,
+							$title->getFullUrl(
+								[
+									'type' => 'revision',
+									'oldid' => $meta['prev_oldid'],
+									'diff' => $meta['next_oldid']
+								]
+							)
+						]
 					]
 				]
-			]
-		);
-		if ($broadcast) {
-			$broadcast->transmit();
+			);
+			if ($broadcast) {
+				$broadcast->transmit();
+			}
 		}
+
 		$redis->del($cacheKey);
 
 		return false;
@@ -928,9 +916,9 @@ class Hooks {
 		// rc_last_oldid - ID of the old revision.
 		// rc_this_oldid - ID of the new revision.
 		$redis = RedisCache::getClient('cache');
-		$redis->setEx(
-			'ReverbWatchlist:edited:' . md5($title->getFullText()),
-			86400,
+		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullText());
+		$redis->sAdd(
+			$cacheKey,
 			json_encode(
 				[
 					'name' => $editor->getName(),
@@ -939,6 +927,7 @@ class Hooks {
 				]
 			)
 		);
+		$redis->expire($cacheKey, 86400);
 
 		return true;
 	}
