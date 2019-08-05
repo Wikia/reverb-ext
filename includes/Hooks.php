@@ -19,6 +19,7 @@ use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
+use PreferencesForm;
 use RecentChange;
 use RedisCache;
 use Reverb\Notification\NotificationBroadcast;
@@ -678,6 +679,21 @@ class Hooks {
 				$preferences[$index]['section'] = 'reverb/reverb-email-options';
 			}
 		}
+		return true;
+	}
+
+	/**
+	 * Function Documentation
+	 *
+	 * @param array           $formData       An associative array containing the data from the preferences form.
+	 * @param PreferencesForm $form           The PreferencesForm object that represents the preferences form.
+	 * @param User            $user           The User object that can be used to change the user's preferences.
+	 * @param boolean         &$result        The boolean return value of the Preferences::tryFormSubmit method.
+	 * @param array           $oldUserOptions An associative array containing the old user options (before save).
+	 *
+	 * @return boolean True
+	 */
+	public function onPreferencesFormPreSave(array $formData, PreferencesForm $form, User $user, bool &$result, array $oldUserOptions): bool {
 		return true;
 	}
 
