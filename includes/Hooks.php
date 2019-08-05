@@ -852,9 +852,8 @@ class Hooks {
 						$title->getFullUrl(
 							[
 								'type' => 'revision',
-								'oldid' => $meta['oldid'],
-								'diff' => $meta['oldid'],
-								'curid' => $meta['curid']
+								'oldid' => $meta['prev_oldid'],
+								'diff' => $meta['next_oldid']
 							]
 						)
 					]
@@ -885,6 +884,8 @@ class Hooks {
 
 		// We can get the revision information here to pass on, but onSendWatchlistEmailNotification can only retrieve
 		// the agent user name.  In the future we could bundle all of the users and display a 'X users edited...'.
+		// rc_last_oldid - ID of the old revision.
+		// rc_this_oldid - ID of the new revision.
 		$redis = RedisCache::getClient('cache');
 		$redis->setEx(
 			'ReverbWatchlist:edited:' . md5($title->getFullText()),
@@ -892,8 +893,8 @@ class Hooks {
 			json_encode(
 				[
 					'name' => $editor->getName(),
-					'oldid' => $recentChange->mAttribs['rc_this_oldid'],
-					'curid' => $recentChange->mAttribs['rc_cur_id']
+					'prev_oldid' => $recentChange->mAttribs['rc_last_oldid'],
+					'next_oldid' => $recentChange->mAttribs['rc_this_oldid']
 				]
 			)
 		);
