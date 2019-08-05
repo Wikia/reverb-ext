@@ -291,6 +291,13 @@
 		});
 	}
 
+	// Mark notification as read if we click a link in the notification.
+	$(document).on('click', ".reverb-npnr-header > a, .reverb-npnr-body > a", function(e){
+		var id = $(this).parent().data('id');
+		markRead(id);
+	});
+
+	// Mark notifications as read when you click the notification indicator. 
 	$(document).on('click', ".reverb-npnr-hitbox", function(){
 		var nId = $(this).closest(".reverb-npn-row").data("id");
 		var button = $(this).find('.reverb-npnrc')[0];
@@ -299,7 +306,7 @@
 		} else {
 			markRead(nId,true);
 		}
-	})
+	});
 
 	/***
 	 *    ███████╗██████╗ ███████╗ ██████╗██╗ █████╗ ██╗         ██████╗  █████╗  ██████╗ ███████╗
@@ -493,9 +500,9 @@
 		+ '        <i class="fa '+d.icon+' fa-lg reverb-icon"></i>'
 		+ '    </div>'
 		+ '    <div class="reverb-npnr-right">'
-		+ '        <div class="reverb-npnr-header">'+d.header+'</div>';
+		+ '        <div class="reverb-npnr-header" data-id="'+d.id+'">'+d.header+'</div>';
 		if (d.body && d.body.length) {
-		   html += '<div class="reverb-npnr-body">'+d.body+'</div>'
+		   html += '<div class="reverb-npnr-body" data-id="'+d.id+'">'+d.body+'</div>'
 		}
 		html += '      <div class="reverb-npnr-bottom">'
 		+ '            <span class="reverb-npnr-hitbox"><span class="reverb-npnr-'+d.read+' reverb-npnrc" data-id="'+d.id+'"></span></span>'
