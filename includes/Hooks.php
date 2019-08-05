@@ -117,7 +117,7 @@ class Hooks {
 								],
 								[
 									1,
-									self::getAgentPage($agent->getName())->getFullURL()
+									self::getAgentPage($agent)->getFullURL()
 								],
 								[
 									2,
@@ -449,7 +449,7 @@ class Hooks {
 							],
 							[
 								5,
-								self::getAgentPage($agent->getName())->getFullURL()
+								self::getAgentPage($agent)->getFullURL()
 							],
 							[
 								6,
@@ -550,6 +550,10 @@ class Hooks {
 	 * @return boolean True
 	 */
 	public static function onBeforePageDisplay(OutputPage &$output, SkinTemplate &$skin) {
+		if ($output->getUser()->isAnon()) {
+			return true;
+		}
+
 		$output->addModuleStyles('ext.reverb.notifications.styles');
 		$output->addModules('ext.reverb.notifications.scripts');
 		return true;
@@ -620,9 +624,11 @@ class Hooks {
 	 * @return boolean True in all cases.
 	 */
 	public static function onGetPreferences($user, &$preferences): bool {
-		// Remove these preferences since they are handled by Reverb.
-		$remove = ['enotifusertalkpages' => false, 'enotifwatchlistpages' => false];
-		$preferences = array_diff_key($preferences, $remove);
+		if (self::shouldHandleWatchlist()) {
+			// Remove these preferences since they are handled by Reverb.
+			$remove = ['enotifusertalkpages' => false, 'enotifwatchlistpages' => false];
+			$preferences = array_diff_key($preferences, $remove);
+		}
 
 		$preferences['reverb-email-frequency'] = [
 			'type' => 'radio',
@@ -778,13 +784,17 @@ class Hooks {
 	 * @param Title             $title             The title of the edited page.
 	 * @param EmailNotification $emailNotification Useless, everything is protected with no getters.
 	 *
-	 * @return boolean False
+	 * @return boolean Continue with default email handling
 	 */
 	public static function onSendWatchlistEmailNotification(
 		User $watchingUser,
 		Title $title,
 		EmailNotification $emailNotification
 	): bool {
+		if (!self::shouldHandleWatchlist()) {
+			return true;
+		}
+
 		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 
 		$cacheKey = $cache->makeKey(
@@ -824,7 +834,7 @@ class Hooks {
 					],
 					[
 						1,
-						self::getAgentPage($name)->getFullURL()
+						self::getAgentPage($agent)->getFullURL()
 					],
 					[
 						2,
@@ -867,9 +877,13 @@ class Hooks {
 	 * @param Title        $title        The title of the edited page.
 	 * @param RecentChange $recentChange Useless, everything is protected with no getters.
 	 *
-	 * @return boolean True
+	 * @return boolean Continue with email notification
 	 */
 	public static function onAbortEmailNotification(User $editor, Title $title, RecentChange $recentChange): bool {
+		if (!self::shouldHandleWatchlist()) {
+			return true;
+		}
+
 		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 
 		// We can get the revision information here to pass on, but onSendWatchlistEmailNotification can only retrieve
@@ -899,12 +913,22 @@ class Hooks {
 	 *
 	 * @return Title MediaWiki Title of the desired user page.
 	 */
-	private function getAgentPage(User $agent): Title {
+	private static function getAgentPage(User $agent): Title {
 		if (!$agent->getId()) {
 			$agentPage = SpecialPage::getTitleFor('Contributions', $agent->getName());
 		} else {
 			$agentPage = Title::newFromText($agent->getName(), NS_USER);
 		}
 		return $agentPage;
+	}
+
+	/**
+	 * Get whether watchlist handling is enabled.
+	 *
+	 * @return bool Enabled
+	 */
+	private static function shouldHandleWatchlist(): bool {
+		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
+		return $mainConfig->get('ReverbEnableWatchlistHandling');
 	}
 }

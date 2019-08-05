@@ -16,6 +16,7 @@ use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use MediaWiki\MediaWikiServices;
 use Reverb\Traits\NotificationListTrait;
 use Reverb\TwiggyWiring;
+use MailAddress;
 use SpecialPage;
 use User;
 
@@ -72,6 +73,8 @@ class NotificationEmail {
 	 * @return bool Success
 	 */
 	public function send(): bool {
+		global $wgNoReplyAddress;
+
 		$attributes = $this->broadcast->getAttributes();
 
 		$resource = new NotificationResource();
@@ -85,14 +88,14 @@ class NotificationEmail {
 		foreach ($targets as $user) {
 			if ($this->shouldNotify($user, $attributes['type'], 'email')) {
 				$notification->setUser($user);
-				$header = (string)$notification->getHeader(true);
+				$header = (string)$notification->getHeader();
 				$htmlBody = $this->getWrappedBody($notification, $user);
 				$body = [
 					'text' => $htmlBody,
 					'html' => $htmlBody
 				];
 
-				$status = $user->sendMail(strip_tags($header), $body);
+				$status = $user->sendMail(strip_tags($header), $body, null, new MailAddress($wgNoReplyAddress));
 				if ($status->isGood()) {
 					$success++;
 				}
