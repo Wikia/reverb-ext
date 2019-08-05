@@ -20,6 +20,7 @@ use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
 use RecentChange;
+use RedisCache;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Traits\NotificationListTrait;
 use Revision;
@@ -795,15 +796,12 @@ class Hooks {
 			return true;
 		}
 
-		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+		$redis = RedisCache::getClient('cache');
 
-		$cacheKey = $cache->makeKey(
-			'ReverbWatchlist',
-			'edited:' . md5($title->getFullText())
-		);
+		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullText());
+		$meta = $redis->get($cacheKey);
 
 		// If the cache is bad or something else goes wrong let MediaWiki handle it.
-		$meta = $cache->get($cacheKey);
 		if (is_string($meta)) {
 			$meta = json_decode((string)$meta, true);
 			if (empty($meta)) {
@@ -866,7 +864,7 @@ class Hooks {
 		if ($broadcast) {
 			$broadcast->transmit();
 		}
-		$cache->delete($cacheKey);
+		$redis->del($cacheKey);
 
 		return false;
 	}
@@ -885,23 +883,19 @@ class Hooks {
 			return true;
 		}
 
-		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
-
 		// We can get the revision information here to pass on, but onSendWatchlistEmailNotification can only retrieve
 		// the agent user name.  In the future we could bundle all of the users and display a 'X users edited...'.
-		$cache->set(
-			$cache->makeKey(
-				'ReverbWatchlist',
-				'edited:' . md5($title->getFullText())
-			),
+		$redis = RedisCache::getClient('cache');
+		$redis->setEx(
+			'ReverbWatchlist:edited:' . md5($title->getFullText()),
+			86400,
 			json_encode(
 				[
 					'name' => $editor->getName(),
 					'oldid' => $recentChange->mAttribs['rc_this_oldid'],
 					'curid' => $recentChange->mAttribs['rc_cur_id']
 				]
-			),
-			time() + 86400
+			)
 		);
 
 		return true;
