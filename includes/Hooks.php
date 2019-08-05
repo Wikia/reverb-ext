@@ -802,14 +802,15 @@ class Hooks {
 			'edited:' . md5($title->getFullText())
 		);
 
+		// If the cache is bad or something else goes wrong let MediaWiki handle it.
 		$meta = $cache->get($cacheKey);
 		if (is_string($meta)) {
 			$meta = json_decode((string)$meta, true);
 			if (empty($meta)) {
-				return false;
+				return true;
 			}
 		} else {
-			return false;
+			return true;
 		}
 
 		// The getPerformer() function that generates this name does not validate to allow IP addresses through.

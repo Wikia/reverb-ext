@@ -173,7 +173,7 @@
 			"merge_strategy": "array_plus_2d"
 		},
 		"ReverbEnableWatchlistHandling": {
-			"value": false
+			"value": true
 		},
 		"ReverbIcons": {
 			"value": {
