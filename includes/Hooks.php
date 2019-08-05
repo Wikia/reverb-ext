@@ -683,17 +683,42 @@ class Hooks {
 	}
 
 	/**
-	 * Function Documentation
+	 * Handle ghosting the configuration of stock MediaWiki preferences that have been hidden.
 	 *
 	 * @param array           $formData       An associative array containing the data from the preferences form.
 	 * @param PreferencesForm $form           The PreferencesForm object that represents the preferences form.
 	 * @param User            $user           The User object that can be used to change the user's preferences.
-	 * @param boolean         &$result        The boolean return value of the Preferences::tryFormSubmit method.
+	 * @param boolean         $result         The boolean return value of the Preferences::tryFormSubmit method.
 	 * @param array           $oldUserOptions An associative array containing the old user options (before save).
 	 *
 	 * @return boolean True
 	 */
-	public function onPreferencesFormPreSave(array $formData, PreferencesForm $form, User $user, bool &$result, array $oldUserOptions): bool {
+	public static function onPreferencesFormPreSave(
+		array $formData,
+		PreferencesForm $form,
+		User $user,
+		bool &$result,
+		array $oldUserOptions
+	): bool {
+		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
+		$wgDefaultUserOptions = $mainConfig->get('DefaultUserOptions');
+
+		$emailTalkPageEditKey = self::getPreferenceKey('user-interest-talk-page-edit', 'email');
+		if (isset($formData[$emailTalkPageEditKey])) {
+			$user->setOption('enotifusertalkpages', $formData[$emailTalkPageEditKey]);
+		} else {
+			$user->setOption('enotifusertalkpages', $wgDefaultUserOptions[$emailTalkPageEditKey]);
+		}
+
+		if (self::shouldHandleWatchlist()) {
+			$emailEditWatchKey = self::getPreferenceKey('article-edit-watch', 'email');
+			if (isset($formData[$emailEditWatchKey])) {
+				$user->setOption('enotifwatchlistpages', $formData[$emailEditWatchKey]);
+			} else {
+				$user->setOption('enotifwatchlistpages', $wgDefaultUserOptions[$emailEditWatchKey]);
+			}
+		}
+
 		return true;
 	}
 
