@@ -848,12 +848,6 @@ class Hooks {
 
 			// The getPerformer() function that generates this name does not validate to allow IP addresses through.
 			$agent = User::newFromName($meta['name'], false);
-			if (!$agent) {
-				$agent = null;
-				$name = $meta['name'];
-			} else {
-				$name = $agent->getName();
-			}
 
 			$broadcast = NotificationBroadcast::new(
 				'article-edit-watch',
@@ -872,7 +866,7 @@ class Hooks {
 						],
 						[
 							2,
-							$name
+							$agent->getName()
 						],
 						[
 							3,
