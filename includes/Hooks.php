@@ -19,7 +19,9 @@ use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use OutputPage;
+use PreferencesForm;
 use RecentChange;
+use RedisCache;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Traits\NotificationListTrait;
 use Revision;
@@ -41,11 +43,17 @@ class Hooks {
 	 * @return void
 	 */
 	public static function registerExtension() {
-		global $wgDefaultUserOptions, $wgReverbNotifications;
+		global $wgDefaultUserOptions, $wgReverbNotifications, $wgHiddenPrefs;
+
 		foreach ($wgReverbNotifications as $notification => $notificationData) {
 			[$email, $web] = self::getDefaultPreference($notificationData);
 			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'email')] = $email;
 			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'web')] = $web;
+		}
+
+		if (self::shouldHandleWatchlist()) {
+			$wgHiddenPrefs[] = 'enotifusertalkpages';
+			$wgHiddenPrefs[] = 'enotifwatchlistpages';
 		}
 	}
 
@@ -681,6 +689,33 @@ class Hooks {
 	}
 
 	/**
+	 * Handle ghosting the configuration of stock MediaWiki preferences that have been hidden.
+	 *
+	 * @param array           $formData       An associative array containing the data from the preferences form.
+	 * @param PreferencesForm $form           The PreferencesForm object that represents the preferences form.
+	 * @param User            $user           The User object that can be used to change the user's preferences.
+	 * @param boolean         $result         The boolean return value of the Preferences::tryFormSubmit method.
+	 * @param array           $oldUserOptions An associative array containing the old user options (before save).
+	 *
+	 * @return boolean True
+	 */
+	public static function onPreferencesFormPreSave(
+		array $formData,
+		PreferencesForm $form,
+		User $user,
+		bool &$result,
+		array $oldUserOptions
+	): bool {
+		if (self::shouldHandleWatchlist()) {
+			// These need to be set to true to get to certain code paths that trigger code paths in Reverb.
+			$user->setOption('enotifusertalkpages', true);
+			$user->setOption('enotifwatchlistpages', true);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Handle when FlaggedRevs reverts an edit.
 	 *
 	 * @param RevisionReviewForm $reviewForm The FlaggedRevs review form class.
@@ -795,66 +830,77 @@ class Hooks {
 			return true;
 		}
 
-		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+		$redis = RedisCache::getClient('cache');
 
-		$cacheKey = $cache->makeKey(
-			'ReverbWatchlist',
-			'edited:' . md5($title->getFullText())
-		);
+		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullText());
+		$metas = (array)$redis->sMembers($cacheKey);
 
-		$meta = $cache->get($cacheKey);
-		if (is_string($meta)) {
-			$meta = json_decode((string)$meta, true);
-			if (empty($meta)) {
-				return false;
+		// If the cache is bad or something else goes wrong let MediaWiki handle it.
+		foreach ($metas as $meta) {
+			if (is_string($meta)) {
+				$meta = json_decode((string)$meta, true);
+				if (empty($meta)) {
+					continue;
+				}
+			} else {
+					continue;
 			}
-		} else {
-			return false;
-		}
 
-		$agent = User::newFromName($meta['name']);
-		if (!$agent) {
-			return false;
-		}
+			// The getPerformer() function that generates this name does not validate to allow IP addresses through.
+			$agent = User::newFromName($meta['name']);
+			if (!$agent) {
+				$agent = null;
+				$name = $meta['name'];
+			} else {
+				$name = $agent->getName();
+			}
 
-		$broadcast = NotificationBroadcast::new(
-			'article-edit-watch',
-			$agent,
-			$watchingUser,
-			[
-				'url' => SpecialPage::getTitleFor('Watchlist')->getFullUrl(),
-				'message' => [
-					[
-						'user_note',
-						''
-					],
-					[
-						1,
-						self::getAgentPage($agent)->getFullURL()
-					],
-					[
-						2,
-						$agent->getName()
-					],
-					[
-						3,
-						$title->getFullUrl()
-					],
-					[
-						4,
-						$title->getFullText()
-					],
-					[
-						5,
-						$title->getFullUrl(['oldid' => $meta['oldid']])
+			$broadcast = NotificationBroadcast::new(
+				'article-edit-watch',
+				$agent,
+				$watchingUser,
+				[
+					'url' => SpecialPage::getTitleFor('Watchlist')->getFullUrl(),
+					'message' => [
+						[
+							'user_note',
+							''
+						],
+						[
+							1,
+							self::getAgentPage($agent)->getFullURL()
+						],
+						[
+							2,
+							$name
+						],
+						[
+							3,
+							$title->getFullUrl()
+						],
+						[
+							4,
+							$title->getFullText()
+						],
+						[
+							5,
+							$title->getFullUrl(
+								[
+									'type' => 'revision',
+									'oldid' => $meta['prev_oldid'],
+									'diff' => $meta['next_oldid']
+								]
+							)
+						]
 					]
 				]
-			]
-		);
-		if ($broadcast) {
-			$broadcast->transmit();
+			);
+			if ($broadcast) {
+				$broadcast->transmit();
+			}
 		}
-		$cache->delete($cacheKey);
+
+		$redis->del($cacheKey);
 
 		return false;
 	}
@@ -873,18 +919,23 @@ class Hooks {
 			return true;
 		}
 
-		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
-
 		// We can get the revision information here to pass on, but onSendWatchlistEmailNotification can only retrieve
 		// the agent user name.  In the future we could bundle all of the users and display a 'X users edited...'.
-		$cache->set(
-			$cache->makeKey(
-				'ReverbWatchlist',
-				'edited:' . md5($title->getFullText())
-			),
-			json_encode(['name' => $editor->getName(), 'oldid' => $recentChange->mAttribs['rc_this_oldid']]),
-			time() + 86400
+		// rc_last_oldid - ID of the old revision.
+		// rc_this_oldid - ID of the new revision.
+		$redis = RedisCache::getClient('cache');
+		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullText());
+		$redis->sAdd(
+			$cacheKey,
+			json_encode(
+				[
+					'name' => $editor->getName(),
+					'prev_oldid' => $recentChange->mAttribs['rc_last_oldid'],
+					'next_oldid' => $recentChange->mAttribs['rc_this_oldid']
+				]
+			)
 		);
+		$redis->expire($cacheKey, 86400);
 
 		return true;
 	}

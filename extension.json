@@ -9,6 +9,7 @@
 	"type": "other",
 	"requires": {
 		"extensions": {
+			"RedisCache": ">= 1.0.1",
 			"Twiggy": ">= 0.0.1"
 		},
 		"MediaWiki": ">= 1.31.0"
@@ -124,14 +125,15 @@
 		"AbortEmailNotification": "Reverb\\Hooks::onAbortEmailNotification",
 		"AbortTalkPageEmailNotification": "Reverb\\Hooks::onAbortTalkPageEmailNotification",
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
-		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
 		"BeforeInitialize": "Reverb\\Hooks::onBeforeInitialize",
+		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
 		"FlaggedRevsRevisionReviewFormAfterDoSubmit": "Reverb\\Hooks::onFlaggedRevsRevisionReviewFormAfterDoSubmit",
 		"GetNewMessagesAlert": "Reverb\\Hooks::onGetNewMessagesAlert",
 		"GetPreferences": "Reverb\\Hooks::onGetPreferences",
 		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
 		"LocalUserCreated": "Reverb\\Hooks::onLocalUserCreated",
 		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
+		"PreferencesFormPreSave": "Reverb\\Hooks::onPreferencesFormPreSave",
 		"SendWatchlistEmailNotification": "Reverb\\Hooks::onSendWatchlistEmailNotification",
 		"SpecialPageBeforeExecute": "Reverb\\Hooks::onSpecialPageBeforeExecute",
 		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged"
@@ -173,7 +175,7 @@
 			"merge_strategy": "array_plus_2d"
 		},
 		"ReverbEnableWatchlistHandling": {
-			"value": false
+			"value": true
 		},
 		"ReverbIcons": {
 			"value": {
