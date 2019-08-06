@@ -14,9 +14,9 @@ namespace Reverb\Notification;
 
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use MediaWiki\MediaWikiServices;
+use MailAddress;
 use Reverb\Traits\NotificationListTrait;
 use Reverb\TwiggyWiring;
-use MailAddress;
 use SpecialPage;
 use User;
 
@@ -95,7 +95,9 @@ class NotificationEmail {
 					'html' => $htmlBody
 				];
 
-				$status = $user->sendMail(strip_tags($header), $body, null, new MailAddress($wgNoReplyAddress));
+				$replyTo = new MailAddress($wgNoReplyAddress, wfMessage('emailsender')->inContentLanguage()->text());
+
+				$status = $user->sendMail(strip_tags($header), $body, null, $replyTo);
 				if ($status->isGood()) {
 					$success++;
 				}
