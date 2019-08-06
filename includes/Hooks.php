@@ -700,9 +700,11 @@ class Hooks {
 		bool &$result,
 		array $oldUserOptions
 	): bool {
-		// These need to be set to true to get to certain code paths that trigger code paths in Reverb.
-		$user->setOption('enotifusertalkpages', true);
-		$user->setOption('enotifwatchlistpages', true);
+		if (self::shouldHandleWatchlist()) {
+			// These need to be set to true to get to certain code paths that trigger code paths in Reverb.
+			$user->setOption('enotifusertalkpages', true);
+			$user->setOption('enotifwatchlistpages', true);
+		}
 
 		return true;
 	}
