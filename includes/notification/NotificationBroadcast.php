@@ -113,7 +113,7 @@ class NotificationBroadcast {
 		$targets,
 		array $meta
 	): ?self {
-		if (!$agent->getId()) {
+		if ($agent instanceof User && !$agent->getId()) {
 			$agent = null;
 		}
 
