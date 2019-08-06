@@ -43,11 +43,17 @@ class Hooks {
 	 * @return void
 	 */
 	public static function registerExtension() {
-		global $wgDefaultUserOptions, $wgReverbNotifications;
+		global $wgDefaultUserOptions, $wgReverbNotifications, $wgHiddenPrefs;
+
 		foreach ($wgReverbNotifications as $notification => $notificationData) {
 			[$email, $web] = self::getDefaultPreference($notificationData);
 			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'email')] = $email;
 			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'web')] = $web;
+		}
+
+		if (self::shouldHandleWatchlist()) {
+			$wgHiddenPrefs[] = 'enotifusertalkpages';
+			$wgHiddenPrefs[] = 'enotifwatchlistpages';
 		}
 	}
 
