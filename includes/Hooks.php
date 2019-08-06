@@ -847,7 +847,7 @@ class Hooks {
 			}
 
 			// The getPerformer() function that generates this name does not validate to allow IP addresses through.
-			$agent = User::newFromName($meta['name']);
+			$agent = User::newFromName($meta['name'], false);
 			if (!$agent) {
 				$agent = null;
 				$name = $meta['name'];
