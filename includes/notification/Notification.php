@@ -21,7 +21,6 @@ use Hydrawiki\Reverb\Client\V1\Resources\NotificationTarget as NotificationTarge
 use MediaWiki\MediaWikiServices;
 use Message;
 use MWException;
-use RequestContext;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
 use Reverb\Identifier\SiteIdentifier;
