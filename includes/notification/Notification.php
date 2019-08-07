@@ -21,6 +21,7 @@ use Hydrawiki\Reverb\Client\V1\Resources\NotificationTarget as NotificationTarge
 use MediaWiki\MediaWikiServices;
 use Message;
 use MWException;
+use RequestContext;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
 use Reverb\Identifier\SiteIdentifier;
@@ -137,7 +138,7 @@ class Notification {
 
 		return wfMessage(
 			($long ? 'long' : 'short') . '-header-' . $this->getType()
-		)->params($parameters)->inLanguage($this->getUser()->getOption('language'));
+		)->params($parameters);
 	}
 
 	/**

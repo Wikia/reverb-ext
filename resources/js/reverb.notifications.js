@@ -185,6 +185,12 @@
 			format:'json'
 		};
 
+		var urlParams = new URLSearchParams(document.location.search);
+
+		if (urlParams.has('uselang')) {
+			data.uselang = urlParams.get('uselang');
+		}
+
 		if (f.type) {
 			data.type = f.type;
 		}
