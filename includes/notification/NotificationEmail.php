@@ -97,7 +97,12 @@ class NotificationEmail {
 
 				$replyTo = new MailAddress($wgNoReplyAddress, wfMessage('emailsender')->inContentLanguage()->text());
 
-				$status = $user->sendMail(strip_tags($header->inLanguage($user->getOption('language'))), $body, null, $replyTo);
+				$status = $user->sendMail(
+					strip_tags($header->inLanguage($user->getOption('language'))),
+					$body,
+					null,
+					$replyTo
+				);
 				if ($status->isGood()) {
 					$success++;
 				}
