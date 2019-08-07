@@ -37,7 +37,7 @@
             "minus-x check .",
             "phpunit",
             "npm test",
-            "jsonlint ./i18n/*"
+            "jsonlint ./i18n/*.json"
         ],
         "fix": [
             "minus-x fix .",
