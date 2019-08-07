@@ -88,7 +88,7 @@ class NotificationEmail {
 		foreach ($targets as $user) {
 			if ($this->shouldNotify($user, $attributes['type'], 'email')) {
 				$notification->setUser($user);
-				$header = (string)$notification->getHeader();
+				$header = $notification->getHeader();
 				$htmlBody = $this->getWrappedBody($notification, $user);
 				$body = [
 					'text' => $htmlBody,
@@ -97,7 +97,12 @@ class NotificationEmail {
 
 				$replyTo = new MailAddress($wgNoReplyAddress, wfMessage('emailsender')->inContentLanguage()->text());
 
-				$status = $user->sendMail(strip_tags($header), $body, null, $replyTo);
+				$status = $user->sendMail(
+					strip_tags((string)$header->inLanguage($user->getOption('language'))),
+					$body,
+					null,
+					$replyTo
+				);
 				if ($status->isGood()) {
 					$success++;
 				}
@@ -130,7 +135,7 @@ class NotificationEmail {
 		$wrapped = $template->render(
 			[
 				'wgCanonicalServer' => $wgCanonicalServer,
-				'header' => (string)$notification->getHeader(true),
+				'header' => (string)$notification->getHeader(true)->inLanguage($user->getOption('language')),
 				'user_note' => $notification->getUserNote(),
 				'icon' => $notification->getNotificationIcon(),
 				'action' => $notification->getCanonicalUrl(),
