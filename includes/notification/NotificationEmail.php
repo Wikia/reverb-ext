@@ -88,7 +88,7 @@ class NotificationEmail {
 		foreach ($targets as $user) {
 			if ($this->shouldNotify($user, $attributes['type'], 'email')) {
 				$notification->setUser($user);
-				$header = (string)$notification->getHeader();
+				$header = $notification->getHeader();
 				$htmlBody = $this->getWrappedBody($notification, $user);
 				$body = [
 					'text' => $htmlBody,
@@ -98,7 +98,7 @@ class NotificationEmail {
 				$replyTo = new MailAddress($wgNoReplyAddress, wfMessage('emailsender')->inContentLanguage()->text());
 
 				$status = $user->sendMail(
-					strip_tags($header->inLanguage($user->getOption('language'))),
+					strip_tags((string)$header->inLanguage($user->getOption('language'))),
 					$body,
 					null,
 					$replyTo
