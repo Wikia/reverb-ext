@@ -137,7 +137,7 @@ class Notification {
 
 		return wfMessage(
 			($long ? 'long' : 'short') . '-header-' . $this->getType()
-		)->params($parameters)->inLanguage($this->getUser()->getOption('language'));
+		)->params($parameters);
 	}
 
 	/**
