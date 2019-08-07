@@ -97,7 +97,7 @@ class NotificationEmail {
 
 				$replyTo = new MailAddress($wgNoReplyAddress, wfMessage('emailsender')->inContentLanguage()->text());
 
-				$status = $user->sendMail(strip_tags($header), $body, null, $replyTo);
+				$status = $user->sendMail(strip_tags($header->inLanguage($user->getOption('language'))), $body, null, $replyTo);
 				if ($status->isGood()) {
 					$success++;
 				}
@@ -130,7 +130,7 @@ class NotificationEmail {
 		$wrapped = $template->render(
 			[
 				'wgCanonicalServer' => $wgCanonicalServer,
-				'header' => (string)$notification->getHeader(true),
+				'header' => (string)$notification->getHeader(true)->inLanguage($user->getOption('language')),
 				'user_note' => $notification->getUserNote(),
 				'icon' => $notification->getNotificationIcon(),
 				'action' => $notification->getCanonicalUrl(),
