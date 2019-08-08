@@ -17,6 +17,9 @@
 	"SpecialPages": {
 		"Notifications": "Reverb\\Special\\SpecialNotifications"
 	},
+	"ExtensionMessagesFiles": {
+		"SpecialNotifications": "i18n/Reverb.i18n.alias.php"
+	},
 	"MessagesDirs": {
 		"HydraCore": [
 			"i18n"
