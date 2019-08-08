@@ -11,6 +11,13 @@
 $specialPageAliases = [];
 
 /**
+ * German
+ */
+$specialPageAliases['de'] = [
+	'Notifications' => ['Benachrichtigungen'],
+];
+
+/**
  * English
  */
 $specialPageAliases['en'] = [
