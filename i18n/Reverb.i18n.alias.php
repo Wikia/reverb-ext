@@ -30,3 +30,10 @@ $specialPageAliases['en'] = [
 $specialPageAliases['pl'] = [
 	'Notifications' => ['Powiadomienia'],
 ];
+
+/**
+ * Russian
+ */
+$specialPageAliases['ru'] = [
+	'Notifications' => ['Уведомления'],
+];
