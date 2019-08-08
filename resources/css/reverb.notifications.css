@@ -437,6 +437,23 @@ button.reverb-active-button {
 	color: #0c81c9;
 }
 
+.reverb-npnrb-site a:link,
+.reverb-npnrb-site a:active,
+.reverb-npnrb-site a:visited,
+.skin-hydra .reverb-npnrb-site a:link,
+.skin-hydra .reverb-npnrb-site a:active,
+.skin-hydra .reverb-npnrb-site a:visited,
+.skin-minerva .reverb-npnrb-site a:link,
+.skin-minerva .reverb-npnrb-site a:active,
+.skin-minerva .reverb-npnrb-site a:visited {
+	color: #000000;
+}
+
+.skin-hydra .reverb-npnrb-site, 
+.skin-minerva .reverb-npnrb-site {
+	color: #000000;
+}
+
 .skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left, 
 .skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-right,
 .skin-minerva .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left, 
