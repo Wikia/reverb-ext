@@ -71,7 +71,7 @@ trait NotificationListTrait {
 	 *
 	 * @return array
 	 */
-	public static function getDefaultPreference($options) {
+	public static function getDefaultPreference($options): array {
 		$email = $options['defaults']['email'] ?? false;
 		$web = $options['defaults']['web'] ?? true;
 
@@ -90,7 +90,8 @@ trait NotificationListTrait {
 		$ordered = [];
 		foreach ($notificationList as $key => $notification) {
 			if (!self::isNotificationAllowedForUser($user, $notification)
-			|| self::isUsingAnotherPreference($notification)) {
+			|| self::isUsingAnotherPreference($notification)
+			|| !self::shouldBeInMatrix($notification)) {
 				continue;
 			}
 			$value['key'] = $key;
@@ -108,12 +109,26 @@ trait NotificationListTrait {
 	 *
 	 * @return boolean
 	 */
-	public static function isNotificationAllowedForUser(User $user, $notification): bool {
+	public static function isNotificationAllowedForUser(User $user, array $notification): bool {
 		if (!isset($notification['requires'])) {
 			return true;
 		}
 
 		return boolval(array_intersect($user->getEffectiveGroups(), $notification['requires']));
+	}
+
+	/**
+	 * Check if a preference should be in the preference matrix
+	 *
+	 * @param array $notification
+	 *
+	 * @return boolean
+	 */
+	public static function shouldBeInMatrix(array $notification): bool {
+		if (isset($notification['matrix'])) {
+			return boolval($notification['matrix']);
+		}
+		return true;
 	}
 
 	/**
