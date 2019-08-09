@@ -1,4 +1,4 @@
-#netbar.netbar-box .reverb-notifications {
+#netbar .netbar-box .reverb-notifications {
 	cursor: pointer;
 	position: relative;
 }
@@ -39,7 +39,7 @@ div.reverb-np:after {
 	border: 10px solid; /* arrow size */
 	border-color: transparent;
 }
- 
+
 div.reverb-np-arrow:before {
 	border-bottom-color: #202020; /* arrow color */
 	color: #fff;
