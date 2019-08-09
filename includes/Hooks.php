@@ -18,10 +18,12 @@ use EmailNotification;
 use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MWNamespace;
+use MWTimestamp;
 use OutputPage;
 use PreferencesForm;
 use RecentChange;
 use RedisCache;
+use RequestContext;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Traits\NotificationListTrait;
 use Revision;
@@ -121,7 +123,7 @@ class Hooks {
 							'message' => [
 								[
 									'user_note',
-									''
+									htmlentities($summary, ENT_QUOTES)
 								],
 								[
 									1,
@@ -164,7 +166,7 @@ class Hooks {
 							'message' => [
 								[
 									'user_note',
-									''
+									htmlentities($summary, ENT_QUOTES)
 								],
 								[
 									1,
@@ -849,16 +851,33 @@ class Hooks {
 			// The getPerformer() function that generates this name does not validate to allow IP addresses through.
 			$agent = User::newFromName($meta['name'], false);
 
+			$canonicalUrl = $title->getFullUrl(
+				[
+					'type' => 'revision',
+					'oldid' => $meta['prev_oldid'],
+					'diff' => $meta['next_oldid']
+				]
+			);
+			$watchlistUrl = SpecialPage::getTitleFor('Watchlist')->getFullUrl();
+
+			$language = RequestContext::getMain()->getLanguage();
+			if (isset($meta['timestamp'])) {
+				$timestamp = MWTimestamp::convert(TS_ISO_8601, $meta['timestamp']);
+			} else {
+				$timestamp = MWTimestamp::now(TS_ISO_8601);
+			}
+			$userDateAndTime = $language->userTimeAndDate($timestamp, $watchingUser);
+
 			$broadcast = NotificationBroadcast::new(
 				'article-edit-watch',
 				$agent,
 				$watchingUser,
 				[
-					'url' => SpecialPage::getTitleFor('Watchlist')->getFullUrl(),
+					'url' => $canonicalUrl,
 					'message' => [
 						[
 							'user_note',
-							''
+							isset($meta['comment']) ? htmlentities($meta['comment'], ENT_QUOTES) : ''
 						],
 						[
 							1,
@@ -878,13 +897,19 @@ class Hooks {
 						],
 						[
 							5,
-							$title->getFullUrl(
-								[
-									'type' => 'revision',
-									'oldid' => $meta['prev_oldid'],
-									'diff' => $meta['next_oldid']
-								]
-							)
+							$canonicalUrl
+						],
+						[
+							6,
+							$userDateAndTime
+						],
+						[
+							7,
+							$timestamp
+						],
+						[
+							8,
+							$watchingUser->getDatePreference()
 						]
 					]
 				]
@@ -925,7 +950,9 @@ class Hooks {
 				[
 					'name' => $editor->getName(),
 					'prev_oldid' => $recentChange->mAttribs['rc_last_oldid'],
-					'next_oldid' => $recentChange->mAttribs['rc_this_oldid']
+					'next_oldid' => $recentChange->mAttribs['rc_this_oldid'],
+					'comment' => $recentChange->mAttribs['rc_comment'],
+					'timestamp' => $recentChange->mAttribs['rc_timestamp']
 				]
 			)
 		);
