@@ -123,7 +123,7 @@ class Hooks {
 							'message' => [
 								[
 									'user_note',
-									''
+									htmlentities($summary, ENT_QUOTES)
 								],
 								[
 									1,
@@ -166,7 +166,7 @@ class Hooks {
 							'message' => [
 								[
 									'user_note',
-									''
+									htmlentities($summary, ENT_QUOTES)
 								],
 								[
 									1,
