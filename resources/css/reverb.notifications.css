@@ -271,7 +271,7 @@ div.reverb-np-arrow {
 	justify-content: flex-start;
 }
 
-.skin-hydra.reverb-notification-page {
+.skin-hydra .reverb-notification-page {
 	color: #000;
 }
 
@@ -418,16 +418,16 @@ div.reverb-np-arrow {
 	background-image:url(../images/checkbox-light.png);
 }
 
-.skin-hydra.reverb-button-bar button,
-.skin-minerva.reverb-button-bar button {
+.skin-hydra .reverb-button-bar button,
+.skin-minerva .reverb-button-bar button {
 	border-color: #0c81c9;
 	background-color: #d9d9d9;
 	color: #000;
 }
 
-.skin-hydra.reverb-button-bar button:hover,
+.skin-hydra .reverb-button-bar button:hover,
 .skin-hydra .reverb-button-bar button.reverb-selected,
-.skin-minerva.reverb-button-bar button:hover,
+.skin-minerva .reverb-button-bar button:hover,
 .skin-minerva .reverb-button-bar button.reverb-selected {
 	color: #0c81c9;
 }
@@ -435,32 +435,32 @@ div.reverb-np-arrow {
 .reverb-npnrb-site a:link,
 .reverb-npnrb-site a:active,
 .reverb-npnrb-site a:visited,
-.skin-hydra.reverb-npnrb-site a:link,
-.skin-hydra.reverb-npnrb-site a:active,
-.skin-hydra.reverb-npnrb-site a:visited,
-.skin-minerva.reverb-npnrb-site a:link,
-.skin-minerva.reverb-npnrb-site a:active,
-.skin-minerva.reverb-npnrb-site a:visited {
+.skin-hydra .reverb-npnrb-site a:link,
+.skin-hydra .reverb-npnrb-site a:active,
+.skin-hydra .reverb-npnrb-site a:visited,
+.skin-minerva .reverb-npnrb-site a:link,
+.skin-minerva .reverb-npnrb-site a:active,
+.skin-minerva .reverb-npnrb-site a:visited {
 	color: #000000;
 }
 
-.skin-hydra.reverb-npnrb-site,
-.skin-minerva.reverb-npnrb-site {
+.skin-hydra .reverb-npnrb-site,
+.skin-minerva .reverb-npnrb-site {
 	color: #000000;
 }
 
-.skin-hydra.reverb-notification-page.reverb-npn-row-unread.reverb-npnr-left,
-.skin-hydra.reverb-notification-page.reverb-npn-row-unread.reverb-npnr-right,
-.skin-minerva.reverb-notification-page.reverb-npn-row-unread.reverb-npnr-left,
-.skin-minerva.reverb-notification-page.reverb-npn-row-unread.reverb-npnr-right {
+.skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left,
+.skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-right,
+.skin-minerva .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left,
+.skin-minerva .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-right {
 	background: #e6e4e4;
 }
 
-.skin-minerva.reverb-notification-page-left {
+.skin-minerva .reverb-notification-page-left {
 	display: none;
 }
 
-.skin-minerva.reverb-notification-page-right {
+.skin-minerva .reverb-notification-page-right {
 	margin-left: 0px;
 }
 
@@ -468,6 +468,6 @@ div.reverb-np-arrow {
 	display: none;
 }
 
-.skin-minerva.reverb-button-bar {
+.skin-minerva .reverb-button-bar {
 	text-align: center;
 }
