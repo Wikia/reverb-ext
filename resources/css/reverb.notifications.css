@@ -1,4 +1,4 @@
-#netbar.netbar-box.reverb-notifications {
+#netbar.netbar-box .reverb-notifications {
 	cursor: pointer;
 	position: relative;
 }
@@ -123,10 +123,6 @@ div.reverb-np-arrow {
 	padding: 0px 0px 0px 5px;
 }
 
-.reverb-np-notifications {
-	/* MEMES GO HERE */
-}
-
 .reverb-np-no-unread {
 	text-align: center;
 	padding: 20px 20px;
@@ -144,8 +140,8 @@ div.reverb-np-arrow {
 	justify-content: flex-start;
 }
 
-.reverb-npn-row-unread.reverb-npnr-left,
-.reverb-npn-row-unread.reverb-npnr-right {
+.reverb-npn-row-unread .reverb-npnr-left,
+.reverb-npn-row-unread .reverb-npnr-right {
 	background: #393939;
 }
 
@@ -180,10 +176,6 @@ div.reverb-np-arrow {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	border-bottom: 1px solid #4f4f4f;
-}
-
-.reverb-npn-row:hover {
-	/* background: #4f4f4f; */
 }
 
 .reverb-npnr-unread {
@@ -275,7 +267,7 @@ div.reverb-np-arrow {
 	color: #000;
 }
 
-.skin-hydradark.reverb-notification-page {
+.skin-hydradark .reverb-notification-page {
 	color: #FFF;
 }
 
@@ -414,7 +406,7 @@ div.reverb-np-arrow {
 	Hydra Light and Minerva custom colors
 */
 
-.skin-hydra label.reverb-filter-label {
+.skin-hydra label .reverb-filter-label {
 	background-image:url(../images/checkbox-light.png);
 }
 
@@ -426,9 +418,9 @@ div.reverb-np-arrow {
 }
 
 .skin-hydra .reverb-button-bar button:hover,
-.skin-hydra .reverb-button-bar button.reverb-selected,
+.skin-hydra .reverb-button-bar button .reverb-selected,
 .skin-minerva .reverb-button-bar button:hover,
-.skin-minerva .reverb-button-bar button.reverb-selected {
+.skin-minerva .reverb-button-bar button .reverb-selected {
 	color: #0c81c9;
 }
 
