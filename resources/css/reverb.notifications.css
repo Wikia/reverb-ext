@@ -1,19 +1,19 @@
-#netbar .netbar-box.reverb-notifications {
+#netbar.netbar-box.reverb-notifications {
 	cursor: pointer;
 	position: relative;
 }
  
- .reverb-filter-notice {
+.reverb-filter-notice {
 	width:100%;
 	text-align: center;
 }
  
- .reverb-icon {
+.reverb-icon {
 	width: 24px;
 	height: 24px;
 }
  
- .reverb-np {
+.reverb-np {
 	/*display: none;*/
 	width: 500px;
 	height: auto;
@@ -58,14 +58,14 @@
 	display: none;
 }
  
- .reverb-np-header {
+.reverb-np-header {
 	font-size: 16px;
 	font-weight: bold;
 	padding: 0px 0px 15px 0px;
 	border-bottom: 1px solid #4f4f4f;
 }
  
- .reverb-nph-right {
+.reverb-nph-right {
 	float: right;
 	font-size: 14px;
 	font-weight: bold;
@@ -76,21 +76,21 @@
 	text-align: right;
 }
  
- .reverb-nph-right a:link, 
- .reverb-nph-right a:active, 
- .reverb-nph-right a:visited {
+.reverb-nph-right a:link, 
+.reverb-nph-right a:active, 
+.reverb-nph-right a:visited {
 	color: #fff;
 } 
  
  
- .reverb-nph-right a:hover {
+.reverb-nph-right a:hover {
 	text-decoration: none;
 	color: #fff;
 }
  
- .reverb-npn-viewmore:link,  
- .reverb-npn-viewmore:active,
- .reverb-npn-viewmore:visited{
+.reverb-npn-viewmore:link,  
+.reverb-npn-viewmore:active,
+.reverb-npn-viewmore:visited{
 	color: #fff;
 	width: 100%;
 	text-align: center;
@@ -102,12 +102,12 @@
 	letter-spacing: normal;
 }
  
- .reverb-npn-viewmore:hover {
+.reverb-npn-viewmore:hover {
 	text-decoration: none;
 	color: #fff;
 }
  
- .reverb-nph-notifications {
+.reverb-nph-notifications {
 	padding: 0px 10px 0px 0px;
 	border-right: 1px solid #4f4f4f;
 	font-family: Helvetica, sans-serif;
@@ -119,61 +119,61 @@
 	letter-spacing: normal;
 }
  
- .reverb-nph-preferences {
+.reverb-nph-preferences {
 	padding: 0px 0px 0px 5px;
 }
  
- .reverb-np-notifications {
+.reverb-np-notifications {
 	/* MEMES GO HERE */
 }
  
- .reverb-np-no-unread {
+.reverb-np-no-unread {
 	text-align: center;
 	padding: 20px 20px;
 }
  
- .reverb-npn {
+.reverb-npn {
 	max-height: 500px;
 	overflow-y: auto;
 }
  
- .reverb-npn-row, .reverb-notification-page-row {
+.reverb-npn-row,.reverb-notification-page-row {
 	padding: 0px 0px 10px 0px;
 	display: flex;
 	justify-content: flex-start;
 }
  
- .reverb-npn-row-unread .reverb-npnr-left, 
- .reverb-npn-row-unread .reverb-npnr-right {
+.reverb-npn-row-unread.reverb-npnr-left, 
+.reverb-npn-row-unread.reverb-npnr-right {
 	background: #393939;
 }
  
- .reverb-npn-row-global {
+.reverb-npn-row-global {
 	border-bottom: 1px solid #4f4f4f;
 	margin-bottom: 5px;
 	background-color: #212121;
 }
  
- .reverb-npn-row-global > .reverb-npnr-right {
+.reverb-npn-row-global >.reverb-npnr-right {
 	border-bottom: 0;
 	padding: 5px 0px;
 }
  
- .reverb-npnr-unread-global {
+.reverb-npnr-unread-global {
 	position: relative;
 	top: 5px;
 }
  
- .reverb-icon-global {
+.reverb-icon-global {
 	position: relative;
 	top: 5px;
 }
  
- .reverb-npnr-left {
+.reverb-npnr-left {
 	padding: 10px 15px 0px 5px;
 }
  
- .reverb-npnr-right {
+.reverb-npnr-right {
 	flex: 1;
 	padding-right: 7px;
 	padding-top: 10px;
@@ -181,19 +181,19 @@
 	border-bottom: 1px solid #4f4f4f;
 }
  
- .reverb-npn-row:hover {
+.reverb-npn-row:hover {
 	/* background: #4f4f4f; */
 }
  
- .reverb-npnr-unread {
+.reverb-npnr-unread {
 	background-color: #f37f20;
 }
  
- .reverb-npnr-read {
+.reverb-npnr-read {
 	background-color: #303030;
 }
  
- .reverb-npnr-hitbox {
+.reverb-npnr-hitbox {
 	float: right;
 	width: 20px;
 	height: 20px;
@@ -201,7 +201,7 @@
 	cursor: pointer;
 }
  
- .reverb-npnrc {
+.reverb-npnrc {
 	float: right;
 	width: 10px;
 	height: 10px;
@@ -211,7 +211,7 @@
 	border-radius: 25px;
 }
  
- .reverb-npnr-header {
+.reverb-npnr-header {
 	font-family: Helvetica, sans-serif;
 	font-size: 16px;
 	font-weight: bold;
@@ -221,17 +221,17 @@
 	letter-spacing: normal;
 }
  
- .reverb-npnr-header a:link,
- .reverb-npnr-header a:active,
- .reverb-npnr-header a:visited {
+.reverb-npnr-header a:link,
+.reverb-npnr-header a:active,
+.reverb-npnr-header a:visited {
 	color: #f37f20;
 }
  
- .reverb-npnr-header a:hover {
+.reverb-npnr-header a:hover {
 	color: #f37f20;
 }
  
- .reverb-npnr-body {
+.reverb-npnr-body {
 	margin-top: 10px;
 	padding: 3px 0px;
 	opacity: 0.75;
@@ -244,7 +244,7 @@
 	letter-spacing: normal;
 }
  
- .reverb-npnr-bottom {
+.reverb-npnr-bottom {
 	margin-top: 10px;
 	width: 100%;
 	font-size: 14px;
@@ -252,47 +252,47 @@
 	font-weight: bold;
 }
  
- .reverb-npnrb-site {
+.reverb-npnrb-site {
 	font-weight: normal;
 	font-size: 12px;
 	color: #d9d9d9;
 }
  
- .reverb-npnrb-site a:link,
- .reverb-npnrb-site a:active,
- .reverb-npnrb-site a:visited {
+.reverb-npnrb-site a:link,
+.reverb-npnrb-site a:active,
+.reverb-npnrb-site a:visited {
 	color: #d9d9d9;
 }
  
- .reverb-notification-page {
+.reverb-notification-page {
 	padding: 10px 0px;
 	display: flex;
 	justify-content: flex-start;
 }
  
- .skin-hydra .reverb-notification-page {
+.skin-hydra.reverb-notification-page {
 	color: #000;
 }
  
- .skin-hydradark .reverb-notification-page {
+.skin-hydradark.reverb-notification-page {
 	color: #FFF;
 }
  
- .reverb-notification-page-left {
+.reverb-notification-page-left {
 	width: 300px;
 	border: solid 1px #bed1cf;
 }
  
- .reverb-notification-page-right {
+.reverb-notification-page-right {
 	flex: 1;
 	margin-left: 20px;
 }
  
- .reverb-pull-right {
+.reverb-pull-right {
 	float: right;
 }
  
- .reverb-filter-title {
+.reverb-filter-title {
 	margin: 20px 10px;
 	height: 18px;
 	font-family: Rubik, Helvetica, sans-serif;
@@ -304,7 +304,7 @@
 	letter-spacing: normal;
 }
  
- .reverb-filter-row {
+.reverb-filter-row {
 	margin: 0px 10px;
 	padding: 12px 0px;
 	font-family: Rubik, Helvetica, sans-serif;
@@ -349,12 +349,12 @@
 	width: 100%;
 }
  
- .reverb-button-bar {
+.reverb-button-bar {
 	padding: 0px 0px 20px 0px;
 	border-bottom: 1px solid #fff;
 }
  
- .reverb-button-bar  button {
+.reverb-button-bar  button {
 	border-radius: 2px;
 	border: solid 1px #f37f20;
 	background-color: #000000;
@@ -372,46 +372,46 @@
 }
  
  
- .reverb-button-bar  button:hover, 
- .reverb-button-bar  button.reverb-selected {
+.reverb-button-bar  button:hover, 
+.reverb-button-bar  button.reverb-selected {
 	color: #f37f20;
 }
  
- .reverb-notification-page-paging {
+.reverb-notification-page-paging {
 	
 }
  
- .reverb-npp-bottom {
+.reverb-npp-bottom {
 	padding: 10px 0px 0px 0px;
 	border-top: 1px solid #4f4f4f;
 }
  
- .reverb-npp-top {
+.reverb-npp-top {
 	padding: 15px 0px 10px 0px;
 	border-bottom: 1px solid #4f4f4f;
 }
  
- .reverb-bell-unread {
+.reverb-bell-unread {
 	color: #f37f20;
 }
  
- .reverb-mobile-bell-unread:before {
+.reverb-mobile-bell-unread:before {
 	background-image: url(../images/bell-unread.svg) !important;
 }
  
  
- .reverb-icon {
+.reverb-icon {
 	position: relative;
 	top: 5px;
 	left: 5px;
 	color: #36c;
 }
  
- .reverb-bell-notification-count {
+.reverb-bell-notification-count {
 	display: none;
 }
  
- .reverb-npn-row:last-child .reverb-npnr-right { 
+.reverb-npn-row:last-child.reverb-npnr-right { 
 	border: 0; 
 }
  
@@ -419,60 +419,60 @@
 	Hydra Light and Minerva custom colors
  */
  
- .skin-hydra label.reverb-filter-label {
+.skin-hydra label.reverb-filter-label {
 	background-image:url(../images/checkbox-light.png);
 }
  
- .skin-hydra .reverb-button-bar  button,
- .skin-minerva .reverb-button-bar  button {
+.skin-hydra.reverb-button-bar  button,
+.skin-minerva.reverb-button-bar  button {
 	border-color: #0c81c9;
 	background-color: #d9d9d9;
 	color: #000;
 }
  
- .skin-hydra .reverb-button-bar  button:hover, 
- .skin-hydra  .reverb-button-bar  button.reverb-selected,
- .skin-minerva .reverb-button-bar  button:hover, 
- .skin-minerva  .reverb-button-bar  button.reverb-selected {
+.skin-hydra.reverb-button-bar  button:hover, 
+.skin-hydra .reverb-button-bar  button.reverb-selected,
+.skin-minerva.reverb-button-bar  button:hover, 
+.skin-minerva .reverb-button-bar  button.reverb-selected {
 	color: #0c81c9;
 }
  
- .reverb-npnrb-site a:link,
- .reverb-npnrb-site a:active,
- .reverb-npnrb-site a:visited,
- .skin-hydra .reverb-npnrb-site a:link,
- .skin-hydra .reverb-npnrb-site a:active,
- .skin-hydra .reverb-npnrb-site a:visited,
- .skin-minerva .reverb-npnrb-site a:link,
- .skin-minerva .reverb-npnrb-site a:active,
- .skin-minerva .reverb-npnrb-site a:visited {
+.reverb-npnrb-site a:link,
+.reverb-npnrb-site a:active,
+.reverb-npnrb-site a:visited,
+.skin-hydra.reverb-npnrb-site a:link,
+.skin-hydra.reverb-npnrb-site a:active,
+.skin-hydra.reverb-npnrb-site a:visited,
+.skin-minerva.reverb-npnrb-site a:link,
+.skin-minerva.reverb-npnrb-site a:active,
+.skin-minerva.reverb-npnrb-site a:visited {
 	color: #000000;
 }
  
- .skin-hydra .reverb-npnrb-site, 
- .skin-minerva .reverb-npnrb-site {
+.skin-hydra.reverb-npnrb-site, 
+.skin-minerva.reverb-npnrb-site {
 	color: #000000;
 }
  
- .skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left, 
- .skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-right,
- .skin-minerva .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left, 
- .skin-minerva .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-right {
+.skin-hydra.reverb-notification-page.reverb-npn-row-unread.reverb-npnr-left, 
+.skin-hydra.reverb-notification-page.reverb-npn-row-unread.reverb-npnr-right,
+.skin-minerva.reverb-notification-page.reverb-npn-row-unread.reverb-npnr-left, 
+.skin-minerva.reverb-notification-page.reverb-npn-row-unread.reverb-npnr-right {
 	background: #e6e4e4;
 }
  
- .skin-minerva .reverb-notification-page-left {
+.skin-minerva.reverb-notification-page-left {
 	display: none;
 }
  
- .skin-minerva .reverb-notification-page-right {
+.skin-minerva.reverb-notification-page-right {
 	margin-left: 0px;
 }
  
- .skin-minerva #reverb-mark-all-read {
+.skin-minerva #reverb-mark-all-read {
 	display: none;
 }
  
- .skin-minerva .reverb-button-bar {
+.skin-minerva.reverb-button-bar {
 	text-align: center;
 }
