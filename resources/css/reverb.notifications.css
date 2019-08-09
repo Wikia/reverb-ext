@@ -1,6 +1,6 @@
-#netbar .netbar-box.reverb-notifications {
-   cursor: pointer;
-   position: relative;
+#netbar .netbar-box .reverb-notifications {
+	cursor: pointer;
+	position: relative;
 }
 
 .reverb-filter-notice {
@@ -30,7 +30,8 @@
 	display: none;
 }
 
-div.reverb-np-arrow:before, div.reverb-np:after {
+div.reverb-np-arrow:before,
+div.reverb-np:after {
 	content: ' ';
 	height: 0;
 	position: absolute;
@@ -76,19 +77,18 @@ div.reverb-np-arrow {
 	text-align: right;
 }
 
-.reverb-nph-right a:link, 
-.reverb-nph-right a:active, 
+.reverb-nph-right a:link,
+.reverb-nph-right a:active,
 .reverb-nph-right a:visited {
 	color: #fff;
 } 
-
 
 .reverb-nph-right a:hover {
 	text-decoration: none;
 	color: #fff;
 }
 
-.reverb-npn-viewmore:link,  
+.reverb-npn-viewmore:link,
 .reverb-npn-viewmore:active,
 .reverb-npn-viewmore:visited{
 	color: #fff;
@@ -123,10 +123,6 @@ div.reverb-np-arrow {
 	padding: 0px 0px 0px 5px;
 }
 
-.reverb-np-notifications {
-	/* MEMES GO HERE */
-}
-
 .reverb-np-no-unread {
 	text-align: center;
 	padding: 20px 20px;
@@ -137,13 +133,14 @@ div.reverb-np-arrow {
 	overflow-y: auto;
 }
 
-.reverb-npn-row, .reverb-notification-page-row {
+.reverb-npn-row,
+.reverb-notification-page-row {
 	padding: 0px 0px 10px 0px;
 	display: flex;
 	justify-content: flex-start;
 }
 
-.reverb-npn-row-unread .reverb-npnr-left, 
+.reverb-npn-row-unread .reverb-npnr-left,
 .reverb-npn-row-unread .reverb-npnr-right {
 	background: #393939;
 }
@@ -154,7 +151,7 @@ div.reverb-np-arrow {
 	background-color: #212121;
 }
 
-.reverb-npn-row-global > .reverb-npnr-right {
+.reverb-npn-row-global >.reverb-npnr-right {
 	border-bottom: 0;
 	padding: 5px 0px;
 }
@@ -179,10 +176,6 @@ div.reverb-np-arrow {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	border-bottom: 1px solid #4f4f4f;
-}
-
-.reverb-npn-row:hover {
-   /* background: #4f4f4f; */
 }
 
 .reverb-npnr-unread {
@@ -317,11 +310,11 @@ div.reverb-np-arrow {
 	border-bottom: 1px solid #4f4f4f;
 }
 
-input[type=checkbox].reverb-filter-checkbox {
+ input[type=checkbox].reverb-filter-checkbox {
 	position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
 }
 
-input[type=checkbox].reverb-filter-checkbox + label.reverb-filter-label {
+ input[type=checkbox].reverb-filter-checkbox + label.reverb-filter-label {
 	padding-left:21px;
 	height:16px; 
 	display:inline-block;
@@ -331,14 +324,14 @@ input[type=checkbox].reverb-filter-checkbox + label.reverb-filter-label {
 	font-size:16px;
 	vertical-align:middle;
 	cursor:pointer;
-
+ 
 }
 
-input[type=checkbox].reverb-filter-checkbox:checked + label.reverb-filter-label {
+ input[type=checkbox].reverb-filter-checkbox:checked + label.reverb-filter-label {
 	background-position: 0 -16px;
 }
 
-label.reverb-filter-label {
+ label.reverb-filter-label {
 	background-image:url(../images/checkbox.png);
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -354,7 +347,7 @@ label.reverb-filter-label {
 	border-bottom: 1px solid #fff;
 }
 
-.reverb-button-bar  button {
+.reverb-button-bar button {
 	border-radius: 2px;
 	border: solid 1px #f37f20;
 	background-color: #000000;
@@ -367,18 +360,13 @@ label.reverb-filter-label {
 	cursor: pointer;
 }
 
-button.reverb-active-button {
+ button.reverb-active-button {
 	color: #f37f20;
 }
 
-
-.reverb-button-bar  button:hover, 
-.reverb-button-bar  button.reverb-selected {
+.reverb-button-bar button:hover,
+.reverb-button-bar button.reverb-selected {
 	color: #f37f20;
-}
-
-.reverb-notification-page-paging {
-	
 }
 
 .reverb-npp-bottom {
@@ -396,9 +384,8 @@ button.reverb-active-button {
 }
 
 .reverb-mobile-bell-unread:before {
-    background-image: url(../images/bell-unread.svg) !important;
+	background-image: url(../images/bell-unread.svg) !important;
 }
-
 
 .reverb-icon {
 	position: relative;
@@ -411,7 +398,7 @@ button.reverb-active-button {
 	display: none;
 }
 
-.reverb-npn-row:last-child .reverb-npnr-right { 
+.reverb-npn-row:last-child.reverb-npnr-right { 
 	border: 0; 
 }
 
@@ -419,27 +406,44 @@ button.reverb-active-button {
 	Hydra Light and Minerva custom colors
 */
 
-.skin-hydra label.reverb-filter-label {
+.skin-hydra label .reverb-filter-label {
 	background-image:url(../images/checkbox-light.png);
 }
 
-.skin-hydra .reverb-button-bar  button,
-.skin-minerva .reverb-button-bar  button {
+.skin-hydra .reverb-button-bar button,
+.skin-minerva .reverb-button-bar button {
 	border-color: #0c81c9;
 	background-color: #d9d9d9;
 	color: #000;
 }
 
-.skin-hydra .reverb-button-bar  button:hover, 
-.skin-hydra  .reverb-button-bar  button.reverb-selected,
-.skin-minerva .reverb-button-bar  button:hover, 
-.skin-minerva  .reverb-button-bar  button.reverb-selected {
+.skin-hydra .reverb-button-bar button:hover,
+.skin-hydra .reverb-button-bar button .reverb-selected,
+.skin-minerva .reverb-button-bar button:hover,
+.skin-minerva .reverb-button-bar button .reverb-selected {
 	color: #0c81c9;
 }
 
-.skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left, 
+.reverb-npnrb-site a:link,
+.reverb-npnrb-site a:active,
+.reverb-npnrb-site a:visited,
+.skin-hydra .reverb-npnrb-site a:link,
+.skin-hydra .reverb-npnrb-site a:active,
+.skin-hydra .reverb-npnrb-site a:visited,
+.skin-minerva .reverb-npnrb-site a:link,
+.skin-minerva .reverb-npnrb-site a:active,
+.skin-minerva .reverb-npnrb-site a:visited {
+	color: #000000;
+}
+
+.skin-hydra .reverb-npnrb-site,
+.skin-minerva .reverb-npnrb-site {
+	color: #000000;
+}
+
+.skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left,
 .skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-right,
-.skin-minerva .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left, 
+.skin-minerva .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left,
 .skin-minerva .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-right {
 	background: #e6e4e4;
 }
