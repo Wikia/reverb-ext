@@ -39,7 +39,7 @@
 	 *  Identify user box to place notifications directly next to it.
 	 *  Also remove any echo notification boxes that may exist.
 	 */
-	
+
 
 
 	var getUserBox = function() {
@@ -55,7 +55,7 @@
 		}
 		return userBox;
 	}
-	
+
 
 
 	reverbNotificationPage = (typeof window.reverbNotificationPage !== "undefined") ? true : false;
@@ -227,6 +227,10 @@
 			var icon = (n.icons.notification) ? n.icons.notification : ( (n.icons.subcategory && n.icons.subcategory) ? n.icons.subcategory : ((n.icons.category && n.icons.category) ? n.icons.category : false));
 			icon = icon ? icon : "fa-bullhorn";
 
+			// Set localization for moment
+			var lang = mw.config.get('wgContentLanguage');
+			moment.locale(lang);
+
 			// Convert for javascript
 			var created_at = moment(n.created_at * 1000);
 			var created = created_at.fromNow();
@@ -303,7 +307,7 @@
 		markRead(id);
 	});
 
-	// Mark notifications as read when you click the notification indicator. 
+	// Mark notifications as read when you click the notification indicator.
 	$(document).on('click', ".reverb-npnr-hitbox", function(){
 		var nId = $(this).closest(".reverb-npn-row").data("id");
 		var button = $(this).find('.reverb-npnrc')[0];
@@ -348,7 +352,7 @@
 		$(".reverb-filter-checkbox").change(function(e) {
 			// check original event to verify human interaction
 			if (this.id == "filter_all" && this.checked) {
-				
+
 					// This is the all checkbox. Lets check every other box
 					$('.reverb-filter-checkbox').each(function () {
 						if (this.id !== "filter_all") {
@@ -358,7 +362,7 @@
 					generateWithFilters({page: 0, perpage: perPage}, false);
 					$(".reverb-active-button").removeClass('reverb-active-button');
 					$("#reverb-ru-all").addClass('reverb-active-button');
-			
+
 			} else {
 
 				if (e.originalEvent !== undefined) {
@@ -390,7 +394,7 @@
 							// if all are checked (except for all) then check all
 							$('#filter_all').get(0).checked = true;
 						}
-						
+
 						generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
 						$(".reverb-active-button").removeClass('reverb-active-button');
 						$("#reverb-ru-all").addClass('reverb-active-button');
@@ -558,13 +562,13 @@
 	/***
 	 *    ██╗  ██╗██╗ ██████╗██╗  ██╗    ██╗████████╗     ██████╗ ███████╗███████╗
 	 *    ██║ ██╔╝██║██╔════╝██║ ██╔╝    ██║╚══██╔══╝    ██╔═══██╗██╔════╝██╔════╝
-	 *    █████╔╝ ██║██║     █████╔╝     ██║   ██║       ██║   ██║█████╗  █████╗  
-	 *    ██╔═██╗ ██║██║     ██╔═██╗     ██║   ██║       ██║   ██║██╔══╝  ██╔══╝  
-	 *    ██║  ██╗██║╚██████╗██║  ██╗    ██║   ██║       ╚██████╔╝██║     ██║     
-	 *    ╚═╝  ╚═╝╚═╝ ╚═════╝╚═╝  ╚═╝    ╚═╝   ╚═╝        ╚═════╝ ╚═╝     ╚═╝     
-	 *    Now that we wrote a bunch of logic, lets kick off our actions.                                                                      
+	 *    █████╔╝ ██║██║     █████╔╝     ██║   ██║       ██║   ██║█████╗  █████╗
+	 *    ██╔═██╗ ██║██║     ██╔═██╗     ██║   ██║       ██║   ██║██╔══╝  ██╔══╝
+	 *    ██║  ██╗██║╚██████╗██║  ██╗    ██║   ██║       ╚██████╔╝██║     ██║
+	 *    ╚═╝  ╚═╝╚═╝ ╚═════╝╚═╝  ╚═╝    ╚═╝   ╚═╝        ╚═════╝ ╚═╝     ╚═╝
+	 *    Now that we wrote a bunch of logic, lets kick off our actions.
 	 */
-	
+
 	initNotifications();
 
 	/*
