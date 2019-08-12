@@ -16,6 +16,7 @@ namespace Reverb;
 use Content;
 use EmailNotification;
 use LinksUpdate;
+use MailAddress;
 use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use MWTimestamp;
@@ -52,6 +53,10 @@ class Hooks {
 			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'email')] = $email;
 			$wgDefaultUserOptions[self::getPreferenceKey($notification, 'web')] = $web;
 		}
+
+		$wgDefaultUserOptions[self::getPreferenceKey('user-interest-email-user', 'email')] = 0;
+		$wgDefaultUserOptions[self::getPreferenceKey('user-interest-email-user', 'web')] = 1;
+		$wgHiddenPrefs[] = self::getPreferenceKey('user-interest-email-user', 'email');
 
 		if (self::shouldHandleWatchlist()) {
 			$wgHiddenPrefs[] = 'enotifusertalkpages';
@@ -650,6 +655,12 @@ class Hooks {
 			],
 		];
 
+		$preferences[self::getPreferenceKey('user-interest-email-user', 'web')] = [
+			'type' => 'toggle',
+			'label-message' => 'user-interest-email-user',
+			'section' => 'reverb/email-user-notification'
+		];
+
 		// Setup Check Matrix columns
 		$columns = [];
 		$reverbNotifiers = self::getNotifiers();
@@ -958,6 +969,62 @@ class Hooks {
 		);
 		$redis->expire($cacheKey, 86400);
 
+		return true;
+	}
+
+	/**
+	 * Handler for EmailUserComplete hook.
+	 *
+	 * @param MailAddress $address Address of receiving user
+	 * @param MailAddress $from    Address of sending user
+	 * @param string      $subject Subject of the mail
+	 * @param string      $text    Text of the mail
+	 *
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/EmailUserComplete
+	 *
+	 * @return bool true in all cases
+	 */
+	public static function onEmailUserComplete(MailAddress $address, MailAddress $from, $subject, $text): bool {
+		$fromUserTitle = Title::makeTitle(NS_USER, $from->name);
+
+		// strip the auto footer from email preview
+		$autoFooter = "\n\n-- \n" . wfMessage('emailuserfooter', $from->name, $address->name)
+				->inContentLanguage()->text();
+		$textWithoutFooter = preg_replace('/' . preg_quote($autoFooter, '/') . '$/', '', $text);
+
+		$broadcast = NotificationBroadcast::newSingle(
+			'user-interest-email-user',
+			User::newFromName($from->name),
+			User::newFromName($address->name),
+			[
+				'url' => SpecialPage::getTitleFor('EmailUser')->getFullUrl(),
+				'message' => [
+					[
+						'user_note',
+						mb_strimwidth($textWithoutFooter, 0, 200, '...')
+					],
+					[
+						1,
+						$from->name
+					],
+					[
+						2,
+						$address->name
+					],
+					[
+						3,
+						$subject
+					],
+					[
+						4,
+						$fromUserTitle->getFullURL()
+					]
+				]
+			]
+		);
+		if ($broadcast) {
+			$broadcast->transmit();
+		}
 		return true;
 	}
 

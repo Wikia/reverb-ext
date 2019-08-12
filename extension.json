@@ -130,6 +130,7 @@
 		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
 		"BeforeInitialize": "Reverb\\Hooks::onBeforeInitialize",
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
+		"EmailUserComplete": "Reverb\\Hooks::onEmailUserComplete",
 		"FlaggedRevsRevisionReviewFormAfterDoSubmit": "Reverb\\Hooks::onFlaggedRevsRevisionReviewFormAfterDoSubmit",
 		"GetNewMessagesAlert": "Reverb\\Hooks::onGetNewMessagesAlert",
 		"GetPreferences": "Reverb\\Hooks::onGetPreferences",
@@ -150,12 +151,6 @@
 		},
 		"ReverbNotifications": {
 			"value": {
-				"user-interest-welcome": {
-					"importance": 0
-				},
-				"user-interest-talk-page-edit": {
-					"importance": 9
-				},
 				"article-edit-page-linked": {
 					"importance": 1
 				},
@@ -172,6 +167,16 @@
 					"importance": 9
 				},
 				"user-account-groups-changed": {
+					"importance": 9
+				},
+				"user-interest-email-user": {
+					"importance": 0,
+					"matrix": false
+				},
+				"user-interest-welcome": {
+					"importance": 0
+				},
+				"user-interest-talk-page-edit": {
 					"importance": 9
 				}
 			},
