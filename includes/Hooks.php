@@ -959,6 +959,12 @@ class Hooks {
 	 */
 	public static function onEmailUserComplete(MailAddress $address, MailAddress $from, $subject, $text): bool {
 		$fromUserTitle = Title::makeTitle(NS_USER, $from->name);
+
+		// strip the auto footer from email preview
+		$autoFooter = "\n\n-- \n" . wfMessage('emailuserfooter', $from->name, $address->name)
+				->inContentLanguage()->text();
+		$textWithoutFooter = preg_replace('/' . preg_quote($autoFooter, '/') . '$/', '', $text);
+
 		$broadcast = NotificationBroadcast::newSingle(
 			'user-interest-email-user',
 			User::newFromName($from->name),
@@ -968,7 +974,7 @@ class Hooks {
 				'message' => [
 					[
 						'user_note',
-						mb_strimwidth($text, 0, 200, '...')
+						mb_strimwidth($textWithoutFooter, 0, 200, '...')
 					],
 					[
 						1,
