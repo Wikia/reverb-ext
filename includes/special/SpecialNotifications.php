@@ -53,6 +53,8 @@ class SpecialNotifications extends SpecialPage {
 			}
 		}
 
+		ksort($groups);
+
 		// Additional Scrips for the Notification Page
 		$this->output->addModules('ext.reverb.notifications.scripts.notificationPage');
 		$this->output->addModuleStyles('ext.reverb.notifications.styles.notificationPage');
