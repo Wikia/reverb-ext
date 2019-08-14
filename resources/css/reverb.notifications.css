@@ -339,7 +339,10 @@ div.reverb-np-arrow {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	width: 100%;
+	width: 270px;
+	white-space: nowrap; 
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .reverb-button-bar {
