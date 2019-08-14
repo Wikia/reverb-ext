@@ -357,7 +357,6 @@
 			});
 		});
 
-
 		// Make firefox work like a good web browser.
 		$('.reverb-filter-checkbox').each(function(){
 			this.checked = true;
