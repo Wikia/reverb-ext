@@ -319,11 +319,8 @@
 	});
 
 	$(document).on('click', "#reverb-mark-all-read-panel", function(){
-		
-
 		api.post({action:'notifications', do:'dismissAllNotifications', format:'json', formatversion: 2})
 		.done(function(data) {
-
 			generateWithFilters({page: 0, perpage: perPage}, false);
 			$('.reverb-npn > .reverb-npn-row').each(function(){
 				$(this).hide();
@@ -349,7 +346,6 @@
 	 */
 
 	if (reverbNotificationPage) {
-
 		var perPage = 10;
 		var activeFilters = {};
 
