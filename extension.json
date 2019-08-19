@@ -75,6 +75,7 @@
 				"special-button-all",
 				"special-button-read",
 				"special-button-unread",
+				"special-button-mark-all-read",
 				"notifications",
 				"view-all",
 				"no-read",

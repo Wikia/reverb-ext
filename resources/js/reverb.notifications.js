@@ -318,6 +318,20 @@
 		}
 	});
 
+	$(document).on('click', "#reverb-mark-all-read-panel", function(){
+		api.post({action:'notifications', do:'dismissAllNotifications', format:'json', formatversion: 2})
+		.done(function(data) {
+			generateWithFilters({page: 0, perpage: perPage}, false);
+			$('.reverb-npn > .reverb-npn-row').each(function(){
+				$(this).hide();
+			});
+			$('.reverb-np-no-unread').show();
+			meta.read = meta.read + meta.unread;
+			meta.unread = 0;
+			updateCounts();
+		});	
+	});
+
 	/***
 	 *    ███████╗██████╗ ███████╗ ██████╗██╗ █████╗ ██╗         ██████╗  █████╗  ██████╗ ███████╗
 	 *    ██╔════╝██╔══██╗██╔════╝██╔════╝██║██╔══██╗██║         ██╔══██╗██╔══██╗██╔════╝ ██╔════╝
@@ -332,7 +346,6 @@
 	 */
 
 	if (reverbNotificationPage) {
-
 		var perPage = 10;
 		var activeFilters = {};
 
@@ -528,7 +541,7 @@
 		// lots of i18n stuff to add in here...
 		var html = '<div class="reverb-np">'
 				 + '    <div class="reverb-np-header">'
-				 + '        <span class="reverb-nph-right"><a href="/Special:Notifications">'+l('view-all')+' <i class="fa fa-arrow-right"></i></a></span>'
+				 + '        <span class="reverb-nph-right"><span id="reverb-mark-all-read-panel">' + l('special-button-mark-all-read') + '</span></span>'
 				 + '        <span class="reverb-nph-notifications">'+ l('notifications') +' (<span class="reverb-total-notifications">0</span>)</span>'
 				 + '        <span class="reverb-nph-preferences"><a href="/Special:Preferences#mw-prefsection-reverb"><i class="fa fa-cog"></i></a></span>'
 				 + '    </div>'
