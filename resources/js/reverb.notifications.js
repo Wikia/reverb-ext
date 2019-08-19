@@ -416,20 +416,34 @@
 			}
 		});
 
+		var makeNewFilter = function() {
+			var newFilters = activeFilters;
+			newFilters.page = 0;
+			newFilters.perpage = perPage;
+			return newFilters;
+		};
+
 		$("#reverb-ru-all").click(function(){
-			generateWithFilters({page: 0, perpage: perPage}, true);
+			var newFilters = makeNewFilter();
+			generateWithFilters(newFilters, true);
 			$(".reverb-active-button").removeClass('reverb-active-button');
 			$(this).addClass('reverb-active-button');
 		});
 
 		$("#reverb-ru-unread").click(function(){
-			generateWithFilters({page: 0, perpage: perPage, unread: 1}, true);
+			var newFilters = makeNewFilter();
+			newFilters.unread = 1;
+			delete(newFilters.read);
+			generateWithFilters(newFilters, true);
 			$(".reverb-active-button").removeClass('reverb-active-button');
 			$(this).addClass('reverb-active-button');
 		});
 
 		$("#reverb-ru-read").click(function(){
-			generateWithFilters({page: 0, perpage: perPage, read: 1}, true);
+			var newFilters = makeNewFilter();
+			newFilters.read = 1;
+			delete(newFilters.unread);
+			generateWithFilters(newFilters, true);
 			$(".reverb-active-button").removeClass('reverb-active-button');
 			$(this).addClass('reverb-active-button');
 		});
