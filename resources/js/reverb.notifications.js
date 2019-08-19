@@ -403,19 +403,22 @@
 			}
 		});
 
-		$("#reverb-ru-all").click(function(){
+		var makeNewFilter = function() {
 			var newFilters = activeFilters;
 			newFilters.page = 0;
 			newFilters.perpage = perPage;
+			return newFilters;
+		};
+
+		$("#reverb-ru-all").click(function(){
+			var newFilters = makeNewFilter();
 			generateWithFilters(newFilters, true);
 			$(".reverb-active-button").removeClass('reverb-active-button');
 			$(this).addClass('reverb-active-button');
 		});
 
 		$("#reverb-ru-unread").click(function(){
-			var newFilters = activeFilters;
-			newFilters.page = 0;
-			newFilters.perpage = perPage;
+			var newFilters = makeNewFilter();
 			newFilters.unread = 1;
 			delete(newFilters.read);
 			generateWithFilters(newFilters, true);
@@ -424,9 +427,7 @@
 		});
 
 		$("#reverb-ru-read").click(function(){
-			var newFilters = activeFilters;
-			newFilters.page = 0;
-			newFilters.perpage = perPage;
+			var newFilters = makeNewFilter();
 			newFilters.read = 1;
 			delete(newFilters.unread);
 			generateWithFilters(newFilters, true);
