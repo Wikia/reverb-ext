@@ -1,3 +1,6 @@
+## Setup
+Reverb requires the RedisCache and Twiggy extensions to function.
+
 ## Configuration
 ### $wgReverbNotifications
 `$wgReverbNotifications` defines the notifications that will be displayed and handled by the extension.  Notification types not defined in this setting may still be returned from the service, but will be display with less formatting information.
