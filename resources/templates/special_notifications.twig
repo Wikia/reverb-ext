@@ -13,7 +13,7 @@
 		{% for group, types in groups %}
 			<div class="reverb-filter-row">
 				<input type="checkbox" id="filter_{{ group }}" data-types="{{ types|join(',') }}" class="reverb-filter-checkbox">
-				<label for="filter_{{ group }}" class="reverb-filter-label"> {{ wfMessage('special-sidebar-' ~ group, '50') }} Oh yeah this is really long now woooo </label>
+				<label for="filter_{{ group }}" class="reverb-filter-label"> {{ wfMessage('special-sidebar-' ~ group, '50') }} </label>
 			</div>
 		{% endfor %}
 		</div>
