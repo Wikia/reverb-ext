@@ -102,6 +102,37 @@ trait NotificationListTrait {
 	}
 
 	/**
+	 * Get an array of notification groups to notifications.  Good for filter groups.
+	 * [
+	 *     'user_wiki_claim' => ['user-account-wiki-claim-created', 'user-account-wiki-claim-pending'],
+	 *     'article-edit-revert' => ['article-edit-revert']
+	 * ]
+	 *
+	 * @param User|null $user [Optional] Only show filters that the given user can see.
+	 *
+	 * @return array
+	 */
+	public static function getNotificationsGroupedByPreference(?User $user): array {
+		$typesRaw = self::getNotificationList();
+
+		$groups = [];
+		foreach ($typesRaw as $type => $data) {
+			if ($user !== null && !self::isNotificationAllowedForUser($user, $data)) {
+				continue;
+			}
+			if (isset($data['use-preference'])) {
+				$groups[$data['use-preference']][] = $type;
+			} else {
+				$groups[$type][] = $type;
+			}
+		}
+
+		ksort($groups);
+
+		return $groups;
+	}
+
+	/**
 	 * Check user permission for a notification
 	 *
 	 * @param User  $user
