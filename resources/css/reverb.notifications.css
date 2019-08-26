@@ -69,11 +69,12 @@ div.reverb-np-arrow {
 .reverb-nph-right {
 	float: right;
 	font-size: 14px;
-	font-weight: bold;
-	font-style: normal;
 	font-stretch: normal;
-	line-height: 1;
+	font-style: normal;
+	font-weight: bold;
 	letter-spacing: normal;
+	line-height: 1;
+	margin: 3px 0;
 	text-align: right;
 }
 
@@ -108,19 +109,28 @@ div.reverb-np-arrow {
 }
 
 .reverb-nph-notifications {
-	padding: 0px 10px 0px 0px;
 	border-right: 1px solid #4f4f4f;
 	font-family: Helvetica, sans-serif;
 	font-size: 20px;
-	font-weight: bold;
-	font-style: normal;
 	font-stretch: normal;
-	line-height: 1;
+	font-style: normal;
+	font-weight: bold;
 	letter-spacing: normal;
+	line-height: 1;
+	padding: 0px 10px 0px 0px;
 }
 
 .reverb-nph-preferences {
 	padding: 0px 0px 0px 5px;
+}
+
+.reverb-nph-notifications a,
+.reverb-nph-notifications a:hover,
+.reverb-nph-notifications a:visited,
+.reverb-nph-preferences a,
+.reverb-nph-preferences a:hover,
+.reverb-nph-preferences a:visited {
+	color: #fff;
 }
 
 .reverb-np-no-unread {
