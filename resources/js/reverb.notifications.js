@@ -321,9 +321,9 @@
 	$(document).on('click', "#reverb-mark-all-read-panel", function(){
 		api.post(
 			{
-				action:'notifications',
-				do:'dismissAllNotifications',
-				format:'json',
+				action: 'notifications',
+				do: 'dismissAllNotifications',
+				format: 'json',
 				formatversion: 2
 			}
 		).done(function(data) {
