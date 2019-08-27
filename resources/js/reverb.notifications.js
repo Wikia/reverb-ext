@@ -327,6 +327,15 @@
 				formatversion: 2
 			}
 		).done(function(data) {
+			if (reverbNotificationPage) {
+				generateWithFilters(
+					{
+						page: 0,
+						perpage: perPage
+					},
+					false
+				);
+			}
 			$('.reverb-npn > .reverb-npn-row').each(function(){
 				$(this).hide();
 			});
