@@ -319,9 +319,14 @@
 	});
 
 	$(document).on('click', "#reverb-mark-all-read-panel", function(){
-		api.post({action:'notifications', do:'dismissAllNotifications', format:'json', formatversion: 2})
-		.done(function(data) {
-			generateWithFilters({page: 0, perpage: perPage}, false);
+		api.post(
+			{
+				action:'notifications',
+				do:'dismissAllNotifications',
+				format:'json',
+				formatversion: 2
+			}
+		).done(function(data) {
 			$('.reverb-npn > .reverb-npn-row').each(function(){
 				$(this).hide();
 			});
@@ -331,58 +336,6 @@
 			updateCounts();
 		});	
 	});
-
-	var generateWithFilters = function(filters, noUpdateCount) {
-		activeFilters = filters;
-		noUpdateCount = noUpdateCount ? true : false;
-		var showingRead = false;
-
-		if (typeof filters.read !== "undefined" && filters.read) {
-			showingRead = true;
-		}
-
-		loadNotifications(filters, function(data) {
-			if (!noUpdateCount) {
-				updateCounts(true);
-			}
-			if (data.notifications && data.notifications.length) {
-				$(".reverb-notification-page-paging").empty();
-				$(".reverb-notification-page-notifications").empty();
-				var notifications = buildNotificationsFromData(data,false);
-				for (var x in notifications) {
-					addNotification(notifications[x],'specialpage');
-				}
-
-				if (meta.total_all > meta.total_this_page) {
-					// Oh boy, we gotta do pagination guys
-					$(".reverb-notification-page-paging").pagination({
-						items: meta.total_all,
-						itemsOnPage: meta.items_per_page,
-						cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
-						onPageClick: function(page,event) {
-							var newfilters = activeFilters;
-							newfilters.page = page-1;
-							loadNotifications(newfilters, function(data) {
-								if (data.notifications && data.notifications.length) {
-									$(".reverb-notification-page-notifications").empty();
-									var notifications = buildNotificationsFromData(data,false);
-									for (var x in notifications) {
-										addNotification(notifications[x],'specialpage');
-									}
-								}
-							});
-						}
-					});
-				}
-			} else {
-				// We need to display a "no items" section.
-				$(".reverb-notification-page-paging").empty();
-				$(".reverb-notification-page-notifications").empty();
-				addNotification(buildNoNotifications(showingRead),'specialpage');
-			}
-
-		});
-	}
 
 	/***
 	 *    ███████╗██████╗ ███████╗ ██████╗██╗ █████╗ ██╗         ██████╗  █████╗  ██████╗ ███████╗
@@ -499,6 +452,58 @@
 			$(".reverb-active-button").removeClass('reverb-active-button');
 			$(this).addClass('reverb-active-button');
 		});
+
+
+		var generateWithFilters = function(filters, noUpdateCount) {
+			activeFilters = filters;
+			noUpdateCount = noUpdateCount ? true : false;
+			var showingRead = false;
+
+			if (typeof filters.read !== "undefined" && filters.read) {
+				showingRead = true;
+			}
+
+			loadNotifications(filters, function(data) {
+				if (!noUpdateCount) {
+					updateCounts(true);
+				}
+				if (data.notifications && data.notifications.length) {
+					$(".reverb-notification-page-paging").empty();
+					$(".reverb-notification-page-notifications").empty();
+					var notifications = buildNotificationsFromData(data,false);
+					for (var x in notifications) {
+						addNotification(notifications[x],'specialpage');
+					}
+
+					if (meta.total_all > meta.total_this_page) {
+						// Oh boy, we gotta do pagination guys
+						$(".reverb-notification-page-paging").pagination({
+							items: meta.total_all,
+							itemsOnPage: meta.items_per_page,
+							cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
+							onPageClick: function(page,event) {
+								var newfilters = activeFilters;
+								newfilters.page = page-1;
+								loadNotifications(newfilters, function(data) {
+									if (data.notifications && data.notifications.length) {
+										$(".reverb-notification-page-notifications").empty();
+										var notifications = buildNotificationsFromData(data,false);
+										for (var x in notifications) {
+											addNotification(notifications[x],'specialpage');
+										}
+									}
+								});
+							}
+						});
+					}
+				} else {
+					// We need to display a "no items" section.
+					$(".reverb-notification-page-paging").empty();
+					$(".reverb-notification-page-notifications").empty();
+					addNotification(buildNoNotifications(showingRead),'specialpage');
+				}
+			});
+		}
 
 		var initialSpecialPageData = function() {
 			// Force filters reset back to "All" and repopulate.
