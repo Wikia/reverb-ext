@@ -556,7 +556,7 @@
 		var html = '<div class="reverb-np">'
 				 + '    <div class="reverb-np-header">'
 				 + '        <span class="reverb-nph-right"><span id="reverb-mark-all-read-panel">' + l('special-button-mark-all-read') + '</span></span>'
-				 + '        <span class="reverb-nph-notifications">'+ l('notifications') +' (<span class="reverb-total-notifications">0</span>)</span>'
+				 + '        <span class="reverb-nph-notifications"><a href="/Special:Notifications">'+ l('notifications') +' (<span class="reverb-total-notifications">0</span>)</a></span>'
 				 + '        <span class="reverb-nph-preferences"><a href="/Special:Preferences#mw-prefsection-reverb"><i class="fa fa-cog"></i></a></span>'
 				 + '    </div>'
 				 + '    <div class="reverb-npn">'
