@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Reverb\Special;
 
-use MediaWiki\MediaWikiServices;
+use Reverb\Traits\NotificationListTrait;
 use Reverb\TwiggyWiring;
 use SpecialPage;
 
 class SpecialNotifications extends SpecialPage {
+	use NotificationListTrait;
+
 	/**
 	 * Main Constructor
 	 *
@@ -41,19 +43,7 @@ class SpecialNotifications extends SpecialPage {
 		$twig = TwiggyWiring::init();
 		$template = $twig->load('@Reverb/special_notifications.twig');
 
-		$config = MediaWikiServices::getInstance()->getMainConfig();
-		$typesRaw = $config->get("ReverbNotifications");
-
-		$groups = [];
-		foreach ($typesRaw as $type => $data) {
-			if (isset($data['use-preference'])) {
-				$groups[$data['use-preference']][] = $type;
-			} else {
-				$groups[$type][] = $type;
-			}
-		}
-
-		ksort($groups);
+		$groups = self::getNotificationsGroupedByPreference($this->getUser());
 
 		// Additional Scrips for the Notification Page
 		$this->output->addModules('ext.reverb.notifications.scripts.notificationPage');
