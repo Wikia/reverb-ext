@@ -401,6 +401,14 @@ div.reverb-np-arrow {
 	border: 0; 
 }
 
+#reverb-mark-all-read-panel {
+	cursor: pointer;
+}
+
+#reverb-mark-all-read-panel:hover {
+	text-decoration: underline;
+}
+
 /**
 	Hydra Light and Minerva custom colors
 */
