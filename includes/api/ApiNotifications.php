@@ -45,7 +45,7 @@ class ApiNotifications extends ApiBase {
 				$response = $this->dismissAllNotifications();
 				break;
 			default:
-				$this->dieUsageMsg(['invaliddo', $this->params['do']]);
+				$this->dieWithError(['invaliddo', $this->params['do']]);
 				break;
 		}
 
