@@ -30,6 +30,13 @@
 	display: none;
 }
 
+
+div.reverb-np .reverb-npnrb-site a:link,
+div.reverb-np .reverb-npnrb-site a:active,
+div.reverb-np .reverb-npnrb-site a:visited {
+	color: #d9d9d9;
+}
+
 div.reverb-np-arrow:before,
 div.reverb-np:after {
 	content: ' ';
