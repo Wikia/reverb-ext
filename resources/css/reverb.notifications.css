@@ -1,4 +1,4 @@
-#netbar .netbar-box .reverb-notifications {
+#netbar .netbar-box.reverb-notifications {
 	cursor: pointer;
 	position: relative;
 }
