@@ -21,7 +21,7 @@ use MediaWiki\MediaWikiServices;
 use MWNamespace;
 use MWTimestamp;
 use OutputPage;
-use PreferencesForm;
+use PreferencesFormOOUI;
 use RecentChange;
 use RedisCache;
 use RequestContext;
@@ -704,17 +704,17 @@ class Hooks {
 	/**
 	 * Handle ghosting the configuration of stock MediaWiki preferences that have been hidden.
 	 *
-	 * @param array           $formData       An associative array containing the data from the preferences form.
-	 * @param PreferencesForm $form           The PreferencesForm object that represents the preferences form.
-	 * @param User            $user           The User object that can be used to change the user's preferences.
-	 * @param boolean         $result         The boolean return value of the Preferences::tryFormSubmit method.
-	 * @param array           $oldUserOptions An associative array containing the old user options (before save).
+	 * @param array               $formData       An associative array containing the data from the preferences form.
+	 * @param PreferencesFormOOUI $form           The PreferencesForm object that represents the preferences form.
+	 * @param User                $user           The User object that can be used to change the user's preferences.
+	 * @param boolean             $result         The boolean return value of the Preferences::tryFormSubmit method.
+	 * @param array               $oldUserOptions An associative array containing the old user options (before save).
 	 *
 	 * @return boolean True
 	 */
 	public static function onPreferencesFormPreSave(
 		array $formData,
-		PreferencesForm $form,
+		PreferencesFormOOUI $form,
 		User $user,
 		bool &$result,
 		array $oldUserOptions
