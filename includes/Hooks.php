@@ -845,7 +845,7 @@ class Hooks {
 
 		$redis = RedisCache::getClient('cache');
 
-		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullText());
+		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullURL());
 		$metas = (array)$redis->sMembers($cacheKey);
 
 		// If the cache is bad or something else goes wrong let MediaWiki handle it.
@@ -954,7 +954,7 @@ class Hooks {
 		// rc_last_oldid - ID of the old revision.
 		// rc_this_oldid - ID of the new revision.
 		$redis = RedisCache::getClient('cache');
-		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullText());
+		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullURL());
 		$redis->sAdd(
 			$cacheKey,
 			json_encode(
