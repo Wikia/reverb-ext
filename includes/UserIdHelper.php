@@ -6,7 +6,7 @@
  * @package Reverb
  * @author  Alexia E. Smith
  * @license MIT
- **/
+ */
 
 declare(strict_types=1);
 

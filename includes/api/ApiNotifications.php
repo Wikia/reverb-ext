@@ -6,14 +6,13 @@
  * @package Reverb
  * @author  Alexia E. Smith
  * @license GPL-2.0-or-later
- **/
+ */
 
 declare(strict_types=1);
 
 namespace Reverb\Api;
 
 use ApiBase;
-use CentralIdLookup;
 use Hydrawiki\Reverb\Client\V1\Resources\NotificationDismissals as NotificationDismissalsResource;
 use MediaWiki\MediaWikiServices;
 use Reverb\Identifier\Identifier;
@@ -147,7 +146,6 @@ class ApiNotifications extends ApiBase {
 
 		$success = false;
 
-		$lookup = CentralIdLookup::factory();
 		$serviceUserId = UserIdHelper::getUserIdForService($this->getUser());
 		$userIdentifier = Identifier::newUser($serviceUserId);
 		$dismiss = new NotificationDismissalsResource(

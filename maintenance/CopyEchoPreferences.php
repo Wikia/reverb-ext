@@ -6,7 +6,7 @@
  * @package Reverb
  * @author  Alexia E. Smith
  * @license MIT
- **/
+ */
 
 namespace Reverb\Maintenance;
 

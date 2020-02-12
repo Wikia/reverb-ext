@@ -6,7 +6,7 @@
  * @package Reverb
  * @author  Alexia E. Smith
  * @license GPL-2.0-or-later
- **/
+ */
 
 namespace Reverb\Traits;
 

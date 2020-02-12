@@ -6,14 +6,13 @@
  * @package Reverb
  * @author  Alexia E. Smith
  * @license GPL-2.0-or-later
- **/
+ */
 
 declare(strict_types=1);
 
 namespace Reverb\Notification;
 
 use ArrayObject;
-use CentralIdLookup;
 use Exception;
 use Hydrawiki\Reverb\Client\V1\Exceptions\ApiResponseInvalid;
 use MediaWiki\MediaWikiServices;
