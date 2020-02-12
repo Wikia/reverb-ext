@@ -17,7 +17,7 @@ use User;
 
 class UserIdHelper {
 	/**
-	 * Get the user ID for this user in the Cheevos service.
+	 * Get the user ID for this user in the Reverb service.
 	 *
 	 * @param User $user
 	 *
@@ -29,7 +29,7 @@ class UserIdHelper {
 	}
 
 	/**
-	 * Get a local User object for this user ID in the Cheevos service.
+	 * Get a local User object for this user ID in the Reverb service.
 	 *
 	 * @param integer $serviceUserId
 	 *
