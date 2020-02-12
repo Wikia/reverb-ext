@@ -27,6 +27,7 @@ use Reverb\Identifier\SiteIdentifier;
 use Reverb\Identifier\UserIdentifier;
 use Reverb\Traits\NotificationListTrait;
 use Reverb\Traits\UserContextTrait;
+use Reverb\UserIdHelper;
 use Title;
 use User;
 

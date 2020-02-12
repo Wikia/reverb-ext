@@ -20,6 +20,7 @@ use Reverb\Identifier\Identifier;
 use Reverb\Notification\Notification;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Notification\NotificationBundle;
+use Reverb\UserIdHelper;
 
 class ApiNotifications extends ApiBase {
 	/**
