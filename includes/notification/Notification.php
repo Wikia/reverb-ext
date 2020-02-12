@@ -295,7 +295,7 @@ class Notification {
 	public function getAgent(): ?User {
 		$id = $this->getAgentId();
 		if ($id !== null) {
-			$user = UserIdHelper::getUserForServiceUserId($id->whoAmI());
+			$user = UserIdHelper::getUserForServiceUserId(intval($id->whoAmI()));
 			if ($user !== null) {
 				return $user;
 			}
