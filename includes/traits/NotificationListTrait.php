@@ -10,9 +10,9 @@
 
 namespace Reverb\Traits;
 
-use User;
 use GlobalVarConfig;
 use MediaWiki\MediaWikiServices;
+use User;
 
 trait NotificationListTrait {
 	/**

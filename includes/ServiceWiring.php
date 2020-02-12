@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
-use MediaWiki\MediaWikiServices;
 use Hydrawiki\Reverb\Client\V1\ClientFactory;
+use MediaWiki\MediaWikiServices;
 
 return [
 	'ReverbApiClient' => function (MediaWikiServices $services) {
