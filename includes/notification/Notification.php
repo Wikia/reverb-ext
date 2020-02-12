@@ -451,8 +451,8 @@ class Notification {
 	 */
 	public static function dismissNotification(User $user, string $id, int $timestamp): bool {
 		$lookup = CentralIdLookup::factory();
-		$globalId = $lookup->centralIdFromLocalUser($user);
-		$userIdentifier = Identifier::newUser($globalId);
+		$serviceUserId = UserIdHelper::getUserIdForService($user);
+		$userIdentifier = Identifier::newUser($serviceUserId);
 		if (!$userIdentifier) {
 			return false;
 		}

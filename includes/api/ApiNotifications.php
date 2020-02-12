@@ -147,8 +147,8 @@ class ApiNotifications extends ApiBase {
 		$success = false;
 
 		$lookup = CentralIdLookup::factory();
-		$globalId = $lookup->centralIdFromLocalUser($this->getUser());
-		$userIdentifier = Identifier::newUser($globalId);
+		$serviceUserId = UserIdHelper::getUserIdForService($this->getUser());
+		$userIdentifier = Identifier::newUser($serviceUserId);
 		$dismiss = new NotificationDismissalsResource(
 			[
 				'target-id' => (string)$userIdentifier
