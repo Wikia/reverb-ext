@@ -6,13 +6,12 @@
  * @package Reverb
  * @author  Alexia E. Smith
  * @license GPL-2.0-or-later
- **/
+ */
 
 declare(strict_types=1);
 
 namespace Reverb\Notification;
 
-use CentralIdLookup;
 use DynamicSettings\Wiki;
 use Exception;
 use Hydrawiki\Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful as ApiRequestUnsuccessful;
@@ -27,6 +26,7 @@ use Reverb\Identifier\SiteIdentifier;
 use Reverb\Identifier\UserIdentifier;
 use Reverb\Traits\NotificationListTrait;
 use Reverb\Traits\UserContextTrait;
+use Reverb\UserIdHelper;
 use Title;
 use User;
 
@@ -295,8 +295,7 @@ class Notification {
 	public function getAgent(): ?User {
 		$id = $this->getAgentId();
 		if ($id !== null) {
-			$lookup = CentralIdLookup::factory();
-			$user = $lookup->localUserFromCentralId($id->whoAmI());
+			$user = UserIdHelper::getUserForServiceUserId(intval($id->whoAmI()));
 			if ($user !== null) {
 				return $user;
 			}
@@ -450,9 +449,8 @@ class Notification {
 	 * @return null
 	 */
 	public static function dismissNotification(User $user, string $id, int $timestamp): bool {
-		$lookup = CentralIdLookup::factory();
-		$globalId = $lookup->centralIdFromLocalUser($user);
-		$userIdentifier = Identifier::newUser($globalId);
+		$serviceUserId = UserIdHelper::getUserIdForService($user);
+		$userIdentifier = Identifier::newUser($serviceUserId);
 		if (!$userIdentifier) {
 			return false;
 		}

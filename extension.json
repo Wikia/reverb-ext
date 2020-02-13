@@ -28,7 +28,6 @@
 	"AutoloadClasses": {
 		"Reverb\\Api\\ApiNotifications": "includes/api/ApiNotifications.php",
 		"Reverb\\Hooks": "includes/Hooks.php",
-		"Reverb\\TwiggyWiring": "includes/TwiggyWiring.php",
 		"Reverb\\Identifier\\Identifier": "includes/identifier/Identifier.php",
 		"Reverb\\Identifier\\InvalidIdentifierException": "includes/identifier/InvalidIdentifierException.php",
 		"Reverb\\Identifier\\SiteIdentifier": "includes/identifier/SiteIdentifier.php",
@@ -38,7 +37,9 @@
 		"Reverb\\Notification\\NotificationBundle": "includes/notification/NotificationBundle.php",
 		"Reverb\\Notification\\NotificationEmail": "includes/notification/NotificationEmail.php",
 		"Reverb\\Special\\SpecialNotifications": "includes/special/SpecialNotifications.php",
-		"Reverb\\Traits\\UserContextTrait": "includes/traits/UserContextTrait.php"
+		"Reverb\\Traits\\UserContextTrait": "includes/traits/UserContextTrait.php",
+		"Reverb\\TwiggyWiring": "includes/TwiggyWiring.php",
+		"Reverb\\UserIdHelper": "includes/UserIdHelper.php"
 	},
 	"ServiceWiringFiles": [
 		"includes/ServiceWiring.php"

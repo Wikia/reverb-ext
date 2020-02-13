@@ -9,8 +9,8 @@
 
 namespace Tests\Unit\Includes\Notification;
 
-use Reverb\Notification\Notification;
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
+use Reverb\Notification\Notification;
 use Tests\TestCase;
 
 class NotificationTest extends TestCase {

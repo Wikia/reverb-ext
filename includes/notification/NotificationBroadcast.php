@@ -6,13 +6,12 @@
  * @package Reverb
  * @author  Alexia E. Smith
  * @license GPL-2.0-or-later
- **/
+ */
 
 declare(strict_types=1);
 
 namespace Reverb\Notification;
 
-use CentralIdLookup;
 use Hydrawiki\Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful;
 use Hydrawiki\Reverb\Client\V1\Resources\NotificationBroadcast as NotificationBroadcastResource;
 use MediaWiki\MediaWikiServices;
@@ -288,8 +287,7 @@ class NotificationBroadcast {
 			throw new MWException('Invalid agent passed.');
 		}
 
-		$lookup = CentralIdLookup::factory();
-		$agentGlobalId = $lookup->centralIdFromLocalUser($agent);
+		$agentGlobalId = UserIdHelper::getUserIdForService($agent);
 
 		if (empty($agentGlobalId)) {
 			return false;
@@ -317,15 +315,13 @@ class NotificationBroadcast {
 	 * @return void
 	 */
 	protected function setTargets(array $targets) {
-		$lookup = CentralIdLookup::factory();
-
 		$targetIdentifiers = [];
 		foreach ($targets as $key => $target) {
 			if (!($target instanceof User)) {
 				throw new MWException('Invalid target passed.');
 			}
 
-			$targetGlobalId = $lookup->centralIdFromLocalUser($target);
+			$targetGlobalId = UserIdHelper::getUserIdForService($target);
 			if (!$targetGlobalId) {
 				unset($targets[$key]);
 				continue;

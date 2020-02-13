@@ -6,15 +6,15 @@
  * @package Reverb
  * @author  Alexia E. Smith
  * @license GPL-2.0-or-later
- **/
+ */
 
 declare(strict_types=1);
 
 namespace Reverb\Notification;
 
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
-use MediaWiki\MediaWikiServices;
 use MailAddress;
+use MediaWiki\MediaWikiServices;
 use Reverb\Traits\NotificationListTrait;
 use Reverb\TwiggyWiring;
 use SpecialPage;

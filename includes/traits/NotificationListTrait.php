@@ -6,13 +6,13 @@
  * @package Reverb
  * @author  Samuel Hilson
  * @license GPL-2.0-or-later
- **/
+ */
 
 namespace Reverb\Traits;
 
-use User;
 use GlobalVarConfig;
 use MediaWiki\MediaWikiServices;
+use User;
 
 trait NotificationListTrait {
 	/**

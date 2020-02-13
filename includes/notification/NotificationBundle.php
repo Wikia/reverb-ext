@@ -6,19 +6,19 @@
  * @package Reverb
  * @author  Alexia E. Smith
  * @license GPL-2.0-or-later
- **/
+ */
 
 declare(strict_types=1);
 
 namespace Reverb\Notification;
 
 use ArrayObject;
-use CentralIdLookup;
 use Exception;
 use Hydrawiki\Reverb\Client\V1\Exceptions\ApiResponseInvalid;
 use MediaWiki\MediaWikiServices;
 use MWException;
 use Reverb\Identifier\Identifier;
+use Reverb\UserIdHelper;
 use User;
 
 class NotificationBundle extends ArrayObject {
@@ -121,16 +121,15 @@ class NotificationBundle extends ArrayObject {
 		// Make sure the page number is >= 0.
 		$pageNumber = max(0, $pageNumber);
 
-		$lookup = CentralIdLookup::factory();
-		$globalId = $lookup->centralIdFromLocalUser($user);
+		$serviceUserId = UserIdHelper::getUserIdForService($user);
 
 		$filters = self::validateFilters($filters);
 
-		if (!empty($globalId)) {
+		if (!empty($serviceUserId)) {
 			$notifications = [];
 
 			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-			$userIdentifier = Identifier::newUser($globalId);
+			$userIdentifier = Identifier::newUser($serviceUserId);
 
 			try {
 				$notificationTargetResources = $client->notification_targets()->page(
@@ -140,7 +139,7 @@ class NotificationBundle extends ArrayObject {
 					array_merge(
 						$filters,
 						[
-							'target-id' => 'hydra:user:' . $globalId
+							'target-id' => 'hydra:user:' . $serviceUserId
 						]
 					)
 				)->all();
