@@ -37,6 +37,7 @@
 		"Reverb\\Notification\\NotificationBundle": "includes/notification/NotificationBundle.php",
 		"Reverb\\Notification\\NotificationEmail": "includes/notification/NotificationEmail.php",
 		"Reverb\\Special\\SpecialNotifications": "includes/special/SpecialNotifications.php",
+		"Reverb\\Traits\\NotificationListTrait": "includes/traits/NotificationListTrait.php",
 		"Reverb\\Traits\\UserContextTrait": "includes/traits/UserContextTrait.php",
 		"Reverb\\TwiggyWiring": "includes/TwiggyWiring.php",
 		"Reverb\\UserIdHelper": "includes/UserIdHelper.php"
