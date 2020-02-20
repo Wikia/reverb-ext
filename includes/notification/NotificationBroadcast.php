@@ -20,6 +20,7 @@ use Reverb\Identifier\Identifier;
 use Reverb\Identifier\SiteIdentifier;
 use Reverb\Identifier\UserIdentifier;
 use Reverb\Traits\NotificationListTrait;
+use Reverb\UserIdHelper;
 use User;
 
 class NotificationBroadcast {
