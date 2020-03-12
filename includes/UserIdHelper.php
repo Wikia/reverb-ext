@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Reverb;
 
-use CentralIdLookup;
 use User;
 
 class UserIdHelper {
@@ -24,8 +23,7 @@ class UserIdHelper {
 	 * @return integer
 	 */
 	public static function getUserIdForService(User $user): int {
-		$lookup = CentralIdLookup::factory();
-		return $lookup->centralIdFromLocalUser($user, CentralIdLookup::AUDIENCE_RAW);
+		return $user->getId();
 	}
 
 	/**
@@ -36,7 +34,6 @@ class UserIdHelper {
 	 * @return User|null
 	 */
 	public static function getUserForServiceUserId(int $serviceUserId): ?User {
-		$lookup = CentralIdLookup::factory();
-		return $lookup->localUserFromCentralId($serviceUserId);
+		return User::newFromId($serviceUserId);
 	}
 }
