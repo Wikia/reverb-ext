@@ -29,7 +29,7 @@
 	"long-header-user-account-wiki-claim-inactive": "Dein [$4 wiki claim] Status für $2 wurde auf Inaktiv gestellt von [$6 $3]",
 	"long-header-user-interest-achievement-earned": "Erfolg erreicht!",
 	"long-header-user-interest-email-user": "[$4 $1] sendete dir eine Email mit folgenden Thema: $3.",
-	"long-header-user-interest-profile-comment-reply-other-self": "[$4 $1] replied to [$6 $3]'s comment on your [$5 profile].",
+	"long-header-user-interest-profile-comment-reply-other-self": "[$4 $1] antwortete auf [$6 $3]'s Kommentar bei deinem [$5 profile].",
 	"long-header-user-interest-profile-friendship": "[$2 $1] möchte [$3 dein Freund sein].",
 	"long-header-user-interest-talk-page-edit": "[$1 $2] {{GENDER:$2|hinterließ}} [$3 eine Nachricht auf {{GENDER:$4|deiner}} Diskussionsseite].",
 	"long-header-user-interest-thanks-log": "[$1 $2] {{GENDER:$2|dankte}} {{GENDER:$4|dir}} für [$7 deine Aktion] bezogen auf [$5 $6].",
