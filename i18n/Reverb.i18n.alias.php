@@ -37,3 +37,15 @@ $specialPageAliases['pl'] = [
 $specialPageAliases['ru'] = [
 	'Notifications' => ['Уведомления'],
 ];
+
+/**
+ * Chinese
+ */
+$specialPageAliases['zh'] = [
+	'Notifications' => ['通知'],
+];
+
+$specialPageAliases['zh-hans'] = [
+	'Notifications' => ['通知'],
+];
+
