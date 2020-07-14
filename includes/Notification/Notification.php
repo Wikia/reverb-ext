@@ -29,6 +29,8 @@ use Reverb\Traits\UserContextTrait;
 use Reverb\UserIdHelper;
 use Title;
 use User;
+use WikiDomain\WikiConfigData;
+use WikiDomain\WikiConfigDataService;
 
 class Notification {
 	use UserContextTrait;
@@ -233,9 +235,9 @@ class Notification {
 	/**
 	 * Return a Wiki object that has wiki information.
 	 *
-	 * @return Wiki|null
+	 * @return WikiConfigData|null
 	 */
-	public function getOrigin(): ?Wiki {
+	public function getOrigin(): ?WikiConfigData {
 		$id = $this->getOriginId();
 
 		if ($id !== null) {
@@ -245,11 +247,8 @@ class Notification {
 				return self::$wikiCache[$id];
 			}
 
-			if ($id === 'master') {
-				$wiki = Wiki::getFakeMainWiki();
-			} else {
-				$wiki = Wiki::loadFromHash($id);
-			}
+			$wikiConfigDataService = MediaWikiServices::getInstance()->getService(WikiConfigDataService::class);
+			$wikiInfo = $wikiConfigDataService->getWikiDataById($id);
 			if (!empty($wiki)) {
 				self::$wikiCache[$id] = $wiki;
 				return $wiki;
@@ -266,7 +265,7 @@ class Notification {
 	public function getOriginUrl(): ?string {
 		$origin = $this->getOrigin();
 		if ($origin !== null) {
-			return wfExpandUrl('//' . $origin->getDomains()->getDomain(), PROTO_HTTPS);
+			return $origin->getWikiUrl();
 		}
 		return null;
 	}
@@ -431,8 +430,8 @@ class Notification {
 			'created_at' => $this->getCreatedAt(),
 			'dismissed_at' => $this->getDismissedAt(),
 			'origin_url' => $this->getOriginUrl(),
-			'site_key' => ($wiki !== null ? $wiki->getSiteKey() : null),
-			'site_name' => ($wiki !== null ? $wiki->getNameForDisplay() : null),
+			'site_key' => ($wiki !== null ? $wiki->getWikiId() : null),
+			'site_name' => ($wiki !== null ? sprintf('%s (%s)', $wiki->getTitle(), mb_strtoupper($wiki->getLangCode(), 'UTF-8')) : null),
 			'agent_url' => $this->getAgentUrl(),
 			'canonical_url' => $this->getCanonicalUrl(),
 			'importance' => $this->getImportance()

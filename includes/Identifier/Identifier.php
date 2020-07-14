@@ -99,9 +99,10 @@ abstract class Identifier {
 	 * @return SiteIdentifier
 	 */
 	public static function newLocalSite(): SiteIdentifier {
-		$siteKey = Environment::getSiteKey();
+		$config = MediaWikiServices::getInstance()->getMainConfig();
+		$siteKey = $config->get('CityId');
 		if (empty($siteKey)) {
-			throw new MWException('Site key could not be detected.');
+			throw new MWException('CityId could not be detected.');
 		}
 		return self::factory(['namespace' => self::getConfiguredNamespace(), 'what' => 'site', 'who' => $siteKey]);
 	}
