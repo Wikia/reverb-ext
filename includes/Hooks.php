@@ -716,7 +716,7 @@ class Hooks {
 		array $formData,
 		PreferencesFormOOUI $form,
 		User $user,
-		bool &$result,
+		&$result,
 		array $oldUserOptions
 	): bool {
 		if (self::shouldHandleWatchlist()) {
