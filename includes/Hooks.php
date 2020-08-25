@@ -569,7 +569,12 @@ class Hooks {
 			return true;
 		}
 
-		$output->addModuleStyles('ext.reverb.notifications.styles');
+		$output->addModuleStyles(
+			[
+				'ext.reverb.notifications.styles',
+				'ext.hydraCore.font-awesome.styles'
+			]
+		);
 		$output->addModules('ext.reverb.notifications.scripts');
 		return true;
 	}

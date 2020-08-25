@@ -47,9 +47,6 @@
 	],
 	"ResourceModules": {
 		"ext.reverb.notifications.styles": {
-			"dependencies": [
-				"ext.hydraCore.font-awesome.styles"
-			],
 			"targets": [
 				"desktop",
 				"mobile"
