@@ -248,7 +248,7 @@ class Notification {
 			}
 
 			$wikiConfigDataService = MediaWikiServices::getInstance()->getService(WikiConfigDataService::class);
-			$wikiInfo = $wikiConfigDataService->getWikiDataById($id);
+			$wikiInfo = $wikiConfigDataService->getWikiDataById((int)$id);
 			if (!empty($wiki)) {
 				self::$wikiCache[$id] = $wiki;
 				return $wiki;
