@@ -247,14 +247,53 @@ class Notification {
 				return self::$wikiCache[$id];
 			}
 
-			$wikiConfigDataService = MediaWikiServices::getInstance()->getService(WikiConfigDataService::class);
-			$wikiInfo = $wikiConfigDataService->getWikiDataById((int)$id);
+			$wiki = self::getWikiInformation((string)$id);
 			if (!empty($wiki)) {
 				self::$wikiCache[$id] = $wiki;
 				return $wiki;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Get wiki information based on the provided site identifier.($dsSiteKey or $cityId)
+	 * This function is copied from Extension:Cheevos.  We should migrate this into another extension.
+	 *
+	 * @param string $siteKey
+	 *
+	 * @return WikiConfigData|null
+	 */
+	private static function getWikiInformation(string $siteKey): ?WikiConfigData {
+		$services = MediaWikiServices::getInstance();
+		$wikiConfigDataService = $services->getService(WikiConfigDataService::class);
+		if (strlen($siteKey) === 32) {
+			// Handle legecy $dsSiteKey MD5 hash.
+			$wikiVariablesService = $services->getService(WikiVariablesDataService::class);
+			$variableId = $wikiVariablesService->getVarIdByName('dsSiteKey');
+			if (!$variableId) {
+				return null;
+			}
+			$listOfWikisWithVar = $wikiVariablesService->getListOfWikisWithVar(
+				$variableId,
+				'=',
+				$siteKey,
+				'$',
+				0,
+				1
+			);
+			if ($listOfWikisWithVar['total_count'] === 1) {
+				$cityId = key($listOfWikisWithVar['result']);
+				$wiki = $wikiConfigDataService->getWikiDataById((int)$cityId);
+			}
+		} else {
+			$wiki = $wikiConfigDataService->getWikiDataById((int)$siteKey);
+		}
+		if (empty($wiki)) {
+			$wiki = null;
+		}
+
+		return $wiki;
 	}
 
 	/**
