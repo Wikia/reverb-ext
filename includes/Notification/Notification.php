@@ -271,7 +271,7 @@ class Notification {
 		if (strlen($siteKey) === 32) {
 			// Handle legecy $dsSiteKey MD5 hash.
 			$wikiVariablesService = $services->getService(WikiVariablesDataService::class);
-			$variableId = $wikiVariablesService->getVarIdByName('dsSiteKey');
+			$variableId = (int)$wikiVariablesService->getVarIdByName('dsSiteKey');
 			if (!$variableId) {
 				return null;
 			}
