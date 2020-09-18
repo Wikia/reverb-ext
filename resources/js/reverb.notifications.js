@@ -237,7 +237,7 @@
 			var timestamp = created_at.format("dddd, MMMM Do YYYY, h:mm:ss a");
 
 			var site_name = n.site_name;
-			var site_url = n.origin_url;
+			var site_url = n.origin_url.replace(/\/$/,"");
 
 			// Handle Read Count -- Not available from API yet
 			var wasRead = n.dismissed_at ? true : false;

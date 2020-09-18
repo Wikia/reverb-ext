@@ -29,6 +29,7 @@ use Reverb\Traits\UserContextTrait;
 use Reverb\UserIdHelper;
 use Title;
 use User;
+use WikiConfig\WikiVariablesDataService;
 use WikiDomain\WikiConfigData;
 use WikiDomain\WikiConfigDataService;
 
