@@ -213,45 +213,6 @@ class Hooks {
 	}
 
 	/**
-	 * Handler for LocalUserCreated hook.
-	 *
-	 * @param User    $user        User object that was created.
-	 * @param boolean $autocreated True when account was auto-created
-	 *
-	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/LocalUserCreated
-	 *
-	 * @return boolean
-	 */
-	public static function onLocalUserCreated(User $user, bool $autocreated): bool {
-		if (!$autocreated) {
-			// @TODO: Fix user note.
-			$broadcast = NotificationBroadcast::newSingle(
-				'user-interest-welcome',
-				$user,
-				$notifyUser,
-				[
-					'url' => $title->getFullURL(),
-					'message' => [
-						[
-							'user_note',
-							''
-						],
-						[
-							1,
-							$user->getName()
-						]
-					]
-				]
-			);
-			if ($broadcast) {
-				$broadcast->transmit();
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * Handler for UserGroupsChanged hook.
 	 *
 	 * @param User        $target    user that was changed
