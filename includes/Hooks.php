@@ -663,6 +663,12 @@ class Hooks {
 			if (isset($preference['section']) && $preference['section'] == 'personal/email') {
 				$preferences[$index]['section'] = 'reverb/reverb-email-options';
 			}
+
+			// Reverb supercedes Fandom email preferences, so don't show them in Special:Preferences
+			// Note: this depends on Reverb being loaded after fandom extensions
+			if (isset($preference['section']) && strpos($preference['section'], 'emailv2/') === 0) {
+				unset($preferences[$index]);
+			}
 		}
 		return true;
 	}
