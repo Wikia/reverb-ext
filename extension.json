@@ -134,7 +134,6 @@
 		"GetNewMessagesAlert": "Reverb\\Hooks::onGetNewMessagesAlert",
 		"GetPreferences": "Reverb\\Hooks::onGetPreferences",
 		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
-		"LocalUserCreated": "Reverb\\Hooks::onLocalUserCreated",
 		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
 		"PreferencesFormPreSave": "Reverb\\Hooks::onPreferencesFormPreSave",
 		"SendWatchlistEmailNotification": "Reverb\\Hooks::onSendWatchlistEmailNotification",
