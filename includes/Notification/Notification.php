@@ -14,6 +14,7 @@ namespace Reverb\Notification;
 
 use DynamicSettings\Wiki;
 use Exception;
+use Fandom\Includes\Util\UrlUtilityService;
 use Hydrawiki\Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful as ApiRequestUnsuccessful;
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use Hydrawiki\Reverb\Client\V1\Resources\NotificationTarget as NotificationTargetResource;
@@ -303,9 +304,13 @@ class Notification {
 	 * @return string|null
 	 */
 	public function getOriginUrl(): ?string {
+		/**
+		 * @var UrlUtilityService $urlUtilityService
+		 */
+		$urlUtilityService = MediaWikiServices::getInstance()->getService( UrlUtilityService::class );
 		$origin = $this->getOrigin();
 		if ($origin !== null) {
-			return $origin->getWikiUrl();
+			return $urlUtilityService->forceHttps($origin->getWikiUrl());
 		}
 		return null;
 	}

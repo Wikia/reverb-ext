@@ -15,6 +15,7 @@ namespace Reverb;
 
 use Content;
 use EmailNotification;
+use Fandom\Includes\Util\UrlUtilityService;
 use LinksUpdate;
 use MailAddress;
 use MediaWiki\MediaWikiServices;
@@ -124,7 +125,7 @@ class Hooks {
 						$agent,
 						$notifyUser,
 						[
-							'url' => $title->getFullURL(),
+							'url' => self::getUserFacingUrl($title),
 							'message' => [
 								[
 									'user_note',
@@ -132,7 +133,7 @@ class Hooks {
 								],
 								[
 									1,
-									self::getAgentPage($agent)->getFullURL()
+									self::getAgentPageUrl($agent)
 								],
 								[
 									2,
@@ -140,7 +141,7 @@ class Hooks {
 								],
 								[
 									3,
-									$notifyUserTalk->getFullURL()
+									self::getUserFacingUrl($notifyUserTalk)
 								],
 								[
 									4,
@@ -167,7 +168,7 @@ class Hooks {
 						$agent,
 						$notifyUser,
 						[
-							'url' => $title->getFullURL(),
+							'url' => self::getUserFacingUrl($title),
 							'message' => [
 								[
 									'user_note',
@@ -187,11 +188,12 @@ class Hooks {
 								],
 								[
 									4,
-									$title->getFullURL()
+									self::getUserFacingUrl($title)
 								],
 								[
 									5,
-									$title->getFullURL(
+									self::getUserFacingUrl(
+										$title,
 										[
 											'type' => 'revision',
 											'oldid' => $undidRevId,
@@ -263,7 +265,7 @@ class Hooks {
 			}
 		}
 
-		$url = Title::newFromText($target->getName(), NS_USER)->getFullURL();
+		$url = self::getUserFacingUrl(Title::newFromText($target->getName(), NS_USER));
 		if ($expiryChanged) {
 			// @TODO: Fix user note.
 			$broadcast = NotificationBroadcast::newSingle(
@@ -401,7 +403,7 @@ class Hooks {
 					$agent,
 					$notifyUsers,
 					[
-						'url' => $linkToTitle->getFullURL(),
+						'url' => self::getUserFacingUrl($linkToTitle),
 						'message' => [
 							[
 								'user_note',
@@ -417,15 +419,15 @@ class Hooks {
 							],
 							[
 								3,
-								$linksUpdate->getTitle()->getFullURL()
+								self::getUserFacingUrl($linksUpdate->getTitle())
 							],
 							[
 								4,
-								$linkToTitle->getFullURL()
+								self::getUserFacingUrl($linkToTitle)
 							],
 							[
 								5,
-								self::getAgentPage($agent)->getFullURL()
+								self::getAgentPageUrl($agent)
 							],
 							[
 								6,
@@ -474,7 +476,7 @@ class Hooks {
 				$agent,
 				$notifyUser,
 				[
-					'url' => $title->getFullURL(),
+					'url' => self::getUserFacingUrl($title),
 					'message' => [
 						[
 							'user_note',
@@ -494,11 +496,12 @@ class Hooks {
 						],
 						[
 							4,
-							$title->getFullURL()
+							self::getUserFacingUrl($title)
 						],
 						[
 							5,
-							$title->getFullURL(
+							self::getUserFacingUrl(
+								$title,
 								[
 									'type' => 'revision',
 									'oldid' => $oldRevision->getId(),
@@ -742,7 +745,7 @@ class Hooks {
 				$reviewForm->getUser(),
 				$affectedRevisions,
 				[
-					'url' => $reviewForm->getPage()->getFullURL(),
+					'url' => self::getUserFacingUrl($reviewForm->getPage()),
 					'message' => [
 						[
 							'user_note',
@@ -762,11 +765,12 @@ class Hooks {
 						],
 						[
 							4,
-							$reviewForm->getPage()->getFullURL()
+							self::getUserFacingUrl($reviewForm->getPage())
 						],
 						[
 							5,
-							$reviewForm->getPage()->getFullURL(
+							self::getUserFacingUrl(
+								$reviewForm->getPage(),
 								[
 									'type' => 'revision',
 									'oldid' => $oldRev->getId(),
@@ -798,6 +802,33 @@ class Hooks {
 	}
 
 	/**
+	 * Get a url for the title suitable for displaying to users.
+	 *
+	 * @param Title
+	 *
+	 * @return string
+	 */
+	private static function getUserFacingUrl(Title $title, array $query = []): string {
+		/**
+		 * @var UrlUtilityService $urlUtilityService
+		 */
+		$urlUtilityService = MediaWikiServices::getInstance()->getService( UrlUtilityService::class );
+		return $urlUtilityService->forceHttps($title->getFullURL($query));
+	}
+
+	/**
+	 * Gets a stable cache key for batching watchlist notification edits for the title.
+	 *
+	 * @param Title $title
+	 *
+	 * @return string
+	 */
+	private static function getWatchlistCacheKey(Title $title): string {
+		// Force https because protocol normalization in service-oriented architectures is still an unsolved problem.
+		return 'ReverbWatchlist:edited:' . md5(self::getUserFacingUrl($title));
+	}
+
+	/**
 	 * Redirect watch list emails to Reverb notifications.
 	 *
 	 * @param User              $watchingUser      The owner of the watch page.
@@ -811,13 +842,14 @@ class Hooks {
 		Title $title,
 		EmailNotification $emailNotification
 	): bool {
+		global $wgServer;
 		if (!self::shouldHandleWatchlist()) {
 			return true;
 		}
 
 		$redis = RedisCache::getClient('cache');
 
-		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullURL());
+		$cacheKey = self::getWatchlistCacheKey($title);
 		$metas = (array)$redis->sMembers($cacheKey);
 
 		// If the cache is bad or something else goes wrong let MediaWiki handle it.
@@ -834,14 +866,15 @@ class Hooks {
 			// The getPerformer() function that generates this name does not validate to allow IP addresses through.
 			$agent = User::newFromName($meta['name'], false);
 
-			$canonicalUrl = $title->getFullUrl(
+			$canonicalUrl = self::getUserFacingUrl(
+				$title,
 				[
 					'type' => 'revision',
 					'oldid' => $meta['prev_oldid'],
 					'diff' => $meta['next_oldid']
 				]
 			);
-			$watchlistUrl = SpecialPage::getTitleFor('Watchlist')->getFullUrl();
+			$watchlistUrl = self::getUserFacingUrl(SpecialPage::getTitleFor('Watchlist'));
 
 			$language = RequestContext::getMain()->getLanguage();
 			if (isset($meta['timestamp'])) {
@@ -864,7 +897,7 @@ class Hooks {
 						],
 						[
 							1,
-							self::getAgentPage($agent)->getFullURL()
+							self::getAgentPageUrl($agent)
 						],
 						[
 							2,
@@ -872,7 +905,7 @@ class Hooks {
 						],
 						[
 							3,
-							$title->getFullUrl()
+							self::getUserFacingUrl($title)
 						],
 						[
 							4,
@@ -926,7 +959,7 @@ class Hooks {
 		// rc_last_oldid - ID of the old revision.
 		// rc_this_oldid - ID of the new revision.
 		$redis = RedisCache::getClient('cache');
-		$cacheKey = 'ReverbWatchlist:edited:' . md5($title->getFullURL());
+		$cacheKey = self::getWatchlistCacheKey($title);
 		$redis->sAdd(
 			$cacheKey,
 			json_encode(
@@ -969,7 +1002,7 @@ class Hooks {
 			User::newFromName($from->name),
 			User::newFromName($address->name),
 			[
-				'url' => SpecialPage::getTitleFor('EmailUser')->getFullUrl(),
+				'url' => self::getUserFacingUrl(SpecialPage::getTitleFor('EmailUser')),
 				'message' => [
 					[
 						'user_note',
@@ -989,7 +1022,7 @@ class Hooks {
 					],
 					[
 						4,
-						$fromUserTitle->getFullURL()
+						self::getUserFacingUrl($fromUserTitle)
 					]
 				]
 			]
@@ -1005,15 +1038,15 @@ class Hooks {
 	 *
 	 * @param User $agent The User
 	 *
-	 * @return Title MediaWiki Title of the desired user page.
+	 * @return string User-facing URL of the desired user page.
 	 */
-	private static function getAgentPage(User $agent): Title {
+	private static function getAgentPageUrl(User $agent): string {
 		if (!$agent->getId()) {
 			$agentPage = SpecialPage::getTitleFor('Contributions', $agent->getName());
 		} else {
 			$agentPage = Title::newFromText($agent->getName(), NS_USER);
 		}
-		return $agentPage;
+		return self::getUserFacingUrl($agentPage);
 	}
 
 	/**
