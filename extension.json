@@ -135,8 +135,6 @@
 		"GetPreferences": "Reverb\\Hooks::onGetPreferences",
 		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
 		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
-		"PreferencesFormPreSave": "Reverb\\Hooks::onPreferencesFormPreSave",
-		"SendWatchlistEmailNotification": "Reverb\\Hooks::onSendWatchlistEmailNotification",
 		"SpecialPageBeforeExecute": "Reverb\\Hooks::onSpecialPageBeforeExecute",
 		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged"
 	},
