@@ -19,12 +19,12 @@ use Fandom\Includes\Util\UrlUtilityService;
 use LinksUpdate;
 use MailAddress;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\UserIdentity;
 use MWNamespace;
 use MWTimestamp;
 use OutputPage;
 use PreferencesFormOOUI;
 use RecentChange;
-use RedisCache;
 use RequestContext;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Traits\NotificationListTrait;
@@ -35,6 +35,7 @@ use SpecialPage;
 use Status;
 use Title;
 use User;
+use UserArray;
 use UserArrayFromResult;
 use WikiPage;
 
@@ -677,33 +678,6 @@ class Hooks {
 	}
 
 	/**
-	 * Handle ghosting the configuration of stock MediaWiki preferences that have been hidden.
-	 *
-	 * @param array               $formData       An associative array containing the data from the preferences form.
-	 * @param PreferencesFormOOUI $form           The PreferencesForm object that represents the preferences form.
-	 * @param User                $user           The User object that can be used to change the user's preferences.
-	 * @param boolean             $result         The boolean return value of the Preferences::tryFormSubmit method.
-	 * @param array               $oldUserOptions An associative array containing the old user options (before save).
-	 *
-	 * @return boolean True
-	 */
-	public static function onPreferencesFormPreSave(
-		array $formData,
-		PreferencesFormOOUI $form,
-		User $user,
-		&$result,
-		array $oldUserOptions
-	): bool {
-		if (self::shouldHandleWatchlist()) {
-			// These need to be set to true to get to certain code paths that trigger code paths in Reverb.
-			$user->setOption('enotifusertalkpages', true);
-			$user->setOption('enotifwatchlistpages', true);
-		}
-
-		return true;
-	}
-
-	/**
 	 * Handle when FlaggedRevs reverts an edit.
 	 *
 	 * @param RevisionReviewForm $reviewForm The FlaggedRevs review form class.
@@ -817,91 +791,89 @@ class Hooks {
 	}
 
 	/**
-	 * Gets a stable cache key for batching watchlist notification edits for the title.
+	 * Handle RecentChanges AbortEmailNotification hook.
 	 *
-	 * @param Title $title
+	 * @param User         $editor       The owner of the watch page.
+	 * @param Title        $title        The title of the edited page.
+	 * @param RecentChange $recentChange The recentchanges object.
 	 *
-	 * @return string
+	 * @return boolean false if Reverb will handle watchlist notifications.
 	 */
-	private static function getWatchlistCacheKey(Title $title): string {
-		// Force https because protocol normalization in service-oriented architectures is still an unsolved problem.
-		return 'ReverbWatchlist:edited:' . md5(self::getUserFacingUrl($title));
-	}
-
-	/**
-	 * Redirect watch list emails to Reverb notifications.
-	 *
-	 * @param User              $watchingUser      The owner of the watch page.
-	 * @param Title             $title             The title of the edited page.
-	 * @param EmailNotification $emailNotification Useless, everything is protected with no getters.
-	 *
-	 * @return boolean Continue with default email handling
-	 */
-	public static function onSendWatchlistEmailNotification(
-		User $watchingUser,
-		Title $title,
-		EmailNotification $emailNotification
-	): bool {
-		global $wgServer;
+	public static function onAbortEmailNotification(User $editor, Title $title, RecentChange $recentChange): bool {
 		if (!self::shouldHandleWatchlist()) {
 			return true;
 		}
 
-		$redis = RedisCache::getClient('cache');
+		// This hook comes from RecentChanges save, where as part of page saving the recentchanges row is being
+		// written.  If the write rolls back, we shoudln't notify; additionally, this does all the service calls
+		// in post-output.
+		$dbw = wfGetDB(DB_MASTER);
+		$dbw->onTransactionCommitOrIdle(
+			function () use ($editor, $title, $recentChange) {
+				self::sendNotificationsForEdit($editor, $title, $recentChange);
+			}
+		);
 
-		$cacheKey = self::getWatchlistCacheKey($title);
-		$metas = (array)$redis->sMembers($cacheKey);
+		return false;
+	}
 
-		// If the cache is bad or something else goes wrong let MediaWiki handle it.
-		foreach ($metas as $meta) {
-			if (is_string($meta)) {
-				$meta = json_decode((string)$meta, true);
-				if (empty($meta)) {
-					continue;
-				}
-			} else {
-					continue;
+	/**
+	 * Send watch list notifications.
+	 *
+	 * @param User         $editor       The owner of the watch page.
+	 * @param Title        $title        The title of the edited page.
+	 * @param RecentChange $recentChange The recentchanges object.
+	 *
+	 * @return boolean false
+	 */
+	private static function sendNotificationsForEdit(User $editor, Title $title, RecentChange $recentChange) {
+		$comment = $recentChange->mAttribs['rc_comment'];
+		$timestamp = $recentChange->mAttribs['rc_timestamp'];
+		$curId = $recentChange->mAttribs['rc_cur_id'] ?? 0;
+		$diffOldId = $recentChange->mAttribs['rc_this_oldid'];
+		$prevOldId = $recentChange->mAttribs['rc_last_oldid'];
+
+		$canonicalUrl = self::getUserFacingUrl(
+			$title,
+			[
+				'curid' => $curId,
+				'diff' => $diffOldId,
+				'oldid' => $prevOldId,
+			]
+		);
+
+		$watchers = self::getWatchersForChange($recentChange);
+		$language = RequestContext::getMain()->getLanguage();
+		if (isset($timestamp)) {
+			$timestamp = MWTimestamp::convert(TS_ISO_8601, $timestamp);
+		} else {
+			$timestamp = MWTimestamp::now(TS_ISO_8601);
+		}
+
+		foreach ($watchers as $watchingUser) {
+			if (!$watchingUser || $watchingUser->isAnon()) {
+				continue;
 			}
 
-			// The getPerformer() function that generates this name does not validate to allow IP addresses through.
-			$agent = User::newFromName($meta['name'], false);
-
-			$canonicalUrl = self::getUserFacingUrl(
-				$title,
-				[
-					'type' => 'revision',
-					'oldid' => $meta['prev_oldid'],
-					'diff' => $meta['next_oldid']
-				]
-			);
-			$watchlistUrl = self::getUserFacingUrl(SpecialPage::getTitleFor('Watchlist'));
-
-			$language = RequestContext::getMain()->getLanguage();
-			if (isset($meta['timestamp'])) {
-				$timestamp = MWTimestamp::convert(TS_ISO_8601, $meta['timestamp']);
-			} else {
-				$timestamp = MWTimestamp::now(TS_ISO_8601);
-			}
 			$userDateAndTime = $language->userTimeAndDate($timestamp, $watchingUser);
-
 			$broadcast = NotificationBroadcast::new(
 				'article-edit-watch',
-				$agent,
+				$editor,
 				$watchingUser,
 				[
 					'url' => $canonicalUrl,
 					'message' => [
 						[
 							'user_note',
-							isset($meta['comment']) ? htmlentities($meta['comment'], ENT_QUOTES) : ''
+							isset($comment) ? htmlentities($comment, ENT_QUOTES) : ''
 						],
 						[
 							1,
-							self::getAgentPageUrl($agent)
+							self::getAgentPageUrl($editor)
 						],
 						[
 							2,
-							$agent->getName()
+							$editor->getName()
 						],
 						[
 							3,
@@ -930,51 +902,72 @@ class Hooks {
 					]
 				]
 			);
-			if ($broadcast) {
-				$broadcast->transmit();
-			}
+			$broadcast->transmit();
 		}
-
-		$redis->del($cacheKey);
-
-		return false;
 	}
 
 	/**
-	 * Save editor information for watch list notifications.
+	 * Get the watching users who should be notified of a change.
 	 *
-	 * @param User         $editor       The owner of the watch page.
-	 * @param Title        $title        The title of the edited page.
-	 * @param RecentChange $recentChange Useless, everything is protected with no getters.
+	 * @param RecentChange $change The change information
 	 *
-	 * @return boolean Continue with email notification
+	 * @return User[]
 	 */
-	public static function onAbortEmailNotification(User $editor, Title $title, RecentChange $recentChange): bool {
-		if (!self::shouldHandleWatchlist()) {
-			return true;
+	private static function getWatchersForChange(RecentChange $change): array {
+		global $wgUsersNotifiedOnAllChanges, $wgEnotifWatchlist, $wgBlockDisablesLogin, $wgEnotifMinorEdits,
+			$wgShowUpdatedMarker;
+
+		$minorEdit = $change->mAttribs['rc_minor'];
+		$timestamp = $change->mAttribs['rc_timestamp'];
+		$title = $change->getTitle();
+		$editor = $change->getPerformer();
+
+		if ($title->getNamespace() < 0) {
+			return [];
 		}
 
-		// We can get the revision information here to pass on, but onSendWatchlistEmailNotification can only retrieve
-		// the agent user name.  In the future we could bundle all of the users and display a 'X users edited...'.
-		// rc_last_oldid - ID of the old revision.
-		// rc_this_oldid - ID of the new revision.
-		$redis = RedisCache::getClient('cache');
-		$cacheKey = self::getWatchlistCacheKey($title);
-		$redis->sAdd(
-			$cacheKey,
-			json_encode(
-				[
-					'name' => $editor->getName(),
-					'prev_oldid' => $recentChange->mAttribs['rc_last_oldid'],
-					'next_oldid' => $recentChange->mAttribs['rc_this_oldid'],
-					'comment' => $recentChange->mAttribs['rc_comment'],
-					'timestamp' => $recentChange->mAttribs['rc_timestamp']
-				]
-			)
-		);
-		$redis->expire($cacheKey, 86400);
+		// update wl_notificationtimestamp for watchers
+		$watcherIds = [];
+		if ( $wgEnotifWatchlist || $wgShowUpdatedMarker ) {
+			$watcherIds = MediaWikiServices::getInstance()->getWatchedItemStore()->updateNotificationTimestamp(
+				$editor,
+				$title,
+				$timestamp
+			);
+		}
 
-		return true;
+		$userTalkId = false;
+		$users = [];
+		if (!$minorEdit || ($wgEnotifMinorEdits && !$editor->isAllowed('nominornewtalk'))) {
+			if ( $title->getNamespace() == NS_USER_TALK ) {
+				$targetUser = User::newFromName($title->getText());
+				$userTalkId = $targetUser->getId();
+			}
+
+			if ($wgEnotifWatchlist) {
+				// Send updates to watchers other than the current editor
+				// and don't send to watchers who are blocked and cannot login
+				$watchUsers = UserArray::newFromIDs( $watcherIds );
+
+				foreach ( $watchUsers as $watchingUser ) {
+					if ((!$minorEdit || $watchingUser->getOption('enotifminoredits')) &&
+						$watchingUser->isEmailConfirmed() && $watchingUser->getId() !== $userTalkId &&
+						!in_array($watchingUser->getName(), $wgUsersNotifiedOnAllChanges, true) &&
+						!($wgBlockDisablesLogin && $watchingUser->isBlocked()) ) {
+						$users[] = $watchingUser;
+					}
+				}
+			}
+		}
+
+		foreach ($wgUsersNotifiedOnAllChanges as $name) {
+			if ($editor->getName() === $name) {
+				continue;
+			}
+			$users[] = User::newFromName($name);
+		}
+
+		return $users;
 	}
 
 	/**
