@@ -14,18 +14,15 @@ declare(strict_types=1);
 namespace Reverb;
 
 use Content;
-use EmailNotification;
 use Fandom\Includes\Util\UrlUtilityService;
+use Language;
 use LinksUpdate;
 use MailAddress;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\User\UserIdentity;
 use MWNamespace;
 use MWTimestamp;
 use OutputPage;
-use PreferencesFormOOUI;
 use RecentChange;
-use RequestContext;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Traits\NotificationListTrait;
 use Revision;
@@ -843,7 +840,6 @@ class Hooks {
 		);
 
 		$watchers = self::getWatchersForChange($recentChange);
-		$language = RequestContext::getMain()->getLanguage();
 		if (isset($timestamp)) {
 			$timestamp = MWTimestamp::convert(TS_ISO_8601, $timestamp);
 		} else {
@@ -855,7 +851,8 @@ class Hooks {
 				continue;
 			}
 
-			$userDateAndTime = $language->userTimeAndDate($timestamp, $watchingUser);
+			$watchingLang = Language::factory( $watchingUser->getOption('language') );
+			$userDateAndTime = $watchingLang->userTimeAndDate($timestamp, $watchingUser);
 			$broadcast = NotificationBroadcast::new(
 				'article-edit-watch',
 				$editor,
