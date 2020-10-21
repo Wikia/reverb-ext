@@ -131,9 +131,15 @@ class NotificationEmail {
 
 		$config = MediaWikiServices::getInstance()->getMainConfig();
 		$wgCanonicalServer = $config->get("CanonicalServer");
+		$wgSitename = $config->get("Sitename");
+		$notificationFrom = wfMessage("reverb-email-notification-from")
+		->params($wgCanonicalServer, $wgSitename)
+		->inLanguage($user->getOption('language'))
+		->text();
 
 		$wrapped = $template->render(
 			[
+				'notification_from' => $notificationFrom,
 				'wgCanonicalServer' => $wgCanonicalServer,
 				'header' => (string)$notification->getHeader(true)->inLanguage($user->getOption('language')),
 				'user_note' => $notification->getUserNote(),
