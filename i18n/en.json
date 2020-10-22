@@ -77,6 +77,7 @@
 	"echo-badge-count": "{{PLURAL:$1|$1|100=99+}}",
 	"view-additional-unread": "View $1 Additional Unread",
 	"filter-by-type": "Filter by Type",
+	"reverb-email-notification-from": "Notification from: <a href='$1'>$2</a>",
 	"reverb-email-action-description": "View on Site",
 	"reverb-email-preferences-footer": "To control which notification emails we send <a href='$1'>change your preferences</a>.",
 	"prefs-reverb": "Notifications",
