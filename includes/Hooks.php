@@ -606,12 +606,6 @@ class Hooks {
 	 * @return boolean True in all cases.
 	 */
 	public static function onGetPreferences($user, &$preferences): bool {
-		if (self::shouldHandleWatchlist()) {
-			// Remove these preferences since they are handled by Reverb.
-			$remove = ['enotifusertalkpages' => false, 'enotifwatchlistpages' => false];
-			$preferences = array_diff_key($preferences, $remove);
-		}
-
 		$preferences['reverb-email-frequency'] = [
 			'type' => 'radio',
 			'help-message' => 'reverb-pref-email-options-toggle-help',
@@ -668,7 +662,8 @@ class Hooks {
 			// Reverb supercedes Fandom email preferences, so don't show them in Special:Preferences
 			// Note: this depends on Reverb being loaded after fandom extensions
 			if (isset($preference['section']) && strpos($preference['section'], 'emailv2/') === 0) {
-				unset($preferences[$index]);
+				$preferences[$index]['type'] = 'hidden';
+				$preferences[$index]['section'] = 'reverb/reverb-email-options';
 			}
 		}
 		return true;
