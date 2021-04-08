@@ -343,7 +343,7 @@
 			meta.read = meta.read + meta.unread;
 			meta.unread = 0;
 			updateCounts();
-		});	
+		});
 	});
 
 	/***
@@ -532,7 +532,8 @@
 	 */
 
 	var buildViewMore = function(more) {
-		var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="/Special:Notifications">'+mw.message('view-additional-unread', more).text()+' <i class="fa fa-arrow-right"></i></button></div>';
+		var notificationsUrl = new mw.Title('Special:Notifications').getUrl();
+		var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="' + notificationsUrl + '">'+mw.message('view-additional-unread', more).text()+' <i class="fa fa-arrow-right"></i></button></div>';
 		return $(html);
 	}
 
@@ -565,12 +566,15 @@
 	}
 
 	var buildNotificationPanel = function(data) {
+		var notificationUrl = new mw.Title('Special:Notifications').getUrl();
+		var preferencesUrl = new mw.Title('Special:Preferences#mw-prefsection-reverb').getUrl();
+
 		// lots of i18n stuff to add in here...
 		var html = '<div class="reverb-np">'
 				 + '    <div class="reverb-np-header">'
 				 + '        <span class="reverb-nph-right"><span id="reverb-mark-all-read-panel">' + l('special-button-mark-all-read') + '</span></span>'
-				 + '        <span class="reverb-nph-notifications"><a href="/Special:Notifications">'+ l('notifications') +' (<span class="reverb-total-notifications">0</span>)</a></span>'
-				 + '        <span class="reverb-nph-preferences"><a href="/Special:Preferences#mw-prefsection-reverb"><i class="fa fa-cog"></i></a></span>'
+				 + '        <span class="reverb-nph-notifications"><a href="' + notificationUrl + '">'+ l('notifications') +' (<span class="reverb-total-notifications">0</span>)</a></span>'
+				 + '        <span class="reverb-nph-preferences"><a href="' + preferencesUrl + '"><i class="fa fa-cog"></i></a></span>'
 				 + '    </div>'
 				 + '    <div class="reverb-npn">'
 				 + '        <div class="reverb-np-no-unread">'+l('no-unread')+'</div>'
