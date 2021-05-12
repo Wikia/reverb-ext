@@ -551,8 +551,10 @@ class Hooks {
 	public static function onBeforePageDisplay(OutputPage &$output, SkinTemplate &$skin) {
 		global $wgEnableHydraFeatures;
 
-		// only load JS and styles on old GP skins
-		if ( !$wgEnableHydraFeatures || $output->getSkin()->getSkinName() === 'fandomdesktop' ) {
+		// only load JS and styles on old GP skins and on other skins on Special:Notifactions
+		$shouldLoadAssets = $wgEnableHydraFeatures ||
+			( $output->getSkin()->getSkinName() === 'fandomdesktop' && $output->getTitle()->isSpecial( 'Notifications' ) );
+		if ( !$shouldLoadAssets ) {
 			return true;
 		}
 
