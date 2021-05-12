@@ -25,7 +25,7 @@ use OutputPage;
 use RecentChange;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Traits\NotificationListTrait;
-use Revision;
+use MediaWiki\Revision\RevisionStore;
 use RevisionReviewForm;
 use SkinTemplate;
 use SpecialPage;
@@ -681,18 +681,23 @@ class Hooks {
 		if ($reviewForm->getAction() === 'reject' && $status === true) {
 			// revid -> userid
 			$affectedRevisions = [];
-			$revQuery = Revision::getQueryInfo();
+			$revisionLookup = MediaWikiServices::getInstance()->getRevisionLookup();
+			$revisionStore = MediaWikiServices::getInstance()->getRevisionStore();
+			$revQuery = $revisionStore->getQueryInfo();
 			$article = new WikiPage($reviewForm->getPage());
-			$newRev = Revision::newFromTitle($reviewForm->getPage(), $reviewForm->getOldId());
-			$oldRev = Revision::newFromTitle($reviewForm->getPage(), $reviewForm->getRefId());
+			$newRev = $revisionLookup->getRevisionByTitle($reviewForm->getPage(), $reviewForm->getOldId());
+			$oldRev = $revisionLookup->getRevisionByTitle($reviewForm->getPage(), $reviewForm->getRefId());
+			$timestampField = isset( $revQuery['tables']['temp_rev_user'] )
+				? 'revactor_timestamp' : 'rev_timestamp';
+
 			$revisions = wfGetDB(DB_REPLICA)->select(
 				$revQuery['tables'],
 				['rev_id', 'rev_user' => $revQuery['fields']['rev_user']],
 				[
 					'rev_id <= ' . $newRev->getId(),
-					'rev_timestamp <= ' . $newRev->getTimestamp(),
+					"$timestampField <= " . $newRev->getTimestamp(),
 					'rev_id > ' . $oldRev->getId(),
-					'rev_timestamp > ' . $oldRev->getTimestamp(),
+					"$timestampField > " . $oldRev->getTimestamp(),
 					'rev_page' => $article->getId(),
 				],
 				__METHOD__,
