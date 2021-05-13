@@ -25,6 +25,7 @@ use OutputPage;
 use RecentChange;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Traits\NotificationListTrait;
+use Revision;
 use MediaWiki\Revision\RevisionStore;
 use RevisionReviewForm;
 use SkinTemplate;
