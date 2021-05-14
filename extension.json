@@ -22,6 +22,9 @@
 	"MessagesDirs": {
 		"HydraCore": [
 			"i18n"
+		],
+		"FandomDesktop": [
+			"i18n"
 		]
 	},
 	"callback": "Reverb\\Hooks::registerExtension",
