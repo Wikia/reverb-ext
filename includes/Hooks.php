@@ -100,6 +100,12 @@ class Hooks {
 		$baseRevId,
 		int $undidRevId = 0
 	): bool {
+		global $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return true;
+		}
+
 		if (!$revision) {
 			return true;
 		}
@@ -237,6 +243,12 @@ class Hooks {
 		array $oldUGMs = [],
 		array $newUGMs = []
 	): bool {
+		global $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return true;
+		}
+
 		if (!$performer) {
 			// TODO: Implement support for autopromotion
 			return true;
@@ -345,7 +357,11 @@ class Hooks {
 	 * @return boolean True
 	 */
 	public static function onLinksUpdateAfterInsert(LinksUpdate $linksUpdate, string $table, array $insertions): bool {
-		global $wgRequest;
+		global $wgRequest, $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return true;
+		}
 
 		// @FIXME: This doesn't work in 1.27+
 		// Rollback or undo should not trigger link notification
@@ -462,6 +478,12 @@ class Hooks {
 		Revision $newRevision,
 		Revision $oldRevision
 	): bool {
+		global $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return true;
+		}
+
 		$notifyUser = $oldRevision->getRevisionRecord()->getUser();
 		$latestRevision = $wikiPage->getRevision();
 
@@ -528,6 +550,15 @@ class Hooks {
 	 * @return boolean True
 	 */
 	public static function onBeforePageDisplay(OutputPage &$output, SkinTemplate &$skin) {
+		global $wgEnableHydraFeatures;
+
+		// only load JS and styles on old GP skins and on other skins on Special:Notifactions
+		$shouldLoadAssets = $wgEnableHydraFeatures ||
+			( $output->getSkin()->getSkinName() === 'fandomdesktop' && $output->getTitle()->isSpecial( 'Notifications' ) );
+		if ( !$shouldLoadAssets ) {
+			return true;
+		}
+
 		if ($output->getUser()->isAnon()) {
 			return true;
 		}
@@ -592,6 +623,12 @@ class Hooks {
 	 * @return boolean False, suppress entirely.
 	 */
 	public static function onGetNewMessagesAlert(&$newMessagesAlert, $newtalks, $user, $out): bool {
+		global $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -679,6 +716,12 @@ class Hooks {
 	 * @return boolean True
 	 */
 	public static function onFlaggedRevsRevisionReviewFormAfterDoSubmit(RevisionReviewForm $reviewForm, $status): bool {
+		global $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return true;
+		}
+
 		if ($reviewForm->getAction() === 'reject' && $status === true) {
 			// revid -> userid
 			$affectedRevisions = [];
@@ -770,6 +813,12 @@ class Hooks {
 	 * @return boolean False
 	 */
 	public static function onAbortTalkPageEmailNotification(User $targetUser, Title $title): bool {
+		global $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -798,6 +847,12 @@ class Hooks {
 	 * @return boolean false if Reverb will handle watchlist notifications.
 	 */
 	public static function onAbortEmailNotification(User $editor, Title $title, RecentChange $recentChange): bool {
+		global $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return true;
+		}
+
 		if (!self::shouldHandleWatchlist()) {
 			return true;
 		}
@@ -981,6 +1036,12 @@ class Hooks {
 	 * @return bool true in all cases
 	 */
 	public static function onEmailUserComplete(MailAddress $address, MailAddress $from, $subject, $text): bool {
+		global $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return true;
+		}
+
 		$fromUserTitle = Title::makeTitle(NS_USER, $from->name);
 
 		// strip the auto footer from email preview
