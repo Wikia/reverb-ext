@@ -644,6 +644,12 @@ class Hooks {
 	 * @return boolean True in all cases.
 	 */
 	public static function onGetPreferences($user, &$preferences): bool {
+		global $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return true;
+		}
+
 		$preferences['reverb-email-frequency'] = [
 			'type' => 'radio',
 			'help-message' => 'reverb-pref-email-options-toggle-help',
