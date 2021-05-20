@@ -46,7 +46,11 @@ class Hooks {
 	 * @return void
 	 */
 	public static function registerExtension() {
-		global $wgDefaultUserOptions, $wgReverbNotifications, $wgHiddenPrefs;
+		global $wgDefaultUserOptions, $wgReverbNotifications, $wgHiddenPrefs, $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return;
+		}
 
 		foreach ($wgReverbNotifications as $notification => $notificationData) {
 			[$email, $web] = self::getDefaultPreference($notificationData);
@@ -586,6 +590,12 @@ class Hooks {
 	 * @return void
 	 */
 	public static function onBeforeInitialize(&$title, &$article, &$output, &$user, $request, $mediaWiki) {
+		global $wgEnableHydraFeatures;
+
+		if ( !$wgEnableHydraFeatures ) {
+			return;
+		}
+
 		if ($title->equals(SpecialPage::getTitleFor("Preferences"))) {
 			$output->addModules('ext.reverb.preferences');
 		}
