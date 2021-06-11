@@ -41,7 +41,9 @@ class SpecialNotifications extends SpecialPage {
 		$this->requireLogin();
 
 		$twig = TwiggyWiring::init();
-		$template = $twig->load('@Reverb/special_notifications.twig');
+		$template = $twig->load($this->getContext()->getSkin()->getSkinName() === 'fandomdesktop'
+			? '@Reverb/special_notifications_fandomdesktop.twig'
+			: '@Reverb/special_notifications.twig');
 
 		$groups = self::getNotificationsGroupedByPreference($this->getUser());
 

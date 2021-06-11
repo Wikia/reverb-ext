@@ -20,6 +20,9 @@
 .reverb-filter-title {
   margin-bottom: 6px;
   font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .reverb-filter-row {
   padding: 12px 0;
@@ -27,28 +30,23 @@
   border-bottom: 1px solid var(--theme-border-color);
 }
 .reverb-filter-label {
-  background-image: url(../images/checkbox.png);
-  user-select: none;
+  display: flex;
+  align-items: center;
 }
 .reverb-filter-checkbox {
-  position: absolute;
-  z-index: -1000;
-  left: -1000px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
+  display: none;
 }
-.reverb-filter-checkbox + .reverb-filter-label {
-  padding-left: 30px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
+.reverb-filter-checkbox:checked + .reverb-filter-label .reverb-filter-checkbox--unchecked {
+  display: none;
 }
-.reverb-filter-checkbox:checked + .reverb-filter-label {
-  background-position: 0 -16px;
+.reverb-filter-checkbox:not(:checked) + .reverb-filter-label .reverb-filter-checkbox--checked {
+  display: none;
+}
+.reverb-filter-checkbox--unchecked, .reverb-filter-checkbox--checked {
+  margin-right: 12px;
+}
+.reverb-filter-checkbox--checked {
+  fill: var(--theme-link-color);
 }
 
 .reverb-button-bar button {
