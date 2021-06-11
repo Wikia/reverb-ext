@@ -74,6 +74,10 @@
 		text-align: right;
 	}
 
+	.wds-tabs {
+		flex-wrap: wrap;
+	}
+
 	.wds-button, .wds-tabs__tab {
 		cursor: pointer;
 	}
@@ -81,15 +85,6 @@
 	.wds-tabs__tab-label {
 		display: grid;
 	}
-}
-
-.reverb-icon {
-	width: 24px;
-	height: 24px;
-	position: relative;
-	top: 5px;
-	left: 5px;
-	color: #36c;
 }
 
 .reverb-npn-row {
@@ -194,4 +189,35 @@
 	input {
 		width: 3em;
 	}
+}
+
+.reverb-icon {
+	width: 18px;
+	min-width: 18px;
+	height: 18px;
+	margin: 6px 18px 0 6px;
+	display: block;
+	background-repeat: no-repeat;
+}
+
+.fa-user, .fa-user-circle {
+	background-image: url(/resources-ucp/dist/svg/wds-icons-user-small.svg);
+}
+.fa-user-cog {
+	background-image: url(/resources-ucp/dist/svg/wds-icons-gear-small.svg);
+}
+.fa-users {
+	background-image: url(/resources-ucp/dist/svg/wds-icons-users-small.svg);
+}
+.fa-file {
+	background-image: url(/resources-ucp/dist/svg/wds-icons-page-small.svg);
+}
+.fa-edit {
+	background-image: url(/resources-ucp/dist/svg/wds-icons-pencil-small.svg);
+}
+.fa-history {
+	background-image: url(/resources-ucp/dist/svg/wds-icons-clock-small.svg);
+}
+.fa-thumbs-up {
+	background-image: url(/resources-ucp/dist/svg/wds-icons-heart-small.svg);
 }
