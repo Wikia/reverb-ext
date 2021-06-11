@@ -1,15 +1,74 @@
 .reverb-notification-page {
   padding: 10px 0;
   display: flex;
-  justify-content: flex-start;
+  align-items: flex-start;
 }
 .reverb-notification-page-left {
+  border: 1px solid var(--theme-border-color);
+  border-radius: 3px;
   width: 300px;
-  border: solid 1px #bed1cf;
+  padding: 18px;
 }
 .reverb-notification-page-right {
   flex: 1;
-  margin-left: 20px;
+  margin-left: 24px;
+}
+.reverb-notification-page-notifications {
+  margin-top: 18px;
+}
+
+.reverb-filter-title {
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+.reverb-filter-row {
+  padding: 12px 0;
+  line-height: 1;
+  border-bottom: 1px solid var(--theme-border-color);
+}
+.reverb-filter-label {
+  background-image: url(../images/checkbox.png);
+  user-select: none;
+}
+.reverb-filter-checkbox {
+  position: absolute;
+  z-index: -1000;
+  left: -1000px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+.reverb-filter-checkbox + .reverb-filter-label {
+  padding-left: 30px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+.reverb-filter-checkbox:checked + .reverb-filter-label {
+  background-position: 0 -16px;
+}
+
+.reverb-button-bar button {
+  border-radius: 2px;
+  border: solid 1px #f37f20;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 10px;
+  margin-left: -5px;
+  /* Dumb way to bump them all together. Roll Tide */
+  font-size: 14px;
+  font-family: Helveta, sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+}
+.reverb-button-bar button:hover, .reverb-button-bar button.reverb-selected {
+  color: #f37f20;
+}
+.reverb-button-bar button.reverb-active-button {
+  color: #f37f20;
 }
 
 .reverb-icon {
@@ -22,35 +81,16 @@
 }
 
 .reverb-npn-row {
-  padding: 0 0 10px 0;
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  border-bottom: 1px solid var(--theme-border-color);
+  padding: 12px;
 }
 .reverb-npn-row-unread {
-  background: #393939;
+  background: rgba(var(--theme-accent-color--rgb), 0.1);
 }
-.reverb-npn-row:last-child.reverb-npnr-right {
-  border: 0;
-}
-
-.reverb-npnr-left {
-  padding: 10px 15px 0 5px;
-}
-
-.reverb-npnr-right {
-  flex: 1;
-  padding-right: 7px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #4f4f4f;
-}
-
-.reverb-npnr-unread {
-  background-color: #f37f20;
-}
-
-.reverb-npnr-read {
-  background-color: #303030;
+.reverb-npn-row:last-child {
+  border-bottom: 0;
 }
 
 .reverb-npnr-hitbox {
@@ -70,146 +110,20 @@
   right: 5px;
   border-radius: 25px;
 }
+.reverb-npnrc.reverb-npnr-unread {
+  background-color: var(--theme-accent-color);
+}
+.reverb-npnrc.reverb-npnr-read {
+  border: 1px solid var(--theme-border-color);
+}
 
 .reverb-npnr-header {
-  font-family: Helvetica, sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-}
-.reverb-npnr-header a:hover,
-.reverb-npnr-header a:link,
-.reverb-npnr-header a:active,
-.reverb-npnr-header a:visited {
-  color: #f37f20;
-}
-
-.reverb-npnr-body {
-  margin-top: 10px;
-  padding: 3px 0;
-  opacity: 0.75;
-  font-family: Helvetica, sans-serif;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
+  font-weight: 500;
 }
 
 .reverb-npnr-bottom {
-  margin-top: 10px;
-  width: 100%;
-  font-size: 14px;
-  line-height: 21px;
-  font-weight: bold;
-}
-
-.reverb-npnrb-site {
-  font-weight: normal;
   font-size: 12px;
-  color: #d9d9d9;
-}
-.reverb-npnrb-site a:link,
-.reverb-npnrb-site a:active,
-.reverb-npnrb-site a:visited {
-  color: #d9d9d9;
-}
-
-.reverb-filter-title {
-  margin: 20px 10px;
-  height: 18px;
-  font-family: Rubik, Helvetica, sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.13;
-  letter-spacing: normal;
-}
-
-.reverb-filter-row {
-  margin: 0px 10px;
-  padding: 10px 0px;
-  font-family: Rubik, Helvetica, sans-serif;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  border-bottom: 1px solid #4f4f4f;
-}
-
-input[type=checkbox].reverb-filter-checkbox {
-  position: absolute;
-  z-index: -1000;
-  left: -1000px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-}
-input[type=checkbox].reverb-filter-checkbox + label.reverb-filter-label {
-  padding-left: 21px;
-  height: 16px;
-  display: inline-block;
-  line-height: 16px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  font-size: 16px;
-  cursor: pointer;
-}
-input[type=checkbox].reverb-filter-checkbox:checked + label.reverb-filter-label {
-  background-position: 0 -16px;
-}
-
-label.reverb-filter-label {
-  background-image: url(../images/checkbox.png);
-  user-select: none;
-  width: 260px;
-  margin: 0;
-}
-
-.reverb-button-bar {
-  padding: 0 0 20px 0;
-  border-bottom: 1px solid #fff;
-}
-.reverb-button-bar button {
-  border-radius: 2px;
-  border: solid 1px #f37f20;
-  background-color: #000000;
-  color: #ffffff;
-  padding: 10px;
-  margin-left: -5px;
-  /* Dumb way to bump them all together. Roll Tide */
-  font-size: 14px;
-  font-family: Helveta, sans-serif;
-  font-weight: bold;
-  cursor: pointer;
-}
-.reverb-button-bar button:hover, .reverb-button-bar button.reverb-selected {
-  color: #f37f20;
-}
-
-button.reverb-active-button {
-  color: #f37f20;
-}
-
-.reverb-npp-bottom {
-  padding: 10px 0px 0px 0px;
-  border-top: 1px solid #4f4f4f;
-}
-
-.reverb-npp-top {
-  padding: 15px 0px 10px 0px;
-  border-bottom: 1px solid #4f4f4f;
+  margin-top: 9px;
 }
 
 .simple-pagination {
