@@ -34,15 +34,23 @@
 				</label>
 			</div>
 		{% endfor %}
-		</div>
+	</div>
 	<div class="reverb-notification-page-right">
-		<div class="reverb-button-bar">
-			<span class="reverb-pull-right">
-				<button id="reverb-mark-all-read">{{ wfMessage('special-button-mark-all-read') }}</button>
-			</span>
-			<button id="reverb-ru-all" class="reverb-active-button">{{ wfMessage('special-button-all', '0') }}</button>
-			<button id="reverb-ru-read">{{ wfMessage('special-button-read', '0') }}</button>
-			<button id="reverb-ru-unread">{{ wfMessage('special-button-unread', '0') }}</button>
+		<div class="reverb-button-bar wds-tabs__wrapper with-bottom-border">
+			<ul class="wds-tabs">
+				<li class="wds-tabs__tab">
+					<a href="#" class="wds-tabs__tab-label" id="reverb-mark-all-read">{{ wfMessage('special-button-mark-all-read') }}</a>
+				</li>
+				<li class="wds-tabs__tab wds-is-current">
+					<a href="#" class="wds-tabs__tab-label" id="reverb-ru-all">{{ wfMessage('special-button-all', '0') }}</a>
+				</li>
+				<li class="wds-tabs__tab">
+					<a href="#" class="wds-tabs__tab-label" id="reverb-ru-read">{{ wfMessage('special-button-read', '0') }}</a>
+				</li>
+				<li class="wds-tabs__tab">
+					<a href="#" class="wds-tabs__tab-label" id="reverb-ru-unread">{{ wfMessage('special-button-unread', '0') }}</a>
+				</li>
+			</ul>
 		</div>
 		<div class="reverb-notification-page-paging reverb-npp-top"></div>
 		<div class="reverb-notification-page-notifications">

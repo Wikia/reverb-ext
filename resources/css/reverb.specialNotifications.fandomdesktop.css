@@ -49,26 +49,6 @@
   fill: var(--theme-link-color);
 }
 
-.reverb-button-bar button {
-  border-radius: 2px;
-  border: solid 1px #f37f20;
-  background-color: #000000;
-  color: #ffffff;
-  padding: 10px;
-  margin-left: -5px;
-  /* Dumb way to bump them all together. Roll Tide */
-  font-size: 14px;
-  font-family: Helveta, sans-serif;
-  font-weight: bold;
-  cursor: pointer;
-}
-.reverb-button-bar button:hover, .reverb-button-bar button.reverb-selected {
-  color: #f37f20;
-}
-.reverb-button-bar button.reverb-active-button {
-  color: #f37f20;
-}
-
 .reverb-icon {
   width: 24px;
   height: 24px;

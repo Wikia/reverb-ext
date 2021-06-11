@@ -56,7 +56,15 @@
 		return userBox;
 	}
 
-
+	var setButtonActive = function (button) {
+		if (mw.config.get('skin') === 'fandomdesktop') {
+			$('.reverb-button-bar .wds-is-current').removeClass('wds-is-current');
+			button.parent().addClass('wds-is-current');
+		} else {
+			$('.reverb-button-bar .reverb-active-button').removeClass('reverb-active-button');
+			button.addClass('reverb-active-button');
+		}
+	};
 
 	reverbNotificationPage = (typeof window.reverbNotificationPage !== "undefined") ? true : false;
 	log('Notification Page: ' + reverbNotificationPage);
@@ -364,7 +372,8 @@
 		var activeFilters = {};
 
 		// Mark All as Read button
-		$("#reverb-mark-all-read").click(function(){
+		$("#reverb-mark-all-read").click(function(e){
+			e.preventDefault();
 			api.post({action:'notifications', do:'dismissAllNotifications', format:'json', formatversion: 2})
 			.done(function(data) {
 				generateWithFilters({page: 0, perpage: perPage}, false);
@@ -387,9 +396,7 @@
 						}
 					});
 					generateWithFilters({page: 0, perpage: perPage}, false);
-					$(".reverb-active-button").removeClass('reverb-active-button');
-					$("#reverb-ru-all").addClass('reverb-active-button');
-
+					setButtonActive($("#reverb-ru-all"));
 			} else {
 
 				if (e.originalEvent !== undefined) {
@@ -423,8 +430,7 @@
 						}
 
 						generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
-						$(".reverb-active-button").removeClass('reverb-active-button');
-						$("#reverb-ru-all").addClass('reverb-active-button');
+						setButtonActive($("#reverb-ru-all"));
 					}
 				}
 			}
@@ -437,29 +443,29 @@
 			return newFilters;
 		};
 
-		$("#reverb-ru-all").click(function(){
+		$("#reverb-ru-all").click(function(e){
+			e.preventDefault();
 			var newFilters = makeNewFilter();
 			generateWithFilters(newFilters, true);
-			$(".reverb-active-button").removeClass('reverb-active-button');
-			$(this).addClass('reverb-active-button');
+			setButtonActive($(this));
 		});
 
-		$("#reverb-ru-unread").click(function(){
+		$("#reverb-ru-unread").click(function(e){
+			e.preventDefault();
 			var newFilters = makeNewFilter();
 			newFilters.unread = 1;
 			delete(newFilters.read);
 			generateWithFilters(newFilters, true);
-			$(".reverb-active-button").removeClass('reverb-active-button');
-			$(this).addClass('reverb-active-button');
+			setButtonActive($(this));
 		});
 
-		$("#reverb-ru-read").click(function(){
+		$("#reverb-ru-read").click(function(e){
+			e.preventDefault();
 			var newFilters = makeNewFilter();
 			newFilters.read = 1;
 			delete(newFilters.unread);
 			generateWithFilters(newFilters, true);
-			$(".reverb-active-button").removeClass('reverb-active-button');
-			$(this).addClass('reverb-active-button');
+			setButtonActive($(this));
 		});
 
 
