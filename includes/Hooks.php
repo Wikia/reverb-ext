@@ -556,9 +556,12 @@ class Hooks {
 	public static function onBeforePageDisplay(OutputPage &$output, SkinTemplate &$skin) {
 		global $wgEnableHydraFeatures;
 
+		$skinName = $output->getSkin()->getSkinName();
+
 		// only load JS and styles on old GP skins and on other skins on Special:Notifactions
 		$shouldLoadAssets = $wgEnableHydraFeatures ||
-			( $output->getSkin()->getSkinName() === 'fandomdesktop' && $output->getTitle()->isSpecial( 'Notifications' ) );
+			( $skinName === 'fandomdesktop' && $output->getTitle()->isSpecial( 'Notifications' ) );
+
 		if ( !$shouldLoadAssets ) {
 			return true;
 		}
@@ -567,12 +570,10 @@ class Hooks {
 			return true;
 		}
 
-		$output->addModuleStyles(
-			[
-				'ext.reverb.notifications.styles',
-				'ext.hydraCore.font-awesome.styles'
-			]
-		);
+		if ($skinName !== 'fandomdesktop') {
+			$output->addModuleStyles( [ 'ext.reverb.notifications.styles', 'ext.hydraCore.font-awesome.styles' ] );
+		}
+
 		$output->addModules('ext.reverb.notifications.scripts');
 		return true;
 	}

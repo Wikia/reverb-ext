@@ -46,8 +46,13 @@ class SpecialNotifications extends SpecialPage {
 		$groups = self::getNotificationsGroupedByPreference($this->getUser());
 
 		// Additional Scrips for the Notification Page
+		if ($this->output->getContext()->getSkin()->getSkinName() === 'fandomdesktop') {
+			$this->output->addModuleStyles('ext.reverb.specialNotifications.fandomdesktop.styles');
+		} else {
+			$this->output->addModuleStyles('ext.reverb.notifications.styles.notificationPage');
+		}
+
 		$this->output->addModules('ext.reverb.notifications.scripts.notificationPage');
-		$this->output->addModuleStyles('ext.reverb.notifications.styles.notificationPage');
 		$this->output->setPageTitle(wfMessage('notifications')->escaped());
 
 		$this->output->addHtml($template->render(['groups' => $groups]));

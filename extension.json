@@ -1,9 +1,7 @@
 {
 	"name": "Reverb",
 	"version": "0.0.1",
-	"author": [
-		"Hydra Wiki Platform Team"
-	],
+	"author": ["Hydra Wiki Platform Team"],
 	"license-name": "GPL-2.0-or-later",
 	"descriptionmsg": "reverb_description",
 	"type": "other",
@@ -20,12 +18,8 @@
 		"SpecialNotifications": "i18n/Reverb.i18n.alias.php"
 	},
 	"MessagesDirs": {
-		"HydraCore": [
-			"i18n"
-		],
-		"FandomDesktop": [
-			"i18n"
-		]
+		"HydraCore": ["i18n"],
+		"FandomDesktop": ["i18n"]
 	},
 	"callback": "Reverb\\Hooks::registerExtension",
 	"AutoloadClasses": {
@@ -45,32 +39,17 @@
 		"Reverb\\TwiggyWiring": "includes/TwiggyWiring.php",
 		"Reverb\\UserIdHelper": "includes/UserIdHelper.php"
 	},
-	"ServiceWiringFiles": [
-		"includes/ServiceWiring.php"
-	],
+	"ServiceWiringFiles": ["includes/ServiceWiring.php"],
 	"ResourceModules": {
 		"ext.reverb.notifications.styles": {
-			"targets": [
-				"desktop",
-				"mobile"
-			],
-			"styles": [
-				"resources/css/reverb.notifications.css"
-			],
+			"targets": ["desktop", "mobile"],
+			"styles": ["resources/css/reverb.notifications.css"],
 			"position": "bottom"
 		},
 		"ext.reverb.notifications.scripts": {
-			"dependencies": [
-				"mediawiki.api"
-			],
-			"targets": [
-				"desktop",
-				"mobile"
-			],
-			"scripts": [
-				"resources/js/reverb.moment.js",
-				"resources/js/reverb.notifications.js"
-			],
+			"dependencies": ["mediawiki.api"],
+			"targets": ["desktop", "mobile"],
+			"scripts": ["resources/js/reverb.moment.js", "resources/js/reverb.notifications.js"],
 			"position": "bottom",
 			"messages": [
 				"special-button-all",
@@ -85,34 +64,23 @@
 			]
 		},
 		"ext.reverb.notifications.scripts.notificationPage": {
-			"targets": [
-				"desktop",
-				"mobile"
-			],
-			"scripts": [
-				"resources/js/reverb.notifications_page.js",
-				"resources/js/reverb.pagination.js"
-			],
+			"targets": ["desktop", "mobile"],
+			"scripts": ["resources/js/reverb.notifications_page.js", "resources/js/reverb.pagination.js"],
 			"position": "bottom"
 		},
 		"ext.reverb.notifications.styles.notificationPage": {
-			"targets": [
-				"desktop",
-				"mobile"
-			],
-			"styles": [
-				"resources/css/reverb.pagination.css"
-			],
+			"targets": ["desktop", "mobile"],
+			"styles": ["resources/css/reverb.pagination.css"],
+			"position": "bottom"
+		},
+		"ext.reverb.specialNotifications.fandomdesktop.styles": {
+			"targets": ["desktop"],
+			"styles": ["resources/css/reverb.specialNotifications.fandomdesktop.css"],
 			"position": "bottom"
 		},
 		"ext.reverb.preferences": {
-			"targets": [
-				"desktop",
-				"mobile"
-			],
-			"scripts": [
-				"resources/js/reverb.preferences.js"
-			],
+			"targets": ["desktop", "mobile"],
+			"scripts": ["resources/js/reverb.preferences.js"],
 			"position": "bottom"
 		}
 	},
@@ -212,14 +180,8 @@
 		},
 		"ReverbNotifiers": {
 			"value": {
-				"web": [
-					"ReverbNotifiers",
-					"notifyWithNotification"
-				],
-				"email": [
-					"ReverbNotifiers",
-					"notifyWithEmail"
-				]
+				"web": ["ReverbNotifiers", "notifyWithNotification"],
+				"email": ["ReverbNotifiers", "notifyWithEmail"]
 			}
 		}
 	},
