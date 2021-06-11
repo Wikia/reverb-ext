@@ -24,6 +24,14 @@
   align-items: center;
   justify-content: space-between;
 }
+.reverb-filter-icon {
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-controls-small.svg");
+  mask-image: url("/resources-ucp/dist/svg/wds-icons-controls-small.svg");
+}
 .reverb-filter-row {
   padding: 12px 0;
   line-height: 1;
@@ -43,10 +51,22 @@
   display: none;
 }
 .reverb-filter-checkbox--unchecked, .reverb-filter-checkbox--checked {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
   margin-right: 12px;
 }
+.reverb-filter-checkbox--unchecked {
+  background-color: currentColor;
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg");
+  mask-image: url("/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg");
+}
 .reverb-filter-checkbox--checked {
-  fill: var(--theme-link-color);
+  background-color: var(--theme-link-color);
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-checkbox-small.svg");
+  mask-image: url("/resources-ucp/dist/svg/wds-icons-checkbox-small.svg");
 }
 
 .reverb-button-bar {
@@ -168,31 +188,52 @@
 }
 
 .fa-user, .fa-user-circle {
-  background-image: url(/resources-ucp/dist/svg/wds-icons-user-small.svg);
+  background-color: currentColor;
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-user-small.svg");
+  mask-image: url("/resources-ucp/dist/svg/wds-icons-user-small.svg");
 }
 
 .fa-user-cog {
-  background-image: url(/resources-ucp/dist/svg/wds-icons-gear-small.svg);
+  background-color: currentColor;
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-gear-small.svg");
+  mask-image: url("/resources-ucp/dist/svg/wds-icons-gear-small.svg");
 }
 
 .fa-users {
-  background-image: url(/resources-ucp/dist/svg/wds-icons-users-small.svg);
+  background-color: currentColor;
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-users-small.svg");
+  mask-image: url("/resources-ucp/dist/svg/wds-icons-users-small.svg");
 }
 
 .fa-file {
-  background-image: url(/resources-ucp/dist/svg/wds-icons-page-small.svg);
+  background-color: currentColor;
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-page-small.svg");
+  mask-image: url("/resources-ucp/dist/svg/wds-icons-page-small.svg");
 }
 
 .fa-edit {
-  background-image: url(/resources-ucp/dist/svg/wds-icons-pencil-small.svg);
+  background-color: currentColor;
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-pencil-small.svg");
+  mask-image: url("/resources-ucp/dist/svg/wds-icons-pencil-small.svg");
 }
 
 .fa-history {
-  background-image: url(/resources-ucp/dist/svg/wds-icons-clock-small.svg);
+  background-color: currentColor;
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-clock-small.svg");
+  mask-image: url("/resources-ucp/dist/svg/wds-icons-clock-small.svg");
 }
 
 .fa-thumbs-up {
-  background-image: url(/resources-ucp/dist/svg/wds-icons-heart-small.svg);
+  background-color: currentColor;
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-heart-small.svg");
+  mask-image: url("/resources-ucp/dist/svg/wds-icons-heart-small.svg");
 }
 
 /*# sourceMappingURL=reverb.specialNotifications.fandomdesktop.css.map */

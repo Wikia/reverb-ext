@@ -2,20 +2,14 @@
 	<div class="reverb-notification-page-left">
 		<div class="reverb-filter-title">
 			{{ wfMessage('filter-by-type') }}
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" class="wds-icon wds-icon-small">
-				<path d="M12 4h4a1 1 0 1 0 0-2h-4a1 1 0 1 0 0 2M2 4h5a1 1 0 1 0 2 0V2a1 1 0 1 0-2 0H2a1 1 0 1 0 0 2m14 10h-4a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2m0-7a1 1 0 0 0-1 1H2a1 1 0 1 0 0 2h13a1 1 0 1 0 2 0V8a1 1 0 0 0-1-1m-8 6a1 1 0 0 0-1 1H2a1 1 0 1 0 0 2h5a1 1 0 1 0 2 0v-2a1 1 0 0 0-1-1"/>
-			</svg>
+			<span class="reverb-filter-icon"></span>
 		</div>
 
 		<div class="reverb-filter-row">
 			<input type="checkbox" id="filter_all" class="reverb-filter-checkbox" checked="checked">
 			<label for="filter_all" class="reverb-filter-label">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" class="wds-icon wds-icon-small reverb-filter-checkbox--unchecked">
-					<path d="M3 15h12V3H3v12zm13 2H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1z"/>
-				</svg>
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" class="wds-icon-small reverb-filter-checkbox--checked">
-					<path id="check-box-small" fill-rule="evenodd" d="M3 15h12V3H3v12zM16 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM7.293 11.707a.997.997 0 0 0 1.414 0l4-4a.999.999 0 1 0-1.414-1.414L8 9.586 6.707 8.293a.999.999 0 1 0-1.414 1.414l2 2z"/>
-				</svg>
+				<span class="reverb-filter-checkbox--unchecked"></span>
+				<span class="reverb-filter-checkbox--checked"></span>
 				{{ wfMessage('special-sidebar-all') }}
 			</label>
 		</div>
@@ -24,12 +18,8 @@
 			<div class="reverb-filter-row">
 				<input type="checkbox" id="filter_{{ group }}" data-types="{{ types|join(',') }}" class="reverb-filter-checkbox">
 				<label for="filter_{{ group }}" class="reverb-filter-label">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" class="wds-icon wds-icon-small reverb-filter-checkbox--unchecked">
-						<path d="M3 15h12V3H3v12zm13 2H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1z"/>
-					</svg>
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" class="wds-icon-small reverb-filter-checkbox--checked">
-						<path id="check-box-small" fill-rule="evenodd" d="M3 15h12V3H3v12zM16 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM7.293 11.707a.997.997 0 0 0 1.414 0l4-4a.999.999 0 1 0-1.414-1.414L8 9.586 6.707 8.293a.999.999 0 1 0-1.414 1.414l2 2z"/>
-					</svg>
+					<span class="reverb-filter-checkbox--unchecked"></span>
+					<span class="reverb-filter-checkbox--checked"></span>
 					{{ wfMessage('special-sidebar-' ~ group, '50') }}
 				</label>
 			</div>

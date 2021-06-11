@@ -1,3 +1,10 @@
+@mixin svgAsBackground( $url, $color ) {
+	background-color: $color;
+	background-repeat: no-repeat;
+	-webkit-mask-image: #{url($url)};
+	mask-image: #{url($url)};
+}
+
 .reverb-notification-page {
 	padding: 10px 0;
 	display: flex;
@@ -29,6 +36,12 @@
 		justify-content: space-between;
 	}
 
+	&-icon {
+		width: 18px;
+		height: 18px;
+		@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-controls-small.svg', currentColor);
+	}
+
 	&-row {
 		padding: 12px 0;
 		line-height: 1;
@@ -54,11 +67,18 @@
 
 	&-checkbox--unchecked,
 	&-checkbox--checked {
+		display: inline-block;
+		width: 18px;
+		height: 18px;
 		margin-right: 12px;
 	}
 
+	&-checkbox--unchecked {
+		@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg', currentColor);
+	}
+
 	&-checkbox--checked {
-		fill: var(--theme-link-color);
+		@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-checkbox-small.svg', var(--theme-link-color));
 	}
 }
 
@@ -201,23 +221,23 @@
 }
 
 .fa-user, .fa-user-circle {
-	background-image: url(/resources-ucp/dist/svg/wds-icons-user-small.svg);
+	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-user-small.svg', currentColor);
 }
 .fa-user-cog {
-	background-image: url(/resources-ucp/dist/svg/wds-icons-gear-small.svg);
+	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-gear-small.svg', currentColor);
 }
 .fa-users {
-	background-image: url(/resources-ucp/dist/svg/wds-icons-users-small.svg);
+	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-users-small.svg', currentColor);
 }
 .fa-file {
-	background-image: url(/resources-ucp/dist/svg/wds-icons-page-small.svg);
+	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-page-small.svg', currentColor);
 }
 .fa-edit {
-	background-image: url(/resources-ucp/dist/svg/wds-icons-pencil-small.svg);
+	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-pencil-small.svg', currentColor);
 }
 .fa-history {
-	background-image: url(/resources-ucp/dist/svg/wds-icons-clock-small.svg);
+	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-clock-small.svg', currentColor);
 }
 .fa-thumbs-up {
-	background-image: url(/resources-ucp/dist/svg/wds-icons-heart-small.svg);
+	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-heart-small.svg', currentColor);
 }
