@@ -1,191 +1,40 @@
-#netbar .netbar-box.reverb-notifications {
-  cursor: pointer;
-  position: relative;
+.reverb-notification-page {
+  padding: 10px 0;
+  display: flex;
+  justify-content: flex-start;
 }
-
-.reverb-filter-notice {
-  width: 100%;
-  text-align: center;
+.reverb-notification-page-left {
+  width: 300px;
+  border: solid 1px #bed1cf;
+}
+.reverb-notification-page-right {
+  flex: 1;
+  margin-left: 20px;
 }
 
 .reverb-icon {
   width: 24px;
   height: 24px;
-}
-
-.reverb-np {
-  /*display: none;*/
-  width: 500px;
-  height: auto;
-  border: 1px solid #4f4f4f;
-  background: #202020;
-  color: #ffffff;
-  position: absolute;
+  position: relative;
   top: 5px;
-  right: 15px;
-  z-index: 9999999;
-  border-radius: 5px;
-  padding: 20px;
-  font-family: "Helvetica", sans-serif;
-  display: none;
+  left: 5px;
+  color: #36c;
 }
 
-div.reverb-np .reverb-npnrb-site a:link,
-div.reverb-np .reverb-npnrb-site a:active,
-div.reverb-np .reverb-npnrb-site a:visited {
-  color: #d9d9d9;
-}
-
-div.reverb-np-arrow:before,
-div.reverb-np:after {
-  content: " ";
-  height: 0;
-  position: absolute;
-  width: 0;
-  border: 10px solid;
-  /* arrow size */
-  border-color: transparent;
-}
-
-div.reverb-np-arrow:before {
-  border-bottom-color: #202020;
-  /* arrow color */
-  color: #fff;
-  position: absolute;
-  top: -20px;
-  right: 0px;
-  z-index: 2;
-}
-
-div.reverb-np-arrow {
-  position: absolute;
-  top: 35px;
-  left: 1px;
-  background: transparent;
-  width: 20px;
-  height: 1px;
-  display: none;
-}
-
-.reverb-np-header {
-  font-size: 16px;
-  font-weight: bold;
-  padding: 0px 0px 15px 0px;
-  border-bottom: 1px solid #4f4f4f;
-}
-
-.reverb-nph-right {
-  float: right;
-  font-size: 14px;
-  font-stretch: normal;
-  font-style: normal;
-  font-weight: bold;
-  letter-spacing: normal;
-  line-height: 1;
-  margin: 3px 0;
-  text-align: right;
-}
-
-.reverb-nph-right a:link,
-.reverb-nph-right a:active,
-.reverb-nph-right a:visited {
-  color: #fff;
-}
-
-.reverb-nph-right a:hover {
-  text-decoration: none;
-  color: #fff;
-}
-
-.reverb-npn-viewmore:link,
-.reverb-npn-viewmore:active,
-.reverb-npn-viewmore:visited {
-  color: #fff;
-  width: 100%;
-  text-align: center;
-  font-size: 14px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-}
-
-.reverb-npn-viewmore:hover {
-  text-decoration: none;
-  color: #fff;
-}
-
-.reverb-nph-notifications {
-  border-right: 1px solid #4f4f4f;
-  font-family: Helvetica, sans-serif;
-  font-size: 20px;
-  font-stretch: normal;
-  font-style: normal;
-  font-weight: bold;
-  letter-spacing: normal;
-  line-height: 1;
-  padding: 0px 10px 0px 0px;
-}
-
-.reverb-nph-preferences {
-  padding: 0px 0px 0px 5px;
-}
-
-.reverb-nph-notifications a,
-.reverb-nph-notifications a:hover,
-.reverb-nph-notifications a:visited,
-.reverb-nph-preferences a,
-.reverb-nph-preferences a:hover,
-.reverb-nph-preferences a:visited {
-  color: #fff;
-}
-
-.reverb-np-no-unread {
-  text-align: center;
-  padding: 20px 20px;
-}
-
-.reverb-npn {
-  max-height: 500px;
-  overflow-y: auto;
-}
-
-.reverb-npn-row,
-.reverb-notification-page-row {
-  padding: 0px 0px 10px 0px;
+.reverb-npn-row {
+  padding: 0 0 10px 0;
   display: flex;
   justify-content: flex-start;
 }
-
-.reverb-npn-row-unread .reverb-npnr-left,
-.reverb-npn-row-unread .reverb-npnr-right {
+.reverb-npn-row-unread {
   background: #393939;
 }
-
-.reverb-npn-row-global {
-  border-bottom: 1px solid #4f4f4f;
-  margin-bottom: 5px;
-  background-color: #212121;
-}
-
-.reverb-npn-row-global > .reverb-npnr-right {
-  border-bottom: 0;
-  padding: 5px 0px;
-}
-
-.reverb-npnr-unread-global {
-  position: relative;
-  top: 5px;
-}
-
-.reverb-icon-global {
-  position: relative;
-  top: 5px;
+.reverb-npn-row:last-child.reverb-npnr-right {
+  border: 0;
 }
 
 .reverb-npnr-left {
-  padding: 10px 15px 0px 5px;
+  padding: 10px 15px 0 5px;
 }
 
 .reverb-npnr-right {
@@ -231,20 +80,16 @@ div.reverb-np-arrow {
   line-height: 1.5;
   letter-spacing: normal;
 }
-
+.reverb-npnr-header a:hover,
 .reverb-npnr-header a:link,
 .reverb-npnr-header a:active,
 .reverb-npnr-header a:visited {
   color: #f37f20;
 }
 
-.reverb-npnr-header a:hover {
-  color: #f37f20;
-}
-
 .reverb-npnr-body {
   margin-top: 10px;
-  padding: 3px 0px;
+  padding: 3px 0;
   opacity: 0.75;
   font-family: Helvetica, sans-serif;
   font-size: 14px;
@@ -268,39 +113,10 @@ div.reverb-np-arrow {
   font-size: 12px;
   color: #d9d9d9;
 }
-
 .reverb-npnrb-site a:link,
 .reverb-npnrb-site a:active,
 .reverb-npnrb-site a:visited {
   color: #d9d9d9;
-}
-
-.reverb-notification-page {
-  padding: 10px 0px;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.skin-hydra .reverb-notification-page {
-  color: #000;
-}
-
-.skin-hydradark .reverb-notification-page {
-  color: #FFF;
-}
-
-.reverb-notification-page-left {
-  width: 300px;
-  border: solid 1px #bed1cf;
-}
-
-.reverb-notification-page-right {
-  flex: 1;
-  margin-left: 20px;
-}
-
-.reverb-pull-right {
-  float: right;
 }
 
 .reverb-filter-title {
@@ -340,7 +156,6 @@ input[type=checkbox].reverb-filter-checkbox {
   padding: 0;
   border: 0;
 }
-
 input[type=checkbox].reverb-filter-checkbox + label.reverb-filter-label {
   padding-left: 21px;
   height: 16px;
@@ -351,28 +166,21 @@ input[type=checkbox].reverb-filter-checkbox + label.reverb-filter-label {
   font-size: 16px;
   cursor: pointer;
 }
-
 input[type=checkbox].reverb-filter-checkbox:checked + label.reverb-filter-label {
   background-position: 0 -16px;
 }
 
 label.reverb-filter-label {
   background-image: url(../images/checkbox.png);
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
   width: 260px;
-  margin: 0px;
+  margin: 0;
 }
 
 .reverb-button-bar {
-  padding: 0px 0px 20px 0px;
+  padding: 0 0 20px 0;
   border-bottom: 1px solid #fff;
 }
-
 .reverb-button-bar button {
   border-radius: 2px;
   border: solid 1px #f37f20;
@@ -386,13 +194,11 @@ label.reverb-filter-label {
   font-weight: bold;
   cursor: pointer;
 }
-
-button.reverb-active-button {
+.reverb-button-bar button:hover, .reverb-button-bar button.reverb-selected {
   color: #f37f20;
 }
 
-.reverb-button-bar button:hover,
-.reverb-button-bar button.reverb-selected {
+button.reverb-active-button {
   color: #f37f20;
 }
 
@@ -406,111 +212,16 @@ button.reverb-active-button {
   border-bottom: 1px solid #4f4f4f;
 }
 
-.reverb-bell-unread {
-  color: #f37f20;
-}
-
-.reverb-mobile-bell-unread:before {
-  background-image: url(../images/bell-unread.svg) !important;
-}
-
-.reverb-icon {
-  position: relative;
-  top: 5px;
-  left: 5px;
-  color: #36c;
-}
-
-.reverb-bell-notification-count {
-  display: none;
-}
-
-.reverb-npn-row:last-child.reverb-npnr-right {
-  border: 0;
-}
-
-#reverb-mark-all-read-panel {
-  cursor: pointer;
-}
-
-#reverb-mark-all-read-panel:hover {
-  text-decoration: underline;
-}
-
-/**
-	Hydra Light and Minerva custom colors
-*/
-.skin-hydra label .reverb-filter-label {
-  background-image: url(../images/checkbox-light.png);
-}
-
-.skin-hydra .reverb-button-bar button,
-.skin-minerva .reverb-button-bar button {
-  border-color: #0c81c9;
-  background-color: #d9d9d9;
-  color: #000;
-}
-
-.skin-hydra .reverb-button-bar button:hover,
-.skin-hydra .reverb-button-bar button .reverb-selected,
-.skin-minerva .reverb-button-bar button:hover,
-.skin-minerva .reverb-button-bar button .reverb-selected {
-  color: #0c81c9;
-}
-
-.skin-hydra .reverb-npnrb-site a:link,
-.skin-hydra .reverb-npnrb-site a:active,
-.skin-hydra .reverb-npnrb-site a:visited,
-.skin-minerva .reverb-npnrb-site a:link,
-.skin-minerva .reverb-npnrb-site a:active,
-.skin-minerva .reverb-npnrb-site a:visited {
-  color: #000000;
-}
-
-.skin-hydra .reverb-npnrb-site,
-.skin-minerva .reverb-npnrb-site {
-  color: #000000;
-}
-
-.skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left,
-.skin-hydra .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-right,
-.skin-minerva .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-left,
-.skin-minerva .reverb-notification-page .reverb-npn-row-unread .reverb-npnr-right {
-  background: #e6e4e4;
-}
-
-.skin-minerva .reverb-notification-page-left {
-  display: none;
-}
-
-.skin-minerva .reverb-notification-page-right {
-  margin-left: 0px;
-}
-
-.skin-minerva #reverb-mark-all-read {
-  display: none;
-}
-
-.skin-minerva .reverb-button-bar {
-  text-align: center;
-}
-
-ul.simple-pagination {
-  list-style: none;
-}
-
 .simple-pagination {
   display: block;
   overflow: hidden;
   margin: 0;
 }
-
 .simple-pagination ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .simple-pagination li {
   list-style: none;
   padding: 0;
@@ -518,10 +229,11 @@ ul.simple-pagination {
   float: left;
 }
 
-span.ellipse.clickable {
+.ellipse.clickable {
   cursor: pointer;
 }
-
 .ellipse input {
   width: 3em;
 }
+
+/*# sourceMappingURL=reverb.specialNotifications.fandomdesktop.css.map */
