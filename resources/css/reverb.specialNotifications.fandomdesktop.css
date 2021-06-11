@@ -49,6 +49,20 @@
   fill: var(--theme-link-color);
 }
 
+.reverb-button-bar {
+  display: flex;
+  justify-content: space-between;
+}
+.reverb-button-bar .wds-button {
+  text-transform: none;
+}
+.reverb-button-bar .wds-button, .reverb-button-bar .wds-tabs__tab {
+  cursor: pointer;
+}
+.reverb-button-bar .wds-tabs__tab-label {
+  display: grid;
+}
+
 .reverb-icon {
   width: 24px;
   height: 24px;

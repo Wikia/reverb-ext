@@ -56,14 +56,13 @@
 		return userBox;
 	}
 
-	var setButtonActive = function (button) {
-		if (mw.config.get('skin') === 'fandomdesktop') {
-			$('.reverb-button-bar .wds-is-current').removeClass('wds-is-current');
-			button.parent().addClass('wds-is-current');
-		} else {
-			$('.reverb-button-bar .reverb-active-button').removeClass('reverb-active-button');
-			button.addClass('reverb-active-button');
-		}
+	const IS_FANDOM_DESKTOP = mw.config.get('skin') === 'fandomdesktop';
+	var setButtonActive = function (target) {
+		const activeButtonClass = IS_FANDOM_DESKTOP ? 'wds-is-current' : 'reverb-active-button';
+		const button = IS_FANDOM_DESKTOP ? target.parent() : target;
+
+		$('.reverb-button-bar .' + activeButtonClass).removeClass(activeButtonClass);
+		button.addClass(activeButtonClass);
 	};
 
 	reverbNotificationPage = (typeof window.reverbNotificationPage !== "undefined") ? true : false;
@@ -372,8 +371,7 @@
 		var activeFilters = {};
 
 		// Mark All as Read button
-		$("#reverb-mark-all-read").click(function(e){
-			e.preventDefault();
+		$("#reverb-mark-all-read").click(function(){
 			api.post({action:'notifications', do:'dismissAllNotifications', format:'json', formatversion: 2})
 			.done(function(data) {
 				generateWithFilters({page: 0, perpage: perPage}, false);
@@ -443,15 +441,13 @@
 			return newFilters;
 		};
 
-		$("#reverb-ru-all").click(function(e){
-			e.preventDefault();
+		$("#reverb-ru-all").click(function(){
 			var newFilters = makeNewFilter();
 			generateWithFilters(newFilters, true);
 			setButtonActive($(this));
 		});
 
 		$("#reverb-ru-unread").click(function(e){
-			e.preventDefault();
 			var newFilters = makeNewFilter();
 			newFilters.unread = 1;
 			delete(newFilters.read);
@@ -459,8 +455,7 @@
 			setButtonActive($(this));
 		});
 
-		$("#reverb-ru-read").click(function(e){
-			e.preventDefault();
+		$("#reverb-ru-read").click(function(){
 			var newFilters = makeNewFilter();
 			newFilters.read = 1;
 			delete(newFilters.unread);

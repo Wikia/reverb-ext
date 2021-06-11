@@ -63,7 +63,19 @@
 }
 
 .reverb-button-bar {
-	button {
+	display: flex;
+	justify-content: space-between;
+
+	.wds-button {
+		text-transform: none;
+	}
+
+	.wds-button, .wds-tabs__tab {
+		cursor: pointer;
+	}
+
+	.wds-tabs__tab-label {
+		display: grid;
 	}
 }
 
