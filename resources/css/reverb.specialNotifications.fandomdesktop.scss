@@ -68,6 +68,7 @@
 	&-checkbox--unchecked,
 	&-checkbox--checked {
 		display: inline-block;
+		min-width: 18px;
 		width: 18px;
 		height: 18px;
 		margin-right: 12px;
