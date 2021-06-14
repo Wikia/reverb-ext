@@ -29,8 +29,8 @@
   height: 18px;
   background-color: currentColor;
   background-repeat: no-repeat;
-  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-controls-small.svg");
-  mask-image: url("/resources-ucp/dist/svg/wds-icons-controls-small.svg");
+  -webkit-mask-image: url(/resources-ucp/dist/svg/wds-icons-controls-small.svg);
+  mask-image: url(/resources-ucp/dist/svg/wds-icons-controls-small.svg);
 }
 .reverb-filter-row {
   padding: 12px 0;
@@ -59,14 +59,14 @@
 .reverb-filter-checkbox--unchecked {
   background-color: currentColor;
   background-repeat: no-repeat;
-  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg");
-  mask-image: url("/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg");
+  -webkit-mask-image: url(/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg);
+  mask-image: url(/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg);
 }
 .reverb-filter-checkbox--checked {
   background-color: var(--theme-link-color);
   background-repeat: no-repeat;
-  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-checkbox-small.svg");
-  mask-image: url("/resources-ucp/dist/svg/wds-icons-checkbox-small.svg");
+  -webkit-mask-image: url(/resources-ucp/dist/svg/wds-icons-checkbox-small.svg);
+  mask-image: url(/resources-ucp/dist/svg/wds-icons-checkbox-small.svg);
 }
 
 .reverb-button-bar {
@@ -184,56 +184,38 @@
   height: 18px;
   margin: 6px 18px 0 6px;
   display: block;
+  background-color: currentColor;
   background-repeat: no-repeat;
+  -webkit-mask-image: var(--reverb-icon);
+  mask-image: var(--reverb-icon);
 }
 
 .fa-user, .fa-user-circle {
-  background-color: currentColor;
-  background-repeat: no-repeat;
-  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-user-small.svg");
-  mask-image: url("/resources-ucp/dist/svg/wds-icons-user-small.svg");
+  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-user-small.svg);
 }
 
 .fa-user-cog {
-  background-color: currentColor;
-  background-repeat: no-repeat;
-  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-gear-small.svg");
-  mask-image: url("/resources-ucp/dist/svg/wds-icons-gear-small.svg");
+  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-gear-small.svg);
 }
 
 .fa-users {
-  background-color: currentColor;
-  background-repeat: no-repeat;
-  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-users-small.svg");
-  mask-image: url("/resources-ucp/dist/svg/wds-icons-users-small.svg");
+  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-users-small.svg);
 }
 
 .fa-file {
-  background-color: currentColor;
-  background-repeat: no-repeat;
-  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-page-small.svg");
-  mask-image: url("/resources-ucp/dist/svg/wds-icons-page-small.svg");
+  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-page-small.svg);
 }
 
 .fa-edit {
-  background-color: currentColor;
-  background-repeat: no-repeat;
-  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-pencil-small.svg");
-  mask-image: url("/resources-ucp/dist/svg/wds-icons-pencil-small.svg");
+  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-pencil-small.svg);
 }
 
 .fa-history {
-  background-color: currentColor;
-  background-repeat: no-repeat;
-  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-clock-small.svg");
-  mask-image: url("/resources-ucp/dist/svg/wds-icons-clock-small.svg");
+  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-clock-small.svg);
 }
 
 .fa-thumbs-up {
-  background-color: currentColor;
-  background-repeat: no-repeat;
-  -webkit-mask-image: url("/resources-ucp/dist/svg/wds-icons-heart-small.svg");
-  mask-image: url("/resources-ucp/dist/svg/wds-icons-heart-small.svg");
+  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-heart-small.svg);
 }
 
 /*# sourceMappingURL=reverb.specialNotifications.fandomdesktop.css.map */

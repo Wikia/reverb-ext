@@ -1,8 +1,8 @@
 @mixin svgAsBackground( $url, $color ) {
 	background-color: $color;
 	background-repeat: no-repeat;
-	-webkit-mask-image: #{url($url)};
-	mask-image: #{url($url)};
+	-webkit-mask-image: #{$url};
+	mask-image: #{$url};
 }
 
 .reverb-notification-page {
@@ -39,7 +39,7 @@
 	&-icon {
 		width: 18px;
 		height: 18px;
-		@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-controls-small.svg', currentColor);
+		@include svgAsBackground(url(/resources-ucp/dist/svg/wds-icons-controls-small.svg), currentColor);
 	}
 
 	&-row {
@@ -74,11 +74,11 @@
 	}
 
 	&-checkbox--unchecked {
-		@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg', currentColor);
+		@include svgAsBackground(url(/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg), currentColor);
 	}
 
 	&-checkbox--checked {
-		@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-checkbox-small.svg', var(--theme-link-color));
+		@include svgAsBackground(url(/resources-ucp/dist/svg/wds-icons-checkbox-small.svg), var(--theme-link-color));
 	}
 }
 
@@ -217,27 +217,27 @@
 	height: 18px;
 	margin: 6px 18px 0 6px;
 	display: block;
-	background-repeat: no-repeat;
+	@include svgAsBackground(var(--reverb-icon), currentColor);
 }
 
 .fa-user, .fa-user-circle {
-	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-user-small.svg', currentColor);
+	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-user-small.svg);
 }
 .fa-user-cog {
-	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-gear-small.svg', currentColor);
+	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-gear-small.svg);
 }
 .fa-users {
-	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-users-small.svg', currentColor);
+	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-users-small.svg);
 }
 .fa-file {
-	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-page-small.svg', currentColor);
+	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-page-small.svg);
 }
 .fa-edit {
-	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-pencil-small.svg', currentColor);
+	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-pencil-small.svg);
 }
 .fa-history {
-	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-clock-small.svg', currentColor);
+	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-clock-small.svg);
 }
 .fa-thumbs-up {
-	@include svgAsBackground('/resources-ucp/dist/svg/wds-icons-heart-small.svg', currentColor);
+	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-heart-small.svg);
 }
