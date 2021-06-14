@@ -1136,7 +1136,7 @@ class Hooks {
 
 	public static function onBeforePrepareActionButtons( $actionButton, &$contentActions ): bool {
 		$contentActions['mainaction'] = [
-			'text' => 'preferences',
+			'text' => wfMessage( 'preferences' )->text(),
 			'href' => SpecialPage::getTitleFor( 'Preferences' )->getLocalURL(),
 			'icon' => 'wds-icons-gear-small',
 			'id' => 'ca-preferences'
