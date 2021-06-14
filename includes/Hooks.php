@@ -1127,4 +1127,21 @@ class Hooks {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
 		return $mainConfig->get('ReverbEnableWatchlistHandling');
 	}
+
+	public static function onPageHeaderActionButtonShouldDisplay(\Title $title, bool &$shouldDisplay): bool {
+		$shouldDisplay = true;
+
+		return true;
+	}
+
+	public static function onBeforePrepareActionButtons( $actionButton, &$contentActions ): bool {
+		$contentActions['mainaction'] = [
+			'text' => 'preferences',
+			'href' => SpecialPage::getTitleFor( 'Preferences' )->getLocalURL(),
+			'icon' => 'wds-icons-gear-small',
+			'id' => 'ca-preferences'
+		];
+
+		return true;
+	}
 }

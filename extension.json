@@ -107,7 +107,9 @@
 		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
 		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
 		"SpecialPageBeforeExecute": "Reverb\\Hooks::onSpecialPageBeforeExecute",
-		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged"
+		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged",
+		"PageHeaderActionButtonShouldDisplay": "Reverb\\Hooks::onPageHeaderActionButtonShouldDisplay",
+		"BeforePrepareActionButtons": "Reverb\\Hooks::onBeforePrepareActionButtons"
 	},
 	"config": {
 		"ReverbApiEndPoint": {
