@@ -56,7 +56,14 @@
 		return userBox;
 	}
 
+	const IS_FANDOM_DESKTOP = mw.config.get('skin') === 'fandomdesktop';
+	var setButtonActive = function (target) {
+		const activeButtonClass = IS_FANDOM_DESKTOP ? 'wds-is-current' : 'reverb-active-button';
+		const button = IS_FANDOM_DESKTOP ? target.parent() : target;
 
+		$('.reverb-button-bar .' + activeButtonClass).removeClass(activeButtonClass);
+		button.addClass(activeButtonClass);
+	};
 
 	reverbNotificationPage = (typeof window.reverbNotificationPage !== "undefined") ? true : false;
 	log('Notification Page: ' + reverbNotificationPage);
@@ -387,9 +394,7 @@
 						}
 					});
 					generateWithFilters({page: 0, perpage: perPage}, false);
-					$(".reverb-active-button").removeClass('reverb-active-button');
-					$("#reverb-ru-all").addClass('reverb-active-button');
-
+					setButtonActive($("#reverb-ru-all"));
 			} else {
 
 				if (e.originalEvent !== undefined) {
@@ -423,8 +428,7 @@
 						}
 
 						generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
-						$(".reverb-active-button").removeClass('reverb-active-button');
-						$("#reverb-ru-all").addClass('reverb-active-button');
+						setButtonActive($("#reverb-ru-all"));
 					}
 				}
 			}
@@ -440,17 +444,15 @@
 		$("#reverb-ru-all").click(function(){
 			var newFilters = makeNewFilter();
 			generateWithFilters(newFilters, true);
-			$(".reverb-active-button").removeClass('reverb-active-button');
-			$(this).addClass('reverb-active-button');
+			setButtonActive($(this));
 		});
 
-		$("#reverb-ru-unread").click(function(){
+		$("#reverb-ru-unread").click(function(e){
 			var newFilters = makeNewFilter();
 			newFilters.unread = 1;
 			delete(newFilters.read);
 			generateWithFilters(newFilters, true);
-			$(".reverb-active-button").removeClass('reverb-active-button');
-			$(this).addClass('reverb-active-button');
+			setButtonActive($(this));
 		});
 
 		$("#reverb-ru-read").click(function(){
@@ -458,8 +460,7 @@
 			newFilters.read = 1;
 			delete(newFilters.unread);
 			generateWithFilters(newFilters, true);
-			$(".reverb-active-button").removeClass('reverb-active-button');
-			$(this).addClass('reverb-active-button');
+			setButtonActive($(this));
 		});
 
 

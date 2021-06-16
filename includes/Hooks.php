@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Reverb;
 
 use Content;
+use Fandom\FandomDesktop\PageHeaderActions;
 use Fandom\Includes\Util\UrlUtilityService;
 use Language;
 use LinksUpdate;
@@ -23,6 +24,7 @@ use MWNamespace;
 use MWTimestamp;
 use OutputPage;
 use RecentChange;
+use RequestContext;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Traits\NotificationListTrait;
 use Revision;
@@ -556,9 +558,12 @@ class Hooks {
 	public static function onBeforePageDisplay(OutputPage &$output, SkinTemplate &$skin) {
 		global $wgEnableHydraFeatures;
 
+		$skinName = $output->getSkin()->getSkinName();
+
 		// only load JS and styles on old GP skins and on other skins on Special:Notifactions
 		$shouldLoadAssets = $wgEnableHydraFeatures ||
-			( $output->getSkin()->getSkinName() === 'fandomdesktop' && $output->getTitle()->isSpecial( 'Notifications' ) );
+			( $skinName === 'fandomdesktop' && $output->getTitle()->isSpecial( 'Notifications' ) );
+
 		if ( !$shouldLoadAssets ) {
 			return true;
 		}
@@ -567,12 +572,10 @@ class Hooks {
 			return true;
 		}
 
-		$output->addModuleStyles(
-			[
-				'ext.reverb.notifications.styles',
-				'ext.hydraCore.font-awesome.styles'
-			]
-		);
+		if ($skinName !== 'fandomdesktop') {
+			$output->addModuleStyles( [ 'ext.reverb.notifications.styles', 'ext.hydraCore.font-awesome.styles' ] );
+		}
+
 		$output->addModules('ext.reverb.notifications.scripts');
 		return true;
 	}
@@ -1125,5 +1128,34 @@ class Hooks {
 	private static function shouldHandleWatchlist(): bool {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
 		return $mainConfig->get('ReverbEnableWatchlistHandling');
+	}
+
+	public static function onPageHeaderActionButtonShouldDisplay(\Title $title, bool &$shouldDisplay): bool {
+		$shouldDisplay = true;
+
+		return true;
+	}
+
+	public static function onBeforePrepareActionButtons( $actionButton, &$contentActions ): bool {
+		global $wgEnableHydraFeatures;
+
+		$skinName = RequestContext::getMain()->getSkin()->getSkinName();
+		$title = RequestContext::getMain()->getTitle();
+
+		if ($skinName === 'fandomdesktop' && $actionButton instanceof PageHeaderActions && $title->isSpecial('Notifications') ) {
+			$actionButton->setCustomAction([
+				'text' => wfMessage( 'preferences' )->text(),
+				'href' => SpecialPage::getTitleFor(
+					'Preferences',
+					false,
+					$wgEnableHydraFeatures ? 'mw-prefsection-reverb' : 'mw-prefsection-emailv2'
+				)->getFullURL(),
+				'id' => 'ca-preferences-notifications',
+				'data-tracking' => 'ca-preferences-notifications',
+				'icon' => 'wds-icons-gear-small'
+			]);
+		}
+
+		return true;
 	}
 }

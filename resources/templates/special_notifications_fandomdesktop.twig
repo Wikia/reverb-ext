@@ -1,0 +1,50 @@
+<div class="reverb-notification-page">
+	<div class="reverb-notification-page-left">
+		<div class="reverb-filter-title">
+			{{ wfMessage('filter-by-type') }}
+			<span class="reverb-filter-icon"></span>
+		</div>
+
+		<div class="reverb-filter-row">
+			<input type="checkbox" id="filter_all" class="reverb-filter-checkbox" checked="checked">
+			<label for="filter_all" class="reverb-filter-label">
+				<span class="reverb-filter-checkbox--unchecked"></span>
+				<span class="reverb-filter-checkbox--checked"></span>
+				{{ wfMessage('special-sidebar-all') }}
+			</label>
+		</div>
+
+		{% for group, types in groups %}
+			<div class="reverb-filter-row">
+				<input type="checkbox" id="filter_{{ group }}" data-types="{{ types|join(',') }}" class="reverb-filter-checkbox">
+				<label for="filter_{{ group }}" class="reverb-filter-label">
+					<span class="reverb-filter-checkbox--unchecked"></span>
+					<span class="reverb-filter-checkbox--checked"></span>
+					{{ wfMessage('special-sidebar-' ~ group, '50') }}
+				</label>
+			</div>
+		{% endfor %}
+	</div>
+	<div class="reverb-notification-page-right">
+		<div class="reverb-button-bar">
+			<div class="wds-tabs__wrapper">
+				<ul class="wds-tabs">
+					<li class="wds-tabs__tab wds-is-current">
+						<span class="wds-tabs__tab-label" id="reverb-ru-all">{{ wfMessage('special-button-all', '0') }}</span>
+					</li>
+					<li class="wds-tabs__tab">
+						<span class="wds-tabs__tab-label" id="reverb-ru-read">{{ wfMessage('special-button-read', '0') }}</span>
+					</li>
+					<li class="wds-tabs__tab">
+						<span class="wds-tabs__tab-label" id="reverb-ru-unread">{{ wfMessage('special-button-unread', '0') }}</span>
+					</li>
+				</ul>
+			</div>
+			<div class="wds-button wds-is-text" id="reverb-mark-all-read">{{ wfMessage('special-button-mark-all-read') }}</div>
+		</div>
+		<div class="reverb-notification-page-notifications">
+			<!-- Notifications will be filled here by glorius JAVASCRIPT -->
+		</div>
+		<div class="reverb-notification-page-paging reverb-npp-bottom"></div>
+	</div>
+</div>
