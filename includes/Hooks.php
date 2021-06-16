@@ -1137,12 +1137,19 @@ class Hooks {
 	}
 
 	public static function onBeforePrepareActionButtons( $actionButton, &$contentActions ): bool {
-		$skinName = RequestContext::getMain()->getSkin()->getSkinName();
+		global $wgEnableHydraFeatures;
 
-		if ($skinName === 'fandomdesktop' && $actionButton instanceof PageHeaderActions ) {
+		$skinName = RequestContext::getMain()->getSkin()->getSkinName();
+		$title = RequestContext::getMain()->getTitle();
+
+		if ($skinName === 'fandomdesktop' && $actionButton instanceof PageHeaderActions && $title->isSpecial('Notifications') ) {
 			$actionButton->setCustomAction([
 				'text' => wfMessage( 'preferences' )->text(),
-				'href' => SpecialPage::getTitleFor( 'Preferences', false, 'mw-prefsection-reverb' )->getLocalURL(),
+				'href' => SpecialPage::getTitleFor(
+					'Preferences',
+					false,
+					$wgEnableHydraFeatures ? 'mw-prefsection-reverb' : 'mw-prefsection-emailv2'
+				)->getFullURL(),
 				'id' => 'ca-preferences-notifications',
 				'data-tracking' => 'ca-preferences-notifications',
 				'icon' => 'wds-icons-gear-small'
