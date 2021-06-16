@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Reverb;
 
 use Content;
+use Fandom\FandomDesktop\PageHeaderActions;
 use Fandom\Includes\Util\UrlUtilityService;
 use Language;
 use LinksUpdate;
@@ -23,6 +24,7 @@ use MWNamespace;
 use MWTimestamp;
 use OutputPage;
 use RecentChange;
+use RequestContext;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Traits\NotificationListTrait;
 use Revision;
@@ -1135,12 +1137,17 @@ class Hooks {
 	}
 
 	public static function onBeforePrepareActionButtons( $actionButton, &$contentActions ): bool {
-		$contentActions['mainaction'] = [
-			'text' => wfMessage( 'preferences' )->text(),
-			'href' => SpecialPage::getTitleFor( 'Preferences' )->getLocalURL(),
-			'icon' => 'wds-icons-gear-small',
-			'id' => 'ca-preferences'
-		];
+		$skinName = RequestContext::getMain()->getSkin()->getSkinName();
+
+		if ($skinName === 'fandomdesktop' && $actionButton instanceof PageHeaderActions ) {
+			$actionButton->setCustomAction([
+				'text' => wfMessage( 'preferences' )->text(),
+				'href' => SpecialPage::getTitleFor( 'Preferences', false, 'mw-prefsection-reverb' )->getLocalURL(),
+				'id' => 'ca-preferences-notifications',
+				'data-tracking' => 'ca-preferences-notifications',
+				'icon' => 'wds-icons-gear-small'
+			]);
+		}
 
 		return true;
 	}
