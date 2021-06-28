@@ -1131,7 +1131,9 @@ class Hooks {
 	}
 
 	public static function onPageHeaderActionButtonShouldDisplay(\Title $title, bool &$shouldDisplay): bool {
-		if ($title->isSpecial('Notifications')) {
+		$skinName = RequestContext::getMain()->getSkin()->getSkinName();
+
+		if ($skinName === 'fandomdesktop' && $title->isSpecial('Notifications')) {
 			$shouldDisplay = true;
 		}
 
