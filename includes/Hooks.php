@@ -1131,7 +1131,9 @@ class Hooks {
 	}
 
 	public static function onPageHeaderActionButtonShouldDisplay(\Title $title, bool &$shouldDisplay): bool {
-		$shouldDisplay = true;
+		if ($title->isSpecial('Notifications')) {
+			$shouldDisplay = true;
+		}
 
 		return true;
 	}
