@@ -238,7 +238,7 @@ div.reverb-np-arrow {
 }
 
 .reverb-npnr-header a:hover {
-	color: var(--fandom-link-color);
+	color: var(--fandom-link-color--hover);
 }
 
 .reverb-npnr-body {
@@ -365,9 +365,8 @@ div.reverb-np-arrow {
 
 .reverb-button-bar button {
 	border-radius: 2px;
-	border: solid 1px var(--fandom-link-color);
-	background-color: #000000;
-	color: #ffffff;
+	border: solid 1px currentColor;
+	color: var(--fandom-link-color);
 	padding: 10px;
 	margin-left: -5px; /* Dumb way to bump them all together. Roll Tide */
 	font-size: 14px;
@@ -377,12 +376,12 @@ div.reverb-np-arrow {
 }
 
  button.reverb-active-button {
-	color: var(--fandom-link-color);
+	color: var(--fandom-link-color--hover);
 }
 
 .reverb-button-bar button:hover,
 .reverb-button-bar button.reverb-selected {
-	color: var(--fandom-link-color);
+	color: var(--fandom-link-color--hover);
 }
 
 .reverb-npp-bottom {
