@@ -238,7 +238,7 @@ div.reverb-np-arrow {
 }
 
 .reverb-npnr-header a:hover {
-	color: var(--fandom-link-color--hover);
+	color: var(--fandom-link-color);
 }
 
 .reverb-npnr-body {
@@ -382,7 +382,7 @@ div.reverb-np-arrow {
 
 .reverb-button-bar button:hover,
 .reverb-button-bar button.reverb-selected {
-	color: var(--fandom-link-color--hover);
+	color: var(--fandom-link-color);
 }
 
 .reverb-npp-bottom {
