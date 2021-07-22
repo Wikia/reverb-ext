@@ -200,7 +200,8 @@ div.reverb-np-arrow {
 }
 
 .reverb-npnr-read {
-	background-color: #303030;
+	background-color: transparent;
+	border: 1px solid var(--theme-accent-color);
 }
 
 .reverb-npnr-hitbox {
