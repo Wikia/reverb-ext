@@ -364,24 +364,25 @@ div.reverb-np-arrow {
 }
 
 .reverb-button-bar button {
-	border-radius: 2px;
+	border-radius: 3px;
 	border: solid 1px currentColor;
-	color: var(--fandom-link-color);
-	padding: 10px;
-	margin-left: -5px; /* Dumb way to bump them all together. Roll Tide */
-	font-size: 14px;
-	font-family: Helveta, sans-serif;
+	color: var(--fandom-accent-label-color);
+	background-color: var(--fandom-accent-color);
+	padding: 9px 12px;
+	margin-left: -1px; /* Dumb way to bump them all together. Roll Tide */
 	font-weight: bold;
 	cursor: pointer;
+	text-transform: uppercase;
+	font-size: 12px;
 }
 
  button.reverb-active-button {
-	color: var(--fandom-link-color--hover);
+	/*background-color: var(--fandom-accent-color--hover);*/
 }
 
 .reverb-button-bar button:hover,
 .reverb-button-bar button.reverb-selected {
-	color: var(--fandom-link-color--hover);
+	background-color: var(--fandom-accent-color--hover);
 }
 
 .reverb-npp-bottom {
