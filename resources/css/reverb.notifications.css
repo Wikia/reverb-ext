@@ -408,7 +408,7 @@ div.reverb-np-arrow {
 	position: relative;
 	top: 5px;
 	left: 5px;
-	color: #36c;
+	color: var(--fandom-accent-color);
 }
 
 .reverb-bell-notification-count {
