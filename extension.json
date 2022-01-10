@@ -147,6 +147,9 @@
 				},
 				"user-interest-talk-page-edit": {
 					"importance": 9
+				},
+				"user-interest-achievement-earned": {
+					"importance": 0
 				}
 			},
 			"merge_strategy": "array_plus_2d"
