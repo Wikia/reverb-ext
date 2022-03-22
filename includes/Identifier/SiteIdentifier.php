@@ -8,7 +8,7 @@
  * @license GPL-2.0-or-later
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace Reverb\Identifier;
 

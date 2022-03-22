@@ -8,7 +8,7 @@
  * @license GPL-2.0-or-later
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace Reverb\Special;
 
@@ -25,7 +25,7 @@ class SpecialNotifications extends SpecialPage {
 	 * @return void
 	 */
 	public function __construct() {
-		parent::__construct('Notifications');
+		parent::__construct( 'Notifications' );
 
 		$this->output = $this->getOutput();
 	}
@@ -37,27 +37,27 @@ class SpecialNotifications extends SpecialPage {
 	 *
 	 * @return void [Outputs to screen]
 	 */
-	public function execute($subpage) {
+	public function execute( $subpage ) {
 		$this->requireLogin();
 
 		$twig = TwiggyWiring::init();
-		$template = $twig->load($this->getContext()->getSkin()->getSkinName() === 'fandomdesktop'
-			? '@Reverb/special_notifications_fandomdesktop.twig'
-			: '@Reverb/special_notifications.twig');
+		$template =
+			$twig->load( $this->getContext()->getSkin()->getSkinName() === 'fandomdesktop'
+				? '@Reverb/special_notifications_fandomdesktop.twig' : '@Reverb/special_notifications.twig' );
 
-		$groups = self::getNotificationsGroupedByPreference($this->getUser());
+		$groups = self::getNotificationsGroupedByPreference( $this->getUser() );
 
 		// Additional Scrips for the Notification Page
-		if ($this->output->getContext()->getSkin()->getSkinName() === 'fandomdesktop') {
-			$this->output->addModuleStyles('ext.reverb.specialNotifications.fandomdesktop.styles');
+		if ( $this->output->getContext()->getSkin()->getSkinName() === 'fandomdesktop' ) {
+			$this->output->addModuleStyles( 'ext.reverb.specialNotifications.fandomdesktop.styles' );
 		} else {
-			$this->output->addModuleStyles('ext.reverb.notifications.styles.notificationPage');
+			$this->output->addModuleStyles( 'ext.reverb.notifications.styles.notificationPage' );
 		}
 
-		$this->output->addModules('ext.reverb.notifications.scripts.notificationPage');
-		$this->output->setPageTitle(wfMessage('notifications')->escaped());
+		$this->output->addModules( 'ext.reverb.notifications.scripts.notificationPage' );
+		$this->output->setPageTitle( wfMessage( 'notifications' )->escaped() );
 
-		$this->output->addHtml($template->render(['groups' => $groups]));
+		$this->output->addHtml( $template->render( [ 'groups' => $groups ] ) );
 	}
 
 	/**

@@ -8,7 +8,7 @@
  * @license GPL-2.0-or-later
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace Reverb\Notification;
 
@@ -76,104 +76,104 @@ class NotificationBundle extends ArrayObject {
 	/**
 	 * Main Constructor
 	 *
-	 * @param array   $notifications Array of Reverb\Notification\Notification objects.
-	 * @param integer $flags         ArrayObject::STD_PROP_LIST | ArrayObject::ARRAY_AS_PROPS
-	 * @param string  $iterator      Iterator class to use.
+	 * @param array $notifications Array of Reverb\Notification\Notification objects.
+	 * @param integer $flags ArrayObject::STD_PROP_LIST | ArrayObject::ARRAY_AS_PROPS
+	 * @param string $iterator Iterator class to use.
 	 *
 	 * @return void
 	 */
-	public function __construct(array $notifications = [], int $flags = 0, string $iterator = "ArrayIterator") {
-		foreach ($notifications as $notification) {
-			if (!($notification instanceof Notification)) {
-				throw new MWException('Invalid item was attempted to be added to bundle.');
+	public function __construct( array $notifications = [], int $flags = 0, string $iterator = "ArrayIterator" ) {
+		foreach ( $notifications as $notification ) {
+			if ( !( $notification instanceof Notification ) ) {
+				throw new MWException( 'Invalid item was attempted to be added to bundle.' );
 			}
 		}
-		parent::__construct($notifications, $flags, $iterator);
+		parent::__construct( $notifications, $flags, $iterator );
 	}
 
 	/**
 	 * Get a bundle of notifications for an user with optional filters.
 	 *
-	 * @param User  $user         User object to use for look up.
-	 * @param array $filters      [Optional] Filters for notifications.
+	 * @param User $user User object to use for look up.
+	 * @param array $filters [Optional] Filters for notifications.
 	 *                            [
 	 *                            'read' => 1, // 1 only
 	 *                            'unread' => 1, // 1 only
 	 *                            'type' => article-edit-revert // Accepts comma separated notification types.
 	 *                            ]
 	 * @param array $itemsPerPage [Optional] Number of items per page.
-	 * @param array $pageNumber   [Optional] Page number to read.
+	 * @param array $pageNumber [Optional] Page number to read.
 	 *
 	 * @return NotificationBundle|null Returns null if a bad user(No global account or robot account) is passed.
 	 */
 	public static function getBundleForUser(
-		User $user,
-		array $filters = [],
-		int $itemsPerPage = 50,
-		int $pageNumber = 0
+		User $user, array $filters = [], int $itemsPerPage = 50, int $pageNumber = 0
 	): ?NotificationBundle {
-		if ($user->isBot()) {
+		if ( $user->isBot() ) {
 			return null;
 		}
 
 		// Make sure this is from 1 to 100.
-		$itemsPerPage = max(min($itemsPerPage, 100), 1);
+		$itemsPerPage = max( min( $itemsPerPage, 100 ), 1 );
 		// Make sure the page number is >= 0.
-		$pageNumber = max(0, $pageNumber);
+		$pageNumber = max( 0, $pageNumber );
 
-		$serviceUserId = UserIdHelper::getUserIdForService($user);
+		$serviceUserId = UserIdHelper::getUserIdForService( $user );
 
-		$filters = self::validateFilters($filters);
+		$filters = self::validateFilters( $filters );
 
-		if (!empty($serviceUserId)) {
+		if ( !empty( $serviceUserId ) ) {
 			$notifications = [];
 
-			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-			$userIdentifier = Identifier::newUser($serviceUserId);
+			$client = MediaWikiServices::getInstance()->getService( 'ReverbApiClient' );
+			$userIdentifier = Identifier::newUser( $serviceUserId );
 
 			try {
-				$notificationTargetResources = $client->notification_targets()->page(
-					$itemsPerPage,
-					$itemsPerPage * $pageNumber
-				)->filter(
-					array_merge(
-						$filters,
-						[
-							'target-id' => 'hydra:user:' . $serviceUserId
-						]
-					)
-				)->all();
-			} catch (ApiResponseInvalid $e) {
-				wfLogWarning('Invalid API response from the service: ' . $e->getMessage());
+				$notificationTargetResources =
+					$client->notification_targets()
+						->page( $itemsPerPage, $itemsPerPage * $pageNumber )
+						->filter( array_merge( $filters, [
+									'target-id' => 'hydra:user:' . $serviceUserId,
+								] ) )
+						->all();
+			}
+			catch ( ApiResponseInvalid $e ) {
+				wfLogWarning( 'Invalid API response from the service: ' . $e->getMessage() );
+
 				return null;
-			} catch (Exception $e) {
-				wfLogWarning('General exception encountered when communicating with the service: ' . $e->getMessage());
+			}
+			catch ( Exception $e ) {
+				wfLogWarning( 'General exception encountered when communicating with the service: ' .
+							  $e->getMessage() );
+
 				return null;
 			}
 
-			foreach ($notificationTargetResources as $key => $resource) {
-				$notification = new Notification($resource->notification());
-				$notification->setDismissedAt(intval($resource->dismissed_at));
-				$notification->setUser($user);
+			foreach ( $notificationTargetResources as $key => $resource ) {
+				$notification = new Notification( $resource->notification() );
+				$notification->setDismissedAt( intval( $resource->dismissed_at ) );
+				$notification->setUser( $user );
 				$notifications[$notification->getId()] = $notification;
 			}
 
 			$meta = $notificationTargetResources->meta();
 
-			$bundle = new NotificationBundle($notifications);
+			$bundle = new NotificationBundle( $notifications );
 
 			$bundle->filters = $filters;
 			$bundle->itemsPerPage = $itemsPerPage;
 			$bundle->pageNumber = $pageNumber;
-			$bundle->unread = intval($meta['unread-count'] ?? 0);
-			$bundle->read = intval($meta['read-count'] ?? 0);
-			$bundle->totalThisPage = count($notifications);
+			$bundle->unread = intval( $meta['unread-count'] ?? 0 );
+			$bundle->read = intval( $meta['read-count'] ?? 0 );
+			$bundle->totalThisPage = count( $notifications );
 			$bundle->totalAll = $bundle->unread + $bundle->read;
 
 			// Set user context on NotificationBundle.
-			$bundle->setUser($user);
+			$bundle->setUser( $user );
+
 			return $bundle;
 		}
+
 		return null;
 	}
 
@@ -184,18 +184,19 @@ class NotificationBundle extends ArrayObject {
 	 *
 	 * @return array Filters with anything invalid removed.
 	 */
-	public static function validateFilters($filters): array {
+	public static function validateFilters( $filters ): array {
 		$validFilters = [
 			'read' => 'intval',
 			'unread' => 'intval',
-			'type' => 'strval'
+			'type' => 'strval',
 		];
 
-		$filters = array_intersect_key($filters, $validFilters);
+		$filters = array_intersect_key( $filters, $validFilters );
 
-		foreach ($filters as $key => $filter) {
-			$filters[$key] = $validFilters[$key]($filter);
+		foreach ( $filters as $key => $filter ) {
+			$filters[$key] = $validFilters[$key]( $filter );
 		}
+
 		return $filters;
 	}
 
@@ -205,7 +206,7 @@ class NotificationBundle extends ArrayObject {
 	 * @return NotificationBundle|null
 	 */
 	public function nextPage(): ?NotificationBundle {
-		return self::getBundleForUser($this->getUser(), $this->filters, $this->itemsPerPage, $this->pageNumber + 1);
+		return self::getBundleForUser( $this->getUser(), $this->filters, $this->itemsPerPage, $this->pageNumber + 1 );
 	}
 
 	/**

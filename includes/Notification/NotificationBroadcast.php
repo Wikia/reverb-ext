@@ -8,7 +8,7 @@
  * @license GPL-2.0-or-later
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace Reverb\Notification;
 
@@ -67,10 +67,10 @@ class NotificationBroadcast {
 	 * @var array
 	 */
 	protected $attributes = [
-		'type'        => null,
-		'message'     => null,
-		'created-at'  => null,
-		'url'         => null
+		'type' => null,
+		'message' => null,
+		'created-at' => null,
+		'url' => null,
 	];
 
 	/**
@@ -93,99 +93,89 @@ class NotificationBroadcast {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
+		$this->client = MediaWikiServices::getInstance()->getService( 'ReverbApiClient' );
 	}
 
 	/**
 	 * Get a new instance for a broadcast to a single target for the system user.
 	 *
-	 * @param string     $type    Notification Type
-	 * @param User|null  $agent   User that triggered the creation of the notification.
+	 * @param string $type Notification Type
+	 * @param User|null $agent User that triggered the creation of the notification.
 	 *                            Null to indicate the system user.  An user with no ID will automatically set null.
 	 * @param User|array $targets User or Users that the notification is targeting.
-	 * @param array      $meta    Meta data attributes such as 'url' and 'message' parameters.
+	 * @param array $meta Meta data attributes such as 'url' and 'message' parameters.
 	 *
 	 * @return self|null
 	 */
 	public static function new(
-		string $type,
-		?User $agent,
-		$targets,
-		array $meta
+		string $type, ?User $agent, $targets, array $meta
 	): ?self {
-		if ($agent instanceof User && !$agent->getId()) {
+		if ( $agent instanceof User && !$agent->getId() ) {
 			$agent = null;
 		}
 
-		if ($targets instanceof User) {
-			$targets = [$targets];
+		if ( $targets instanceof User ) {
+			$targets = [ $targets ];
 		}
 
-		if ($agent === null) {
-			return self::newSystemMulti($type, $targets, $meta);
+		if ( $agent === null ) {
+			return self::newSystemMulti( $type, $targets, $meta );
 		}
-		return self::newMulti($type, $agent, $targets, $meta);
+
+		return self::newMulti( $type, $agent, $targets, $meta );
 	}
 
 	/**
 	 * Get a new instance for a broadcast to a single target.
 	 *
-	 * @param string $type   Notification Type
-	 * @param User   $agent  User that triggered the creation of the notification.
-	 * @param User   $target User that the notification is targeting.
-	 * @param array  $meta   Meta data attributes such as 'url' and 'message' parameters for building language strings.
+	 * @param string $type Notification Type
+	 * @param User $agent User that triggered the creation of the notification.
+	 * @param User $target User that the notification is targeting.
+	 * @param array $meta Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return self|null
 	 */
 	public static function newSingle(
-		string $type,
-		User $agent,
-		User $target,
-		array $meta
+		string $type, User $agent, User $target, array $meta
 	): ?self {
-		return self::newMulti($type, $agent, [$target], $meta);
+		return self::newMulti( $type, $agent, [ $target ], $meta );
 	}
 
 	/**
 	 * Get a new instance for a broadcast to multiple targets.
 	 *
-	 * @param string $type    Notification Type
-	 * @param User   $agent   User that triggered the creation of the notification.
-	 * @param array  $targets Users that the notification is targeting.
-	 * @param array  $meta    Meta data attributes such as 'url' and 'message' parameters for building language strings.
+	 * @param string $type Notification Type
+	 * @param User $agent User that triggered the creation of the notification.
+	 * @param array $targets Users that the notification is targeting.
+	 * @param array $meta Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return self|null
 	 */
 	public static function newMulti(
-		string $type,
-		User $agent,
-		array $targets,
-		array $meta
+		string $type, User $agent, array $targets, array $meta
 	): ?self {
-		if (!self::isTypeConfigured($type)) {
-			throw new MWException('The notification type passed is not defined.');
+		if ( !self::isTypeConfigured( $type ) ) {
+			throw new MWException( 'The notification type passed is not defined.' );
 		}
 
-		if (!isset($meta['url']) || empty($meta['url'])) {
-			throw new MWException('No canonical URL passed for broadcast.');
+		if ( !isset( $meta['url'] ) || empty( $meta['url'] ) ) {
+			throw new MWException( 'No canonical URL passed for broadcast.' );
 		}
 
 		$broadcast = new self();
 
-		$broadcast->setAttributes(
-			[
+		$broadcast->setAttributes( [
 				'type' => $type,
 				'url' => $meta['url'],
-				'message' => json_encode($meta['message'])
-			]
-		);
+				'message' => json_encode( $meta['message'] ),
+			] );
 
 		// These need to come after setAttributes().
-		$broadcast->setAgent($agent);
-		$broadcast->setTargets($targets);
-		$broadcast->setOrigin(Identifier::newLocalSite());
+		$broadcast->setAgent( $agent );
+		$broadcast->setTargets( $targets );
+		$broadcast->setOrigin( Identifier::newLocalSite() );
 
-		if (!$broadcast->getAgent() || empty($broadcast->getTargets())) {
+		if ( !$broadcast->getAgent() || empty( $broadcast->getTargets() ) ) {
 			return null;
 		}
 
@@ -195,57 +185,51 @@ class NotificationBroadcast {
 	/**
 	 * Get a new instance for a broadcast to a single target for the system user.
 	 *
-	 * @param string $type   Notification Type
-	 * @param User   $target User that the notification is targeting.
-	 * @param array  $meta   Meta data attributes such as 'url' and 'message' parameters for building language strings.
+	 * @param string $type Notification Type
+	 * @param User $target User that the notification is targeting.
+	 * @param array $meta Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return self|null
 	 */
 	public static function newSystemSingle(
-		string $type,
-		User $target,
-		array $meta
+		string $type, User $target, array $meta
 	): ?self {
-		return self::newSystemMulti($type, [$target], $meta);
+		return self::newSystemMulti( $type, [ $target ], $meta );
 	}
 
 	/**
 	 * Get a new instance for a broadcast to multiple targets for the system user.
 	 *
-	 * @param string $type    Notification Type
-	 * @param array  $targets User that the notification is targeting.
-	 * @param array  $meta    Meta data attributes such as 'url' and 'message' parameters for building language strings.
+	 * @param string $type Notification Type
+	 * @param array $targets User that the notification is targeting.
+	 * @param array $meta Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return self|null
 	 */
 	public static function newSystemMulti(
-		string $type,
-		array $targets,
-		array $meta
+		string $type, array $targets, array $meta
 	): ?self {
-		if (!self::isTypeConfigured($type)) {
-			throw new MWException('The notification type passed is not defined.');
+		if ( !self::isTypeConfigured( $type ) ) {
+			throw new MWException( 'The notification type passed is not defined.' );
 		}
 
-		if (!isset($meta['url']) || empty($meta['url'])) {
-			throw new MWException('No canonical URL passed for broadcast.');
+		if ( !isset( $meta['url'] ) || empty( $meta['url'] ) ) {
+			throw new MWException( 'No canonical URL passed for broadcast.' );
 		}
 
 		$broadcast = new self();
 
-		$broadcast->setAttributes(
-			[
+		$broadcast->setAttributes( [
 				'type' => $type,
 				'url' => $meta['url'],
-				'message' => json_encode($meta['message'])
-			]
-		);
+				'message' => json_encode( $meta['message'] ),
+			] );
 
 		// These need to come after setAttributes().
-		$broadcast->setTargets($targets);
-		$broadcast->setOrigin(Identifier::newLocalSite());
+		$broadcast->setTargets( $targets );
+		$broadcast->setOrigin( Identifier::newLocalSite() );
 
-		if (empty($broadcast->getTargets())) {
+		if ( empty( $broadcast->getTargets() ) ) {
 			return null;
 		}
 
@@ -259,10 +243,11 @@ class NotificationBroadcast {
 	 *
 	 * @return boolean
 	 */
-	public static function isTypeConfigured(string $type): bool {
+	public static function isTypeConfigured( string $type ): bool {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
-		$types = $mainConfig->get('ReverbNotifications');
-		return isset($types[$type]);
+		$types = $mainConfig->get( 'ReverbNotifications' );
+
+		return isset( $types[$type] );
 	}
 
 	/**
@@ -272,7 +257,7 @@ class NotificationBroadcast {
 	 *
 	 * @return void
 	 */
-	protected function setOrigin(SiteIdentifier $origin) {
+	protected function setOrigin( SiteIdentifier $origin ) {
 		$this->origin = $origin;
 	}
 
@@ -283,19 +268,20 @@ class NotificationBroadcast {
 	 *
 	 * @return boolean Success
 	 */
-	protected function setAgent(User $agent): bool {
-		if (!($agent instanceof User)) {
-			throw new MWException('Invalid agent passed.');
+	protected function setAgent( User $agent ): bool {
+		if ( !( $agent instanceof User ) ) {
+			throw new MWException( 'Invalid agent passed.' );
 		}
 
-		$agentGlobalId = UserIdHelper::getUserIdForService($agent);
+		$agentGlobalId = UserIdHelper::getUserIdForService( $agent );
 
-		if (empty($agentGlobalId)) {
+		if ( empty( $agentGlobalId ) ) {
 			return false;
 		}
 
 		$this->agent = $agent;
-		$this->agentId = Identifier::newUser($agentGlobalId);
+		$this->agentId = Identifier::newUser( $agentGlobalId );
+
 		return true;
 	}
 
@@ -315,21 +301,21 @@ class NotificationBroadcast {
 	 *
 	 * @return void
 	 */
-	protected function setTargets(array $targets) {
+	protected function setTargets( array $targets ) {
 		$targetIdentifiers = [];
-		foreach ($targets as $key => $target) {
-			if (!($target instanceof User)) {
-				throw new MWException('Invalid target passed.');
+		foreach ( $targets as $key => $target ) {
+			if ( !( $target instanceof User ) ) {
+				throw new MWException( 'Invalid target passed.' );
 			}
 
-			$targetGlobalId = UserIdHelper::getUserIdForService($target);
-			if (!$targetGlobalId) {
-				unset($targets[$key]);
+			$targetGlobalId = UserIdHelper::getUserIdForService( $target );
+			if ( !$targetGlobalId ) {
+				unset( $targets[$key] );
 				continue;
 			}
-			$targetShouldBeNotified = $this->shouldNotify($target, $this->attributes['type'], 'web');
-			if ($targetShouldBeNotified) {
-				$targetIdentifiers[] = Identifier::newUser($targetGlobalId);
+			$targetShouldBeNotified = $this->shouldNotify( $target, $this->attributes['type'], 'web' );
+			if ( $targetShouldBeNotified ) {
+				$targetIdentifiers[] = Identifier::newUser( $targetGlobalId );
 			}
 		}
 
@@ -353,9 +339,9 @@ class NotificationBroadcast {
 	 *
 	 * @return void
 	 */
-	protected function setAttributes(array $attributes) {
-		$attributes = array_intersect_key($attributes, $this->attributes);
-		$this->attributes = array_merge($this->attributes, $attributes);
+	protected function setAttributes( array $attributes ) {
+		$attributes = array_intersect_key( $attributes, $this->attributes );
+		$this->attributes = array_merge( $this->attributes, $attributes );
 	}
 
 	/**
@@ -373,28 +359,25 @@ class NotificationBroadcast {
 	 * @return boolean Operation Success
 	 */
 	public function transmit(): bool {
-		$email = NotificationEmail::newFromBroadcast($this);
+		$email = NotificationEmail::newFromBroadcast( $this );
 		$email->send();
 
-		if (empty($this->targetIds)) {
+		if ( empty( $this->targetIds ) ) {
 			return true;
 		}
 
 		try {
-			$notification = new NotificationBroadcastResource(
-				array_merge(
-					$this->attributes,
-					[
-						'origin-id'  => (string)$this->origin,
-						'agent-id'   => (string)$this->agentId,
-						'target-ids' => array_map('strval', $this->targetIds)
-					]
-				)
-			);
+			$notification = new NotificationBroadcastResource( array_merge( $this->attributes, [
+						'origin-id' => (string)$this->origin,
+						'agent-id' => (string)$this->agentId,
+						'target-ids' => array_map( 'strval', $this->targetIds ),
+					] ) );
 
-			$this->client->notification_broadcasts()->create($notification);
-		} catch (ApiRequestUnsuccessful $e) {
+			$this->client->notification_broadcasts()->create( $notification );
+		}
+		catch ( ApiRequestUnsuccessful $e ) {
 			$this->lastError = $e->getMessage();
+
 			return false;
 		}
 

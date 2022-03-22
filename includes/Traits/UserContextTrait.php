@@ -36,7 +36,7 @@ trait UserContextTrait {
 	 *
 	 * @return void
 	 */
-	public function setUser(?User $user) {
+	public function setUser( ?User $user ) {
 		$this->user = $user;
 	}
 }
