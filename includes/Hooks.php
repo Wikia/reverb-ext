@@ -13,26 +13,32 @@ declare( strict_types=1 );
 
 namespace Reverb;
 
-use Content;
+use Article;
+use Exception;
 use Fandom\FandomDesktop\PageHeaderActions;
+use Fandom\Includes\User\UserInfo;
 use Fandom\Includes\Util\UrlUtilityService;
-use Language;
 use LinksUpdate;
 use MailAddress;
 use MediaWiki\MediaWikiServices;
-use MWNamespace;
+use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Storage\EditResult;
+use MediaWiki\Storage\SlotRecord;
+use MediaWiki\User\UserIdentity;
+use MWException;
 use MWTimestamp;
 use OutputPage;
 use RecentChange;
 use RequestContext;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Traits\NotificationListTrait;
-use Revision;
 use RevisionReviewForm;
 use SkinTemplate;
 use SpecialPage;
-use Status;
 use Title;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use User;
 use UserArray;
 use UserArrayFromResult;
@@ -73,27 +79,22 @@ class Hooks {
 	 * Handler for PageContentSaveComplete hook
 	 *
 	 * @param WikiPage $wikiPage WikiPage modified
-	 * @param User $agent User performing the modification
-	 * @param Content $content New content, as a Content object
+	 * @param UserIdentity $user
 	 * @param string $summary Edit summary/comment
-	 * @param boolean $isMinor Whether or not the edit was marked as minor
-	 * @param boolean $isWatch (No longer used)
-	 * @param string $section (No longer used)
-	 * @param integer $flags Flags passed to WikiPage::doEditContent()
-	 * @param Revision $revision Revision object of the saved content.  If the save did not result in the creation
-	 *                             of a new revision (e.g. the submission was equal to the latest revision), this
-	 *                             parameter may be null (null edits, or "no-op").
-	 * @param Status $status Status object about to be returned by doEditContent()
-	 * @param integer $baseRevId the rev ID (or false) this edit was based on
-	 * @param integer $undidRevId the rev ID (or 0) this edit undid - added in MW 1.30
-	 *
-	 * @return boolean True
+	 * @param int $flags Flags passed to WikiPage::doEditContent()
+	 * @param RevisionRecord $revisionRecord
+	 * @param EditResult $editResult
+	 * @return bool True
+	 * @throws Identifier\InvalidIdentifierException
+	 * @throws LoaderError
+	 * @throws MWException
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/PageContentSaveComplete
-	 *
 	 */
 	public static function onPageContentSaveComplete(
-		WikiPage &$wikiPage, User &$agent, Content $content, string $summary, bool $isMinor, ?bool $isWatch,
-		?string $section, int &$flags, $revision, Status &$status, $baseRevId, int $undidRevId = 0
+		WikiPage $wikiPage, UserIdentity $user, string $summary, int $flags, RevisionRecord $revisionRecord,
+		EditResult $editResult
 	): bool {
 		global $wgEnableHydraFeatures;
 
@@ -101,24 +102,21 @@ class Hooks {
 			return true;
 		}
 
-		if ( !$revision ) {
-			return true;
-		}
-
-		if ( !$status->isGood() ) {
+		if ( $editResult->isNullEdit() ) {
 			return true;
 		}
 
 		$title = $wikiPage->getTitle();
-
+		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
+		$agent = $userFactory->newFromUserIdentity( $user );
 		if ( $title->getNamespace() == NS_USER_TALK ) {
-			$notifyUser = User::newFromName( $title->getText() );
+			$notifyUser = $userFactory->newFromName( $title->getText() );
 			// If the recipient is a valid non-anonymous user and hasn't turned off their
 			// notifications, generate a talk page post Echo notification.
-			if ( $notifyUser && $notifyUser->getId() && !$notifyUser->equals( $agent ) ) {
+			if ( $notifyUser && $notifyUser->getId() && !$notifyUser->equals( $user ) ) {
 				// If this is a minor edit, only notify if the agent doesn't have talk page
 				// minor edit notification blocked.
-				if ( !$revision->isMinor() || !$agent->isAllowed( 'nominornewtalk' ) ) {
+				if ( !$revisionRecord->isMinor() || !$agent->isAllowed( 'nominornewtalk' ) ) {
 					$notifyUserTalk = Title::newFromText( $notifyUser->getName(), NS_USER_TALK );
 					$broadcast = NotificationBroadcast::new( 'user-interest-talk-page-edit', $agent, $notifyUser, [
 							'url' => self::getUserFacingUrl( $title ),
@@ -153,10 +151,12 @@ class Hooks {
 		}
 
 		// Reverted edits $undidRevId.
+		$undidRevId = $editResult->getNewestRevertedRevisionId();
+		$revisionLookup = MediaWikiServices::getInstance()->getRevisionLookup();
 		if ( $undidRevId > 0 ) {
-			$undidRevision = Revision::newFromId( $undidRevId );
-			if ( $undidRevision && $undidRevision->getTitle()->equals( $title ) ) {
-				$notifyUser = $undidRevision->getRevisionRecord()->getUser();
+			$undidRevision = $revisionLookup->getRevisionById( $undidRevId );
+			if ( $undidRevision && $undidRevision->getPage()->getId() === $wikiPage->getId() ) {
+				$notifyUser = $userFactory->newFromUserIdentity( $undidRevision->getUser() );
 				if ( $notifyUser && $notifyUser->getId() && !$notifyUser->equals( $agent ) ) {
 					$broadcast = NotificationBroadcast::new( 'article-edit-revert', $agent, $notifyUser, [
 							'url' => self::getUserFacingUrl( $title ),
@@ -186,7 +186,7 @@ class Hooks {
 									self::getUserFacingUrl( $title, [
 											'type' => 'revision',
 											'oldid' => $undidRevId,
-											'diff' => $wikiPage->getRevision()->getId(),
+											'diff' => $revisionRecord->getId(),
 										] ),
 								],
 							],
@@ -212,9 +212,13 @@ class Hooks {
 	 * @param array $oldUGMs
 	 * @param array $newUGMs
 	 *
-	 * @return boolean
+	 * @return bool
+	 * @throws Identifier\InvalidIdentifierException
+	 * @throws LoaderError
+	 * @throws MWException
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/UserGroupsChanged
-	 *
 	 */
 	public static function onUserGroupsChanged(
 		$target, $add, $remove, $performer, $reason = false, array $oldUGMs = [], array $newUGMs = []
@@ -314,9 +318,13 @@ class Hooks {
 	 * @param string $table
 	 * @param array $insertions
 	 *
-	 * @return boolean True
+	 * @return bool True
+	 * @throws Identifier\InvalidIdentifierException
+	 * @throws LoaderError
+	 * @throws MWException
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdateAfterInsert
-	 *
 	 */
 	public static function onLinksUpdateAfterInsert( LinksUpdate $linksUpdate, string $table, array $insertions
 	): bool {
@@ -339,18 +347,19 @@ class Hooks {
 		// 2. content namespace pages &&
 		// 3. non-transcluding pages &&
 		// 4. non-redirect pages
-		if ( $table !== 'pagelinks' || !MWNamespace::isContent( $linksUpdate->getTitle()->getNamespace() ) ||
+		$nsInfo = MediaWikiServices::getInstance()->getNamespaceInfo();
+		if ( $table !== 'pagelinks' || !$nsInfo->isContent( $linksUpdate->getTitle()->getNamespace() ) ||
 			 !$linksUpdate->mRecursive || $linksUpdate->getTitle()->isRedirect() ) {
 			return true;
 		}
 
-		$agent = $linksUpdate->getTriggeringUser();
-
-		$revid = $linksUpdate->getRevision() ? $linksUpdate->getRevision()->getId() : null;
+		$agent = MediaWikiServices::getInstance()
+			->getUserFactory()
+			->newFromUserIdentity( $linksUpdate->getTriggeringUser() );
 
 		$db = wfGetDB( DB_REPLICA );
 		foreach ( $insertions as $page ) {
-			if ( MWNamespace::isContent( $page['pl_namespace'] ) ) {
+			if ( $nsInfo->isContent( $page['pl_namespace'] ) ) {
 				$linkToTitle = Title::makeTitle( $page['pl_namespace'], $page['pl_title'] );
 				if ( $linkToTitle->isRedirect() ) {
 					continue;
@@ -414,16 +423,22 @@ class Hooks {
 	 * Handler for ArticleRollbackComplete hook.
 	 *
 	 * @param WikiPage $wikiPage The article that was edited
-	 * @param User $agent The user who did the rollback
-	 * @param Revision $newRevision The revision the page was reverted back to
-	 * @param Revision $oldRevision The revision of the top edit that was reverted
-	 *
-	 * @return boolean True
+	 * @param UserIdentity $user
+	 * @param string $summary
+	 * @param int $flags
+	 * @param RevisionRecord $revisionRecord
+	 * @param EditResult $editResult
+	 * @return bool True
+	 * @throws Identifier\InvalidIdentifierException
+	 * @throws MWException
+	 * @throws LoaderError
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/ArticleRollbackComplete
-	 *
 	 */
-	public static function onArticleRollbackComplete(
-		WikiPage $wikiPage, User $agent, Revision $newRevision, Revision $oldRevision
+	private static function onArticleRollbackComplete(
+		WikiPage $wikiPage, UserIdentity $user, string $summary, int $flags, RevisionRecord $revisionRecord,
+		EditResult $editResult
 	): bool {
 		global $wgEnableHydraFeatures;
 
@@ -431,15 +446,25 @@ class Hooks {
 			return true;
 		}
 
-		$notifyUser = $oldRevision->getRevisionRecord()->getUser();
-		$latestRevision = $wikiPage->getRevision();
+		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
+		$revisionLookup = MediaWikiServices::getInstance()->getRevisionLookup();
+		$oldRevisionId = $editResult->getNewestRevertedRevisionId();
+		$oldRevision = $revisionLookup->getRevisionById( $oldRevisionId );
+		$newRevisionId = $editResult->getOriginalRevisionId();
+		$newRevision = $revisionLookup->getRevisionById( $newRevisionId );
+		$notifyUser = $oldRevision->getUser();
+		$latestRevision = $wikiPage->getRevisionRecord();
 
 		// Skip anonymous users and null edits.
-		if ( $notifyUser && $notifyUser->getId() && !$notifyUser->equals( $agent ) &&
-			 !$oldRevision->getContent()->equals( $newRevision->getContent() ) ) {
+		if ( $notifyUser && $notifyUser->getId() && !$notifyUser->equals( $user ) &&
+			 !$oldRevision->getContent( SlotRecord::MAIN )->equals( $newRevision->getContent( SlotRecord::MAIN ) ) ) {
 			// @TODO: Fix user note and count reverted revisions.  Echo defaulted to plural/2 for rollback.
 			$title = $wikiPage->getTitle();
-			$broadcast = NotificationBroadcast::newSingle( 'article-edit-revert', $agent, $notifyUser, [
+			$broadcast = NotificationBroadcast::newSingle(
+				'article-edit-revert',
+				$userFactory->newFromUserIdentity( $user ),
+				$userFactory->newFromUserIdentity( $notifyUser ),
+				[
 					'url' => self::getUserFacingUrl( $title ),
 					'message' => [
 						[
@@ -481,12 +506,36 @@ class Hooks {
 	}
 
 	/**
+	 * @param WikiPage $wikiPage
+	 * @param UserIdentity $user
+	 * @param string $summary
+	 * @param int $flags
+	 * @param RevisionRecord $revisionRecord
+	 * @param EditResult $editResult
+	 * @throws Identifier\InvalidIdentifierException
+	 * @throws LoaderError
+	 * @throws MWException
+	 * @throws RuntimeError
+	 * @throws SyntaxError
+	 */
+	public static function onPageSaveComplete(
+		WikiPage $wikiPage, UserIdentity $user, string $summary, int $flags, RevisionRecord $revisionRecord,
+		EditResult $editResult
+	) {
+		if ( $editResult->isRevert() ) {
+			self::onArticleRollbackComplete( $wikiPage, $user, $summary, $flags, $revisionRecord, $editResult );
+		} else {
+			self::onPageContentSaveComplete( $wikiPage, $user, $summary, $flags, $revisionRecord, $editResult );
+		}
+	}
+
+	/**
 	 * Shoehorn the javascript and styles for reverb into every page.
 	 *
-	 * @param OutputPage $output Mediawiki Output Object
-	 * @param SkinTemplate $skin Mediawiki Skin Object
+	 * @param OutputPage &$output Mediawiki Output Object
+	 * @param SkinTemplate &$skin Mediawiki Skin Object
 	 *
-	 * @return boolean True
+	 * @return bool True
 	 */
 	public static function onBeforePageDisplay( OutputPage &$output, SkinTemplate &$skin ) {
 		$skinName = $output->getSkin()->getSkinName();
@@ -512,14 +561,15 @@ class Hooks {
 	/**
 	 * Handle setting up profile page handlers.
 	 *
-	 * @param Title $title
-	 * @param Article $article
-	 * @param object $output
-	 * @param User $user
+	 * @param Title &$title
+	 * @param Article &$article
+	 * @param object &$output
+	 * @param User &$user
 	 * @param object $request
 	 * @param object $mediaWiki
 	 *
 	 * @return void
+	 * @throws MWException
 	 */
 	public static function onBeforeInitialize( &$title, &$article, &$output, &$user, $request, $mediaWiki ) {
 		global $wgEnableHydraFeatures;
@@ -551,7 +601,7 @@ class Hooks {
 	 * ArticleEditUpdateNewTalk hook since we still want the user_newtalk data
 	 * to be updated and availble to client-side tools and the API.
 	 *
-	 * @param string $newMessagesAlert An alert that the user has new messages
+	 * @param string &$newMessagesAlert An alert that the user has new messages
 	 *                                     or an empty string if the user does not
 	 *                                     (empty by default)
 	 * @param array $newtalks This will be empty if the user has no new messages
@@ -560,7 +610,7 @@ class Hooks {
 	 * @param User $user The user who is loading the page
 	 * @param OutputPage $out Output object
 	 *
-	 * @return boolean False, suppress entirely.
+	 * @return bool False, suppress entirely.
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/GetNewMessagesAlert
 	 *
 	 */
@@ -578,10 +628,9 @@ class Hooks {
 	 * Handler for GetPreferences hook.
 	 *
 	 * @param User $user User to get preferences for
-	 * @param array $preferences Preferences array
+	 * @param array &$preferences Preferences array
 	 *
-	 * @return boolean True in all cases.
-	 * @throws MWException
+	 * @return bool True in all cases.
 	 * @see http://www.mediawiki.org/wiki/Manual:Hooks/GetPreferences
 	 *
 	 */
@@ -660,9 +709,14 @@ class Hooks {
 	 * Handle when FlaggedRevs reverts an edit.
 	 *
 	 * @param RevisionReviewForm $reviewForm The FlaggedRevs review form class.
-	 * @param boolean|string $status Success or message key string error.
+	 * @param bool|string $status Success or message key string error.
 	 *
-	 * @return boolean True
+	 * @return bool True
+	 * @throws Identifier\InvalidIdentifierException
+	 * @throws LoaderError
+	 * @throws MWException
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 */
 	public static function onFlaggedRevsRevisionReviewFormAfterDoSubmit( RevisionReviewForm $reviewForm, $status
 	): bool {
@@ -677,6 +731,7 @@ class Hooks {
 			$affectedRevisions = [];
 			$revisionLookup = MediaWikiServices::getInstance()->getRevisionLookup();
 			$revisionStore = MediaWikiServices::getInstance()->getRevisionStore();
+			$userFactory = MediaWikiServices::getInstance()->getUserFactory();
 			$revQuery = $revisionStore->getQueryInfo();
 			$article = new WikiPage( $reviewForm->getPage() );
 			$newRev = $revisionLookup->getRevisionByTitle( $reviewForm->getPage(), $reviewForm->getOldId() );
@@ -693,7 +748,7 @@ class Hooks {
 						'rev_page' => $article->getId(),
 					], __METHOD__, [], $revQuery['joins'] );
 			foreach ( $revisions as $row ) {
-				$user = User::newFromId( $row->rev_user );
+				$user = $userFactory->newFromId( $row->rev_user );
 				if ( $user !== null ) {
 					$affectedRevisions[$row->rev_id] = $user;
 				}
@@ -747,7 +802,7 @@ class Hooks {
 	 * @param User $targetUser The user of the edited talk page.
 	 * @param Title $title The talk page title that was edited.
 	 *
-	 * @return boolean False
+	 * @return bool False
 	 */
 	public static function onAbortTalkPageEmailNotification( User $targetUser, Title $title ): bool {
 		global $wgEnableHydraFeatures;
@@ -762,8 +817,9 @@ class Hooks {
 	/**
 	 * Get a url for the title suitable for displaying to users.
 	 *
-	 * @param Title
+	 * @param Title $title
 	 *
+	 * @param array $query
 	 * @return string
 	 */
 	private static function getUserFacingUrl( Title $title, array $query = [] ): string {
@@ -782,7 +838,8 @@ class Hooks {
 	 * @param Title $title The title of the edited page.
 	 * @param RecentChange $recentChange The recentchanges object.
 	 *
-	 * @return boolean false if Reverb will handle watchlist notifications.
+	 * @return bool false if Reverb will handle watchlist notifications.
+	 * @throws Exception
 	 */
 	public static function onAbortEmailNotification( User $editor, Title $title, RecentChange $recentChange ): bool {
 		global $wgEnableHydraFeatures;
@@ -798,7 +855,7 @@ class Hooks {
 		// This hook comes from RecentChanges save, where as part of page saving the recentchanges row is being
 		// written.  If the write rolls back, we shoudln't notify; additionally, this does all the service calls
 		// in post-output.
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = wfGetDB( DB_PRIMARY );
 		$dbw->onTransactionCommitOrIdle( function () use ( $editor, $title, $recentChange ) {
 			self::sendNotificationsForEdit( $editor, $title, $recentChange );
 		} );
@@ -813,7 +870,12 @@ class Hooks {
 	 * @param Title $title The title of the edited page.
 	 * @param RecentChange $recentChange The recentchanges object.
 	 *
-	 * @return boolean false
+	 * @return void false
+	 * @throws Identifier\InvalidIdentifierException
+	 * @throws LoaderError
+	 * @throws MWException
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 */
 	private static function sendNotificationsForEdit( User $editor, Title $title, RecentChange $recentChange ) {
 		$comment = $recentChange->mAttribs['rc_comment'];
@@ -840,7 +902,9 @@ class Hooks {
 				continue;
 			}
 
-			$watchingLang = Language::factory( $watchingUser->getOption( 'language' ) );
+			$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+			$langFactory = MediaWikiServices::getInstance()->getLanguageFactory();
+			$watchingLang = $langFactory->getLanguage( $userOptionsLookup->getOption( $watchingUser, 'language' ) );
 			$userDateAndTime = $watchingLang->userTimeAndDate( $timestamp, $watchingUser );
 			$broadcast = NotificationBroadcast::new( 'article-edit-watch', $editor, $watchingUser, [
 					'url' => $canonicalUrl,
@@ -895,12 +959,16 @@ class Hooks {
 	 * @return User[]
 	 */
 	private static function getWatchersForChange( RecentChange $change ): array {
-		global $wgUsersNotifiedOnAllChanges, $wgEnotifWatchlist, $wgBlockDisablesLogin, $wgEnotifMinorEdits, $wgShowUpdatedMarker;
+		global $wgUsersNotifiedOnAllChanges, $wgEnotifWatchlist, $wgBlockDisablesLogin, $wgEnotifMinorEdits,
+			   $wgShowUpdatedMarker;
 
 		$minorEdit = $change->mAttribs['rc_minor'];
 		$timestamp = $change->mAttribs['rc_timestamp'];
-		$title = $change->getTitle();
-		$editor = $change->getPerformer();
+		$title = Title::castFromPageReference( $change->getPage() );
+		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
+		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+		$userInfo = MediaWikiServices::getInstance()->getService( UserInfo::class );
+		$editor = $userFactory->newFromUserIdentity( $change->getPerformerIdentity() );
 
 		if ( $title->getNamespace() < 0 ) {
 			return [];
@@ -909,8 +977,7 @@ class Hooks {
 		// update wl_notificationtimestamp for watchers
 		$watcherIds = [];
 		if ( $wgEnotifWatchlist || $wgShowUpdatedMarker ) {
-			$watcherIds =
-				MediaWikiServices::getInstance()
+			$watcherIds = MediaWikiServices::getInstance()
 					->getWatchedItemStore()
 					->updateNotificationTimestamp( $editor, $title, $timestamp );
 		}
@@ -919,7 +986,7 @@ class Hooks {
 		$users = [];
 		if ( !$minorEdit || ( $wgEnotifMinorEdits && !$editor->isAllowed( 'nominornewtalk' ) ) ) {
 			if ( $title->getNamespace() == NS_USER_TALK ) {
-				$targetUser = User::newFromName( $title->getText() );
+				$targetUser = $userFactory->newFromName( $title->getText() );
 				$userTalkId = $targetUser->getId();
 			}
 
@@ -929,10 +996,10 @@ class Hooks {
 				$watchUsers = UserArray::newFromIDs( $watcherIds );
 
 				foreach ( $watchUsers as $watchingUser ) {
-					if ( ( !$minorEdit || $watchingUser->getOption( 'enotifminoredits' ) ) &&
+					if ( ( !$minorEdit || $userOptionsLookup->getOption( $watchingUser, 'enotifminoredits' ) ) &&
 						 $watchingUser->isEmailConfirmed() && $watchingUser->getId() !== $userTalkId &&
 						 !in_array( $watchingUser->getName(), $wgUsersNotifiedOnAllChanges, true ) &&
-						 !( $wgBlockDisablesLogin && $watchingUser->isBlocked() ) ) {
+						 !( $wgBlockDisablesLogin && $userInfo->isBlockedSitewide( $watchingUser ) ) ) {
 						$users[] = $watchingUser;
 					}
 				}
@@ -943,7 +1010,7 @@ class Hooks {
 			if ( $editor->getName() === $name ) {
 				continue;
 			}
-			$users[] = User::newFromName( $name );
+			$users[] = $userFactory->newFromName( $name );
 		}
 
 		return $users;
@@ -958,8 +1025,12 @@ class Hooks {
 	 * @param string $text Text of the mail
 	 *
 	 * @return bool true in all cases
+	 * @throws Identifier\InvalidIdentifierException
+	 * @throws LoaderError
+	 * @throws MWException
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/EmailUserComplete
-	 *
 	 */
 	public static function onEmailUserComplete( MailAddress $address, MailAddress $from, $subject, $text ): bool {
 		global $wgEnableHydraFeatures;
@@ -969,6 +1040,7 @@ class Hooks {
 		}
 
 		$fromUserTitle = Title::makeTitle( NS_USER, $from->name );
+		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
 
 		// strip the auto footer from email preview
 		$autoFooter =
@@ -976,8 +1048,8 @@ class Hooks {
 		$textWithoutFooter = preg_replace( '/' . preg_quote( $autoFooter, '/' ) . '$/', '', $text );
 
 		$broadcast =
-			NotificationBroadcast::newSingle( 'user-interest-email-user', User::newFromName( $from->name ),
-				User::newFromName( $address->name ), [
+			NotificationBroadcast::newSingle( 'user-interest-email-user', $userFactory->newFromName( $from->name ),
+				$userFactory->newFromName( $address->name ), [
 					'url' => self::getUserFacingUrl( SpecialPage::getTitleFor( 'EmailUser' ) ),
 					'message' => [
 						[
@@ -1015,6 +1087,7 @@ class Hooks {
 	 * @param User $agent The User
 	 *
 	 * @return string User-facing URL of the desired user page.
+	 * @throws MWException
 	 */
 	private static function getAgentPageUrl( User $agent ): string {
 		if ( !$agent->getId() ) {
@@ -1037,6 +1110,11 @@ class Hooks {
 		return $mainConfig->get( 'ReverbEnableWatchlistHandling' );
 	}
 
+	/**
+	 * @param Title $title
+	 * @param bool &$shouldDisplay
+	 * @return bool
+	 */
 	public static function onPageHeaderActionButtonShouldDisplay( \Title $title, bool &$shouldDisplay ): bool {
 		if ( $title->isSpecial( 'Notifications' ) ) {
 			$shouldDisplay = true;
@@ -1045,6 +1123,12 @@ class Hooks {
 		return true;
 	}
 
+	/**
+	 * @param $actionButton
+	 * @param &$contentActions
+	 * @return bool
+	 * @throws MWException
+	 */
 	public static function onBeforePrepareActionButtons( $actionButton, &$contentActions ): bool {
 		global $wgEnableHydraFeatures;
 
