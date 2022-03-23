@@ -10,14 +10,14 @@
 
 declare( strict_types=1 );
 
-use Http\Adapter\Guzzle6\Client;
+use Http\Adapter\Guzzle7\Client;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Hydrawiki\Reverb\Client\V1\ClientFactory;
 use MediaWiki\MediaWikiServices;
 
 return [
-	'ReverbApiClient' => function ( MediaWikiServices $services ) {
+	'ReverbApiClient' => static function ( MediaWikiServices $services ) {
 		$mainConfig = $services->getMainConfig();
 		$endPoint = $mainConfig->get( 'ReverbApiEndPoint' );
 		$apiKey = $mainConfig->get( 'ReverbApiKey' );
@@ -31,10 +31,19 @@ return [
 				],
 			] );
 
-			return ( new ClientFactory )->make( $httpClient, MessageFactoryDiscovery::find(), $endPoint, $apiKey );
+			return ( new ClientFactory )->make(
+				$httpClient,
+				MessageFactoryDiscovery::find(),
+				$endPoint,
+				$apiKey
+			);
 		}
 
-		return ( new ClientFactory )->make( HttpClientDiscovery::find(), MessageFactoryDiscovery::find(), $endPoint,
-			$apiKey );
+		return ( new ClientFactory )->make(
+			HttpClientDiscovery::find(),
+			MessageFactoryDiscovery::find(),
+			$endPoint,
+			$apiKey
+		);
 	},
 ];

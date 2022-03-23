@@ -12,7 +12,6 @@ declare( strict_types=1 );
 
 namespace Reverb\Notification;
 
-use DynamicSettings\Wiki;
 use Exception;
 use Fandom\Includes\Util\UrlUtilityService;
 use Fandom\WikiConfig\WikiVariablesDataService;
@@ -62,7 +61,7 @@ class Notification {
 	/**
 	 * Dismissed Timestamp
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $dismissedAt = 0;
 
@@ -87,7 +86,7 @@ class Notification {
 	/**
 	 * Get the unique ID for this notification used by the service.
 	 *
-	 * @return integer ID
+	 * @return int ID
 	 */
 	public function getId(): int {
 		// The resource can return null if nothing is initialized.
@@ -119,9 +118,9 @@ class Notification {
 	/**
 	 * Get the header for this notification.
 	 *
-	 * @param boolean $long Use the short or long version of the header.
+	 * @param bool $long Use the short or long version of the header.
 	 *
-	 * @return string Message
+	 * @return Message
 	 */
 	public function getHeader( bool $long = false ): Message {
 		$parameters = $this->getMessageParameters();
@@ -131,7 +130,7 @@ class Notification {
 		// This fixes issues with legacy Echo language strings missing parameters at the beginning of the string.
 		if ( count( $parameters ) > 0 ) {
 			$max = max( array_keys( $parameters ) );
-			for ( $i = 1; $i < $max; $i ++ ) {
+			for ( $i = 1; $i < $max; $i++ ) {
 				if ( !isset( $parameters[$i] ) ) {
 					$parameters[$i] = null;
 				}
@@ -173,7 +172,7 @@ class Notification {
 	/**
 	 * Get the created date for this notification.
 	 *
-	 * @return integer Creation Date
+	 * @return int Creation Date
 	 */
 	public function getCreatedAt(): int {
 		return $this->resource->created_at;
@@ -182,7 +181,7 @@ class Notification {
 	/**
 	 * Is this notification dismissed?
 	 *
-	 * @return boolean Is dismissed
+	 * @return bool Is dismissed
 	 */
 	public function isDismissed(): bool {
 		return boolval( $this->resource->dismissed_at );
@@ -191,7 +190,7 @@ class Notification {
 	/**
 	 * Get the dismissed timestamp for this notification.
 	 *
-	 * @return integer Dismissed Timestamp
+	 * @return int Dismissed Timestamp
 	 */
 	public function getDismissedAt(): int {
 		return intval( $this->dismissedAt );
@@ -200,7 +199,7 @@ class Notification {
 	/**
 	 * Set the dismissed timestamp for this notification.
 	 *
-	 * @param integer $dismissedAt Dismissed Timestamp
+	 * @param int $dismissedAt Dismissed Timestamp
 	 *
 	 * @return void
 	 */
@@ -333,7 +332,7 @@ class Notification {
 	/**
 	 * Return an User object of the agent that created this notification.
 	 *
-	 * @return Wiki|null
+	 * @return User|null
 	 */
 	public function getAgent(): ?User {
 		$id = $this->getAgentId();
@@ -383,6 +382,7 @@ class Notification {
 	 * Return the URL for the notification icon.
 	 *
 	 * @return string|null URL or null if missing.
+	 * @throws MWException
 	 */
 	public function getNotificationIcon(): ?string {
 		$icons = $this->getIconsConfig( 'notification' );
@@ -394,6 +394,7 @@ class Notification {
 	 * Return the URL for the category icon.
 	 *
 	 * @return string|null URL or null if missing.
+	 * @throws MWException
 	 */
 	public function getCategoryIcon(): ?string {
 		$icons = $this->getIconsConfig( 'category' );
@@ -405,6 +406,7 @@ class Notification {
 	 * Return the URL for the subcategory icon.
 	 *
 	 * @return string|null URL or null if missing.
+	 * @throws MWException
 	 */
 	public function getSubcategoryIcon(): ?string {
 		$icons = $this->getIconsConfig( 'subcategory' );
@@ -425,7 +427,9 @@ class Notification {
 		$reverbIcons = $mainConfig->get( 'ReverbIcons' );
 
 		if ( !isset( $reverbIcons[$type] ) ) {
-			throw new MWException( "The request icon type '{$type}' is missing from the \$wgReverbIcons configuration." );
+			throw new MWException(
+				"The request icon type '{$type}' is missing from the \$wgReverbIcons configuration."
+			);
 		}
 
 		return $reverbIcons[$type];
@@ -434,7 +438,7 @@ class Notification {
 	/**
 	 * Get the importance of this notification to assist with sorting.
 	 *
-	 * @return integer Importance
+	 * @return int Importance
 	 */
 	public function getImportance(): int {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
@@ -456,6 +460,7 @@ class Notification {
 	 * Get an array representation of this object suitable for APIs or otherwise.
 	 *
 	 * @return array
+	 * @throws MWException
 	 */
 	public function toArray(): array {
 		$wiki = $this->getOrigin();
@@ -491,9 +496,10 @@ class Notification {
 	 *
 	 * @param User $user Target user that the notification originally targetted.
 	 * @param string $id The ID from the original resource.
-	 * @param boolean $timestamp Unix timestamp of when the notification was dismissed.
+	 * @param int $timestamp Unix timestamp of when the notification was dismissed.
 	 *
-	 * @return null
+	 * @return bool
+	 * @throws InvalidIdentifierException
 	 */
 	public static function dismissNotification( User $user, string $id, int $timestamp ): bool {
 		$serviceUserId = UserIdHelper::getUserIdForService( $user );

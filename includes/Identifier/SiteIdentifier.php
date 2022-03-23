@@ -23,7 +23,7 @@ class SiteIdentifier extends Identifier {
 	/**
 	 * Did this notification originate from this place?
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isLocal(): bool {
 		return $this->whereIsHome() === $this->getConfiguredNamespace() && $this->whoAmI() === wfWikiID();

@@ -12,8 +12,8 @@ declare( strict_types=1 );
 
 namespace Reverb\Identifier;
 
-use DynamicSettings\Environment;
 use MediaWiki\MediaWikiServices;
+use MWException;
 
 abstract class Identifier {
 	/**
@@ -75,6 +75,7 @@ abstract class Identifier {
 	 * @param mixed $who Unique identifier of the item.
 	 *
 	 * @return UserIdentifier
+	 * @throws InvalidIdentifierException
 	 */
 	public static function newUser( $who ): UserIdentifier {
 		$who = strval( $who );
@@ -88,6 +89,7 @@ abstract class Identifier {
 	 * @param mixed $who Unique identifier of the item.
 	 *
 	 * @return SiteIdentifier
+	 * @throws InvalidIdentifierException
 	 */
 	public static function newSite( $who ): SiteIdentifier {
 		$who = strval( $who );
@@ -99,6 +101,8 @@ abstract class Identifier {
 	 * Return a factory response for a local site identifier.
 	 *
 	 * @return SiteIdentifier
+	 * @throws InvalidIdentifierException
+	 * @throws MWException
 	 */
 	public static function newLocalSite(): SiteIdentifier {
 		$config = MediaWikiServices::getInstance()->getMainConfig();
@@ -183,7 +187,7 @@ abstract class Identifier {
 	/**
 	 * Did this notification originate from this place?
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isLocal(): bool {
 		return $this->namespace === self::getConfiguredNamespace();

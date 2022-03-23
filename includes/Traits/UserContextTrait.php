@@ -16,7 +16,7 @@ trait UserContextTrait {
 	/**
 	 * User context for this scope.
 	 *
-	 * @var User $user
+	 * @var User
 	 */
 	protected $user;
 

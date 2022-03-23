@@ -17,10 +17,14 @@ use Hydrawiki\Reverb\Client\V1\Resources\NotificationBroadcast as NotificationBr
 use MediaWiki\MediaWikiServices;
 use MWException;
 use Reverb\Identifier\Identifier;
+use Reverb\Identifier\InvalidIdentifierException;
 use Reverb\Identifier\SiteIdentifier;
 use Reverb\Identifier\UserIdentifier;
 use Reverb\Traits\NotificationListTrait;
 use Reverb\UserIdHelper;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use User;
 
 class NotificationBroadcast {
@@ -106,6 +110,8 @@ class NotificationBroadcast {
 	 * @param array $meta Meta data attributes such as 'url' and 'message' parameters.
 	 *
 	 * @return self|null
+	 * @throws MWException
+	 * @throws InvalidIdentifierException
 	 */
 	public static function new(
 		string $type, ?User $agent, $targets, array $meta
@@ -134,6 +140,8 @@ class NotificationBroadcast {
 	 * @param array $meta Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return self|null
+	 * @throws MWException
+	 * @throws InvalidIdentifierException
 	 */
 	public static function newSingle(
 		string $type, User $agent, User $target, array $meta
@@ -150,6 +158,8 @@ class NotificationBroadcast {
 	 * @param array $meta Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return self|null
+	 * @throws MWException
+	 * @throws InvalidIdentifierException
 	 */
 	public static function newMulti(
 		string $type, User $agent, array $targets, array $meta
@@ -190,6 +200,8 @@ class NotificationBroadcast {
 	 * @param array $meta Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return self|null
+	 * @throws MWException
+	 * @throws InvalidIdentifierException
 	 */
 	public static function newSystemSingle(
 		string $type, User $target, array $meta
@@ -205,6 +217,8 @@ class NotificationBroadcast {
 	 * @param array $meta Meta data attributes such as 'url' and 'message' parameters for building language strings.
 	 *
 	 * @return self|null
+	 * @throws MWException
+	 * @throws InvalidIdentifierException
 	 */
 	public static function newSystemMulti(
 		string $type, array $targets, array $meta
@@ -241,7 +255,7 @@ class NotificationBroadcast {
 	 *
 	 * @param string $type Notification Type
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function isTypeConfigured( string $type ): bool {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
@@ -266,7 +280,9 @@ class NotificationBroadcast {
 	 *
 	 * @param User $agent Notification Creator
 	 *
-	 * @return boolean Success
+	 * @return bool Success
+	 * @throws MWException
+	 * @throws InvalidIdentifierException
 	 */
 	protected function setAgent( User $agent ): bool {
 		if ( !( $agent instanceof User ) ) {
@@ -300,6 +316,8 @@ class NotificationBroadcast {
 	 * @param array $targets Array of User
 	 *
 	 * @return void
+	 * @throws InvalidIdentifierException
+	 * @throws MWException
 	 */
 	protected function setTargets( array $targets ) {
 		$targetIdentifiers = [];
@@ -356,7 +374,11 @@ class NotificationBroadcast {
 	/**
 	 * Transmit the broadcast.
 	 *
-	 * @return boolean Operation Success
+	 * @return bool Operation Success
+	 * @throws MWException
+	 * @throws LoaderError
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 */
 	public function transmit(): bool {
 		$email = NotificationEmail::newFromBroadcast( $this );

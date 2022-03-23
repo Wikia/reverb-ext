@@ -18,11 +18,13 @@ use Hydrawiki\Reverb\Client\V1\Exceptions\ApiResponseInvalid;
 use MediaWiki\MediaWikiServices;
 use MWException;
 use Reverb\Identifier\Identifier;
+use Reverb\Identifier\InvalidIdentifierException;
+use Reverb\Traits\UserContextTrait;
 use Reverb\UserIdHelper;
 use User;
 
 class NotificationBundle extends ArrayObject {
-	use \Reverb\Traits\UserContextTrait;
+	use UserContextTrait;
 
 	/**
 	 * Filters used to build this instance.
@@ -34,42 +36,42 @@ class NotificationBundle extends ArrayObject {
 	/**
 	 * Items per page.
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $itemsPerPage = 50;
 
 	/**
 	 * Current page number.
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $pageNumber = 0;
 
 	/**
 	 * Total notifications in this bundle.
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $totalThisPage = 0;
 
 	/**
 	 * Total notifications in this bundle.
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $totalAll = 0;
 
 	/**
 	 * Number of unread notifications in this bundle.
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $unreadCount = 0;
 
 	/**
 	 * Number of read notifications in this bundle.
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $readCount = 0;
 
@@ -77,10 +79,11 @@ class NotificationBundle extends ArrayObject {
 	 * Main Constructor
 	 *
 	 * @param array $notifications Array of Reverb\Notification\Notification objects.
-	 * @param integer $flags ArrayObject::STD_PROP_LIST | ArrayObject::ARRAY_AS_PROPS
+	 * @param int $flags ArrayObject::STD_PROP_LIST | ArrayObject::ARRAY_AS_PROPS
 	 * @param string $iterator Iterator class to use.
 	 *
 	 * @return void
+	 * @throws MWException
 	 */
 	public function __construct( array $notifications = [], int $flags = 0, string $iterator = "ArrayIterator" ) {
 		foreach ( $notifications as $notification ) {
@@ -101,10 +104,12 @@ class NotificationBundle extends ArrayObject {
 	 *                            'unread' => 1, // 1 only
 	 *                            'type' => article-edit-revert // Accepts comma separated notification types.
 	 *                            ]
-	 * @param array $itemsPerPage [Optional] Number of items per page.
-	 * @param array $pageNumber [Optional] Page number to read.
+	 * @param int $itemsPerPage [Optional] Number of items per page.
+	 * @param int $pageNumber [Optional] Page number to read.
 	 *
 	 * @return NotificationBundle|null Returns null if a bad user(No global account or robot account) is passed.
+	 * @throws MWException
+	 * @throws InvalidIdentifierException
 	 */
 	public static function getBundleForUser(
 		User $user, array $filters = [], int $itemsPerPage = 50, int $pageNumber = 0
@@ -126,7 +131,6 @@ class NotificationBundle extends ArrayObject {
 			$notifications = [];
 
 			$client = MediaWikiServices::getInstance()->getService( 'ReverbApiClient' );
-			$userIdentifier = Identifier::newUser( $serviceUserId );
 
 			try {
 				$notificationTargetResources =
@@ -204,24 +208,17 @@ class NotificationBundle extends ArrayObject {
 	 * Get the next page of bundled notifications.
 	 *
 	 * @return NotificationBundle|null
+	 * @throws InvalidIdentifierException
+	 * @throws MWException
 	 */
 	public function nextPage(): ?NotificationBundle {
 		return self::getBundleForUser( $this->getUser(), $this->filters, $this->itemsPerPage, $this->pageNumber + 1 );
 	}
 
 	/**
-	 * Get a set of JSON:API compatible links for consumers.
-	 *
-	 * @return array ['first' => '', 'prev' => '', 'next' => '', 'last' => '']
-	 */
-	public function getApiLinks(): array {
-		// code...
-	}
-
-	/**
 	 * Return the total notifications collected.
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	public function getTotalThisPage(): int {
 		return $this->totalThisPage;
@@ -230,7 +227,7 @@ class NotificationBundle extends ArrayObject {
 	/**
 	 * Return the total notifications available from the service.
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	public function getTotalAll(): int {
 		return $this->totalAll;
@@ -239,7 +236,7 @@ class NotificationBundle extends ArrayObject {
 	/**
 	 * Return the unread count from the meta data.
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	public function getUnreadCount(): int {
 		return $this->unread;
@@ -248,7 +245,7 @@ class NotificationBundle extends ArrayObject {
 	/**
 	 * Return the unread count from the meta data.
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	public function getReadCount(): int {
 		return $this->read;
@@ -257,7 +254,7 @@ class NotificationBundle extends ArrayObject {
 	/**
 	 * Return the calculated page number.
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	public function getPageNumber(): int {
 		return $this->pageNumber;
@@ -266,7 +263,7 @@ class NotificationBundle extends ArrayObject {
 	/**
 	 * Return the requested items per page for reference.
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	public function getItemsPerPage(): int {
 		return $this->itemsPerPage;

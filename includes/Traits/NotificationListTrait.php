@@ -10,7 +10,7 @@
 
 namespace Reverb\Traits;
 
-use GlobalVarConfig;
+use Config;
 use MediaWiki\MediaWikiServices;
 use User;
 
@@ -40,15 +40,17 @@ trait NotificationListTrait {
 	 * @param string $type
 	 * @param string $group
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function shouldNotify( User $user, string $type, string $group ): bool {
-		if ( $group == 'email' && $user->getOption( 'reverb-email-frequency' ) == 0 ) {
+		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+
+		if ( $group == 'email' && $userOptionsLookup->getOption( $user,  'reverb-email-frequency' ) == 0 ) {
 			return false;
 		}
 		$type = self::replaceTypeWithUsePreference( $type );
 
-		return $user->getBoolOption( self::getPreferenceKey( $type, $group ) );
+		return $userOptionsLookup->getBoolOption( $user, self::getPreferenceKey( $type, $group ) );
 	}
 
 	/**
@@ -140,14 +142,15 @@ trait NotificationListTrait {
 	 * @param User $user
 	 * @param array $notification
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function isNotificationAllowedForUser( User $user, array $notification ): bool {
 		if ( !isset( $notification['requires'] ) ) {
 			return true;
 		}
 
-		return boolval( array_intersect( $user->getEffectiveGroups(), $notification['requires'] ) );
+		$effectiveGroups = MediaWikiServices::getInstance()->getUserGroupManager()->getUserEffectiveGroups( $user );
+		return boolval( array_intersect( $effectiveGroups, $notification['requires'] ) );
 	}
 
 	/**
@@ -155,7 +158,7 @@ trait NotificationListTrait {
 	 *
 	 * @param array $notification
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function shouldBeInMatrix( array $notification ): bool {
 		if ( isset( $notification['matrix'] ) ) {
@@ -170,7 +173,7 @@ trait NotificationListTrait {
 	 *
 	 * @param array $notification
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function isUsingAnotherPreference( array $notification ): bool {
 		return isset( $notification['use-preference'] );
@@ -201,7 +204,7 @@ trait NotificationListTrait {
 	/**
 	 * Get the Configuration container
 	 *
-	 * @return GlobalVarConfig
+	 * @return Config
 	 */
 	private static function getNotificationConfig() {
 		return MediaWikiServices::getInstance()->getMainConfig();
@@ -222,7 +225,7 @@ trait NotificationListTrait {
 	 * Handle getting parts of a hyphenated string
 	 *
 	 * @param string $type
-	 * @param integer $offset
+	 * @param int $offset
 	 *
 	 * @return string
 	 */
