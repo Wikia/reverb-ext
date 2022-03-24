@@ -8,33 +8,45 @@
  * @license GPL-2.0-or-later
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace Reverb\Api;
 
 use ApiBase;
+use ApiUsageException;
+use Exception;
+use Hydrawiki\Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful;
 use Hydrawiki\Reverb\Client\V1\Resources\NotificationDismissals as NotificationDismissalsResource;
 use MediaWiki\MediaWikiServices;
+use MWException;
 use Reverb\Identifier\Identifier;
+use Reverb\Identifier\InvalidIdentifierException;
 use Reverb\Notification\Notification;
 use Reverb\Notification\NotificationBroadcast;
 use Reverb\Notification\NotificationBundle;
 use Reverb\UserIdHelper;
+use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiNotifications extends ApiBase {
+	/** @var array */
+	private $params;
+
 	/**
 	 * Main API entry point.
 	 *
 	 * @return void
+	 * @throws ApiUsageException
+	 * @throws InvalidIdentifierException
+	 * @throws MWException
 	 */
 	public function execute() {
 		$this->params = $this->extractRequestParams();
 
-		if (!$this->getUser()->isLoggedIn()) {
-			$this->dieWithError(['apierror-permissiondenied-generic']);
+		if ( !$this->getUser()->isRegistered() ) {
+			$this->dieWithError( [ 'apierror-permissiondenied-generic' ] );
 		}
 
-		switch ($this->params['do']) {
+		switch ( $this->params['do'] ) {
 			case 'getNotificationsForUser':
 				$response = $this->getNotificationsForUser();
 				break;
@@ -45,12 +57,12 @@ class ApiNotifications extends ApiBase {
 				$response = $this->dismissAllNotifications();
 				break;
 			default:
-				$this->dieWithError(['invaliddo', $this->params['do']]);
+				$this->dieWithError( [ 'invaliddo', $this->params['do'] ] );
 				break;
 		}
 
-		foreach ($response as $key => $value) {
-			$this->getResult()->addValue(null, $key, $value);
+		foreach ( $response as $key => $value ) {
+			$this->getResult()->addValue( null, $key, $value );
 		}
 	}
 
@@ -58,28 +70,30 @@ class ApiNotifications extends ApiBase {
 	 * Get notifications for the current user.
 	 *
 	 * @return array
+	 * @throws MWException
+	 * @throws InvalidIdentifierException
 	 */
 	public function getNotificationsForUser(): array {
 		$return = [
-			'notifications' => []
+			'notifications' => [],
 		];
 
 		$filters = [];
-		if ($this->params['read'] === 1) {
+		if ( $this->params['read'] === 1 ) {
 			$filters['read'] = 1;
 		}
-		if ($this->params['unread'] === 1) {
+		if ( $this->params['unread'] === 1 ) {
 			$filters['unread'] = 1;
 		}
-		if (!empty($this->params['type'])) {
-			$types = explode(',', $this->params['type']);
-			foreach ($types as $key => $type) {
-				if (!NotificationBroadcast::isTypeConfigured($type)) {
-					unset($types[$key]);
+		if ( !empty( $this->params['type'] ) ) {
+			$types = explode( ',', $this->params['type'] );
+			foreach ( $types as $key => $type ) {
+				if ( !NotificationBroadcast::isTypeConfigured( $type ) ) {
+					unset( $types[$key] );
 				}
 			}
-			if (!empty($types)) {
-				$filters['type'] = implode(',', $types);
+			if ( !empty( $types ) ) {
+				$filters['type'] = implode( ',', $types );
 			}
 		}
 
@@ -90,8 +104,8 @@ class ApiNotifications extends ApiBase {
 			$this->params['page']
 		);
 
-		if ($bundle !== null) {
-			foreach ($bundle as $key => $notification) {
+		if ( $bundle !== null ) {
+			foreach ( $bundle as $key => $notification ) {
 				$return['notifications'][] = $notification->toArray();
 			}
 			$return['meta'] = [
@@ -100,7 +114,7 @@ class ApiNotifications extends ApiBase {
 				'total_this_page' => $bundle->getTotalThisPage(),
 				'total_all' => $bundle->getTotalAll(),
 				'page' => $bundle->getPageNumber(),
-				'items_per_page' => $bundle->getItemsPerPage()
+				'items_per_page' => $bundle->getItemsPerPage(),
 			];
 		}
 
@@ -111,26 +125,28 @@ class ApiNotifications extends ApiBase {
 	 * Dismiss a notification based on ID.
 	 *
 	 * @return array
+	 * @throws ApiUsageException
+	 * @throws InvalidIdentifierException
 	 */
 	public function dismissNotification(): array {
-		if (!$this->getRequest()->wasPosted()) {
-			$this->dieWithError(['apierror-mustbeposted', __FUNCTION__]);
+		if ( !$this->getRequest()->wasPosted() ) {
+			$this->dieWithError( [ 'apierror-mustbeposted', __FUNCTION__ ] );
 		}
 
 		$success = false;
 
 		$id = $this->params['notificationId'];
 		$timestamp = $this->params['dismissedAt'];
-		if ($timestamp === null) {
+		if ( $timestamp === null ) {
 			$timestamp = time();
 		}
 
-		if (!empty($id)) {
-			$success = Notification::dismissNotification($this->getUser(), (string)$id, $timestamp);
+		if ( !empty( $id ) ) {
+			$success = Notification::dismissNotification( $this->getUser(), (string)$id, $timestamp );
 		}
 
 		return [
-			'success' => $success
+			'success' => $success,
 		];
 	}
 
@@ -138,34 +154,36 @@ class ApiNotifications extends ApiBase {
 	 * Dismiss a notification based on ID.
 	 *
 	 * @return array
+	 * @throws ApiUsageException
+	 * @throws InvalidIdentifierException
 	 */
 	public function dismissAllNotifications(): array {
-		if (!$this->getRequest()->wasPosted()) {
-			$this->dieWithError(['apierror-mustbeposted', __FUNCTION__]);
+		if ( !$this->getRequest()->wasPosted() ) {
+			$this->dieWithError( [ 'apierror-mustbeposted', __FUNCTION__ ] );
 		}
 
 		$success = false;
 
-		$serviceUserId = UserIdHelper::getUserIdForService($this->getUser());
-		$userIdentifier = Identifier::newUser($serviceUserId);
-		$dismiss = new NotificationDismissalsResource(
-			[
-				'target-id' => (string)$userIdentifier
-			]
-		);
+		$serviceUserId = UserIdHelper::getUserIdForService( $this->getUser() );
+		$userIdentifier = Identifier::newUser( $serviceUserId );
+		$dismiss = new NotificationDismissalsResource( [
+				'target-id' => (string)$userIdentifier,
+			] );
 
 		try {
-			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-			$response = $client->notification_dismissals()->create($dismiss);
+			$client = MediaWikiServices::getInstance()->getService( 'ReverbApiClient' );
+			$response = $client->notification_dismissals()->create( $dismiss );
 			$success = true;
-		} catch (ApiRequestUnsuccessful $e) {
-			wfLogWarning('Invalid API response from the service: ' . $e->getMessage());
-		} catch (Exception $e) {
-			wfLogWarning('General exception encountered when communicating with the service: ' . $e->getMessage());
+		}
+		catch ( ApiRequestUnsuccessful $e ) {
+			wfLogWarning( 'Invalid API response from the service: ' . $e->getMessage() );
+		}
+		catch ( Exception $e ) {
+			wfLogWarning( 'General exception encountered when communicating with the service: ' . $e->getMessage() );
 		}
 
 		return [
-			'success' => $success
+			'success' => $success,
 		];
 	}
 
@@ -177,60 +195,57 @@ class ApiNotifications extends ApiBase {
 	public function getAllowedParams() {
 		return [
 			'do' => [
-				ApiBase::PARAM_TYPE => 'string',
-				ApiBase::PARAM_REQUIRED => true
+				ParamValidator::PARAM_TYPE => 'string',
+				ParamValidator::PARAM_REQUIRED => true,
 			],
 			'page' => [
-				ApiBase::PARAM_TYPE => 'integer',
-				ApiBase::PARAM_REQUIRED => true,
-				ApiBase::PARAM_DFLT => 0
+				ParamValidator::PARAM_TYPE => 'integer',
+				ParamValidator::PARAM_REQUIRED => true,
+				ParamValidator::PARAM_DEFAULT => 0,
 			],
 			'itemsPerPage' => [
-				ApiBase::PARAM_TYPE => 'integer',
-				ApiBase::PARAM_REQUIRED => true,
-				ApiBase::PARAM_DFLT => 50
+				ParamValidator::PARAM_TYPE => 'integer',
+				ParamValidator::PARAM_REQUIRED => true,
+				ParamValidator::PARAM_DEFAULT => 50,
 			],
 			'type' => [
-				ApiBase::PARAM_TYPE => 'string',
-				ApiBase::PARAM_REQUIRED => false,
-				ApiBase::PARAM_DFLT => null
+				ParamValidator::PARAM_TYPE => 'string',
+				ParamValidator::PARAM_REQUIRED => false,
+				ParamValidator::PARAM_DEFAULT => null,
 			],
 			'read' => [
-				ApiBase::PARAM_TYPE => 'integer',
-				ApiBase::PARAM_REQUIRED => false,
-				ApiBase::PARAM_DFLT => null
+				ParamValidator::PARAM_TYPE => 'integer',
+				ParamValidator::PARAM_REQUIRED => false,
+				ParamValidator::PARAM_DEFAULT => null,
 			],
 			'unread' => [
-				ApiBase::PARAM_TYPE => 'integer',
-				ApiBase::PARAM_REQUIRED => false,
-				ApiBase::PARAM_DFLT => null
+				ParamValidator::PARAM_TYPE => 'integer',
+				ParamValidator::PARAM_REQUIRED => false,
+				ParamValidator::PARAM_DEFAULT => null,
 			],
 			'notificationId' => [
-				ApiBase::PARAM_TYPE => 'string',
-				ApiBase::PARAM_REQUIRED => false,
-				ApiBase::PARAM_DFLT => null
+				ParamValidator::PARAM_TYPE => 'string',
+				ParamValidator::PARAM_REQUIRED => false,
+				ParamValidator::PARAM_DEFAULT => null,
 			],
 			'dismissedAt' => [
-				ApiBase::PARAM_TYPE => 'integer',
-				ApiBase::PARAM_REQUIRED => false,
-				ApiBase::PARAM_DFLT => null
-			]
+				ParamValidator::PARAM_TYPE => 'integer',
+				ParamValidator::PARAM_REQUIRED => false,
+				ParamValidator::PARAM_DEFAULT => null,
+			],
 		];
 	}
 
 	/**
 	 * Get example URL parameters and help message key.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	protected function getExamplesMessages() {
 		return [
-			'action=notifications&do=getNotificationsForUser&page=0&itemsPerPage=50'
-				=> 'apihelp-notifications-getNotificationsForUser-example',
-			'action=notifications&do=dismissNotification&notificationId=1&dismissedAt=1562006555'
-				=> 'apihelp-notifications-dismissNotification-example',
-			'action=notifications&do=dismissAllNotifications'
-				=> 'apihelp-notifications-dismissAllNotifications-example'
+			'action=notifications&do=getNotificationsForUser&page=0&itemsPerPage=50' => 'apihelp-notifications-getNotificationsForUser-example',
+			'action=notifications&do=dismissNotification&notificationId=1&dismissedAt=1562006555' => 'apihelp-notifications-dismissNotification-example',
+			'action=notifications&do=dismissAllNotifications' => 'apihelp-notifications-dismissAllNotifications-example',
 		];
 	}
 

@@ -8,13 +8,17 @@
  * @license GPL-2.0-or-later
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace Reverb\Special;
 
 use Reverb\Traits\NotificationListTrait;
 use Reverb\TwiggyWiring;
 use SpecialPage;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use UserNotLoggedIn;
 
 class SpecialNotifications extends SpecialPage {
 	use NotificationListTrait;
@@ -25,9 +29,7 @@ class SpecialNotifications extends SpecialPage {
 	 * @return void
 	 */
 	public function __construct() {
-		parent::__construct('Notifications');
-
-		$this->output = $this->getOutput();
+		parent::__construct( 'Notifications' );
 	}
 
 	/**
@@ -36,43 +38,46 @@ class SpecialNotifications extends SpecialPage {
 	 * @param string|null $subpage Sub page passed in the URL.
 	 *
 	 * @return void [Outputs to screen]
+	 * @throws LoaderError
+	 * @throws RuntimeError
+	 * @throws SyntaxError
+	 * @throws UserNotLoggedIn
 	 */
-	public function execute($subpage) {
+	public function execute( $subpage ) {
 		$this->requireLogin();
 
 		$twig = TwiggyWiring::init();
-		$template = $twig->load($this->getContext()->getSkin()->getSkinName() === 'fandomdesktop'
-			? '@Reverb/special_notifications_fandomdesktop.twig'
-			: '@Reverb/special_notifications.twig');
+		$template = $twig->load( $this->getContext()->getSkin()->getSkinName() === 'fandomdesktop'
+				? '@Reverb/special_notifications_fandomdesktop.twig' : '@Reverb/special_notifications.twig' );
 
-		$groups = self::getNotificationsGroupedByPreference($this->getUser());
+		$groups = self::getNotificationsGroupedByPreference( $this->getUser() );
 
 		// Additional Scrips for the Notification Page
-		if ($this->output->getContext()->getSkin()->getSkinName() === 'fandomdesktop') {
-			$this->output->addModuleStyles('ext.reverb.specialNotifications.fandomdesktop.styles');
+		if ( $this->getOutput()->getContext()->getSkin()->getSkinName() === 'fandomdesktop' ) {
+			$this->getOutput()->addModuleStyles( 'ext.reverb.specialNotifications.fandomdesktop.styles' );
 		} else {
-			$this->output->addModuleStyles('ext.reverb.notifications.styles.notificationPage');
+			$this->getOutput()->addModuleStyles( 'ext.reverb.notifications.styles.notificationPage' );
 		}
 
-		$this->output->addModules('ext.reverb.notifications.scripts.notificationPage');
-		$this->output->setPageTitle(wfMessage('notifications')->escaped());
+		$this->getOutput()->addModules( 'ext.reverb.notifications.scripts.notificationPage' );
+		$this->getOutput()->setPageTitle( $this->msg( 'notifications' )->escaped() );
 
-		$this->output->addHtml($template->render(['groups' => $groups]));
+		$this->getOutput()->addHtml( $template->render( [ 'groups' => $groups ] ) );
 	}
 
 	/**
 	 * Hides special page from SpecialPages special page.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isListed() {
-		return $this->getUser()->isLoggedIn();
+		return $this->getUser()->isRegistered();
 	}
 
 	/**
 	 * Lets others determine that this special page is restricted.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isRestricted(): bool {
 		return true;

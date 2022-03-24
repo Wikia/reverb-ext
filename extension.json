@@ -97,7 +97,6 @@
 	"Hooks": {
 		"AbortEmailNotification": "Reverb\\Hooks::onAbortEmailNotification",
 		"AbortTalkPageEmailNotification": "Reverb\\Hooks::onAbortTalkPageEmailNotification",
-		"ArticleRollbackComplete": "Reverb\\Hooks::onArticleRollbackComplete",
 		"BeforeInitialize": "Reverb\\Hooks::onBeforeInitialize",
 		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
 		"EmailUserComplete": "Reverb\\Hooks::onEmailUserComplete",
@@ -105,7 +104,7 @@
 		"GetNewMessagesAlert": "Reverb\\Hooks::onGetNewMessagesAlert",
 		"GetPreferences": "Reverb\\Hooks::onGetPreferences",
 		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
-		"PageContentSaveComplete": "Reverb\\Hooks::onPageContentSaveComplete",
+		"PageSaveComplete": "Reverb\\Hooks::onPageSaveComplete",
 		"SpecialPageBeforeExecute": "Reverb\\Hooks::onSpecialPageBeforeExecute",
 		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged",
 		"PageHeaderActionButtonShouldDisplay": "Reverb\\Hooks::onPageHeaderActionButtonShouldDisplay",

@@ -8,10 +8,11 @@
  * @license MIT
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace Reverb;
 
+use MediaWiki\MediaWikiServices;
 use User;
 
 class UserIdHelper {
@@ -20,20 +21,20 @@ class UserIdHelper {
 	 *
 	 * @param User $user
 	 *
-	 * @return integer
+	 * @return int
 	 */
-	public static function getUserIdForService(User $user): int {
+	public static function getUserIdForService( User $user ): int {
 		return $user->getId();
 	}
 
 	/**
 	 * Get a local User object for this user ID in the Reverb service.
 	 *
-	 * @param integer $serviceUserId
+	 * @param int $serviceUserId
 	 *
 	 * @return User|null
 	 */
-	public static function getUserForServiceUserId(int $serviceUserId): ?User {
-		return User::newFromId($serviceUserId);
+	public static function getUserForServiceUserId( int $serviceUserId ): ?User {
+		return MediaWikiServices::getInstance()->getUserFactory()->newFromId( $serviceUserId );
 	}
 }

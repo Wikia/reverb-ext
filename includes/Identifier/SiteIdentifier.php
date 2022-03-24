@@ -8,7 +8,7 @@
  * @license GPL-2.0-or-later
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace Reverb\Identifier;
 
@@ -23,7 +23,7 @@ class SiteIdentifier extends Identifier {
 	/**
 	 * Did this notification originate from this place?
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isLocal(): bool {
 		return $this->whereIsHome() === $this->getConfiguredNamespace() && $this->whoAmI() === wfWikiID();

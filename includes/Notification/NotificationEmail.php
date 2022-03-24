@@ -8,16 +8,21 @@
  * @license GPL-2.0-or-later
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace Reverb\Notification;
 
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use MailAddress;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\UserOptionsLookup;
+use MWException;
 use Reverb\Traits\NotificationListTrait;
 use Reverb\TwiggyWiring;
 use SpecialPage;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use User;
 
 class NotificationEmail {
@@ -29,6 +34,10 @@ class NotificationEmail {
 	 * @var NotificationBroadcast
 	 */
 	protected $broadcast = null;
+	/**
+	 * @var UserOptionsLookup
+	 */
+	private $userOptionsLookup;
 
 	/**
 	 * Main Constructor
@@ -37,8 +46,9 @@ class NotificationEmail {
 	 *
 	 * @return void
 	 */
-	public function __construct(NotificationBroadcast $broadcast) {
+	public function __construct( NotificationBroadcast $broadcast ) {
 		$this->broadcast = $broadcast;
+		$this->userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
 	}
 
 	/**
@@ -48,12 +58,12 @@ class NotificationEmail {
 	 *
 	 * @return NotificationEmail|null
 	 */
-	public static function newFromBroadcast(NotificationBroadcast $broadcast): ?NotificationEmail {
-		if (!$broadcast->getTargets()) {
+	public static function newFromBroadcast( NotificationBroadcast $broadcast ): ?NotificationEmail {
+		if ( !$broadcast->getTargets() ) {
 			return null;
 		}
 
-		$email = new NotificationEmail($broadcast);
+		$email = new NotificationEmail( $broadcast );
 
 		return $email;
 	}
@@ -71,6 +81,10 @@ class NotificationEmail {
 	 * Send the email(s) off.
 	 *
 	 * @return bool Success
+	 * @throws LoaderError
+	 * @throws MWException
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 */
 	public function send(): bool {
 		global $wgNoReplyAddress;
@@ -78,32 +92,30 @@ class NotificationEmail {
 		$attributes = $this->broadcast->getAttributes();
 
 		$resource = new NotificationResource();
-		$resource->setId('0');
-		$resource->setAttributes($attributes);
+		$resource->setId( '0' );
+		$resource->setAttributes( $attributes );
 
-		$notification = new Notification($resource);
+		$notification = new Notification( $resource );
 
 		$targets = $this->getTargets();
 		$success = 0;
-		foreach ($targets as $user) {
-			if ($this->shouldNotify($user, $attributes['type'], 'email')) {
-				$notification->setUser($user);
+		foreach ( $targets as $user ) {
+			if ( $this->shouldNotify( $user, $attributes['type'], 'email' ) ) {
+				$notification->setUser( $user );
 				$header = $notification->getHeader();
-				$htmlBody = $this->getWrappedBody($notification, $user);
+				$htmlBody = $this->getWrappedBody( $notification, $user );
 				$body = [
 					'text' => $htmlBody,
-					'html' => $htmlBody
+					'html' => $htmlBody,
 				];
 
-				$replyTo = new MailAddress($wgNoReplyAddress, wfMessage('emailsender')->inContentLanguage()->text());
+				$replyTo =
+					new MailAddress( $wgNoReplyAddress, wfMessage( 'emailsender' )->inContentLanguage()->text() );
 
-				$status = $user->sendMail(
-					strip_tags((string)$header->inLanguage($user->getOption('language'))),
-					$body,
-					null,
-					$replyTo
-				);
-				if ($status->isGood()) {
+				$status =
+					$user->sendMail( strip_tags( (string)$header->inLanguage( $user->getOption( 'language' ) ) ), $body,
+						null, $replyTo );
+				if ( $status->isGood() ) {
 					$success++;
 				}
 			} else {
@@ -111,9 +123,10 @@ class NotificationEmail {
 			}
 		}
 
-		if ($success != count($targets)) {
+		if ( $success != count( $targets ) ) {
 			return false;
 		}
+
 		return true;
 	}
 
@@ -121,36 +134,39 @@ class NotificationEmail {
 	 * Get the body of the email wrapped in header and footer.
 	 *
 	 * @param Notification $notification The notification to present.
-	 * @param User         $user         User context for language selection.
+	 * @param User $user User context for language selection.
 	 *
 	 * @return string
+	 * @throws MWException
+	 * @throws LoaderError
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 */
-	private function getWrappedBody(Notification $notification, User $user): string {
+	private function getWrappedBody( Notification $notification, User $user ): string {
 		$twig = TwiggyWiring::init();
-		$template = $twig->load('@Reverb/notification_email.twig');
+		$template = $twig->load( '@Reverb/notification_email.twig' );
 
 		$config = MediaWikiServices::getInstance()->getMainConfig();
-		$wgCanonicalServer = $config->get("CanonicalServer");
-		$wgSitename = $config->get("Sitename");
-		$notificationFrom = wfMessage("reverb-email-notification-from")
-		->params($wgCanonicalServer, $wgSitename)
-		->inLanguage($user->getOption('language'))
-		->text();
+		$userLang = $this->userOptionsLookup->getOption( $user, 'language' );
+		$canonicalServer = $config->get( "CanonicalServer" );
+		$sitename = $config->get( "Sitename" );
+		$notificationFrom =
+			wfMessage( "reverb-email-notification-from" )
+				->params( $canonicalServer, $sitename )
+				->inLanguage( $userLang )
+				->text();
 
-		$wrapped = $template->render(
-			[
+		$wrapped = $template->render( [
 				'notification_from' => $notificationFrom,
-				'wgCanonicalServer' => $wgCanonicalServer,
-				'header' => (string)$notification->getHeader(true)->inLanguage($user->getOption('language')),
+				'wgCanonicalServer' => $canonicalServer,
+				'header' => (string)$notification->getHeader( true )->inLanguage( $userLang ),
 				'user_note' => $notification->getUserNote(),
 				'icon' => $notification->getNotificationIcon(),
 				'action' => $notification->getCanonicalUrl(),
-				'action_description' => wfMessage(
-					'reverb-email-action-description'
-				)->inLanguage($user->getOption('language')),
-				'footer' => $this->getFooter($user)
-			]
-		);
+				'action_description' => wfMessage( 'reverb-email-action-description' )->inLanguage( $userLang ),
+				'footer' => $this->getFooter( $user ),
+			] );
+
 		return (string)$wrapped;
 	}
 
@@ -160,13 +176,13 @@ class NotificationEmail {
 	 * @param User $user User context for language selection.
 	 *
 	 * @return string Assembled HTML
+	 * @throws MWException
 	 */
-	private function getFooter(User $user): string {
-		$preferencesTitle = SpecialPage::getTitleFor('Preferences', false, 'mw-prefsection-reverb');
-		$footer = wfMessage(
-			'reverb-email-preferences-footer',
-			$preferencesTitle->getFullURL()
-		)->inLanguage($user->getOption('language'))->text();
+	private function getFooter( User $user ): string {
+		$preferencesTitle = SpecialPage::getTitleFor( 'Preferences', false, 'mw-prefsection-reverb' );
+		$footer = wfMessage( 'reverb-email-preferences-footer', $preferencesTitle->getFullURL() )
+				->inLanguage( $this->userOptionsLookup->getOption( $user, 'language' ) )
+				->text();
 
 		return $footer;
 	}

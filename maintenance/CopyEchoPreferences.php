@@ -10,7 +10,7 @@
 
 namespace Reverb\Maintenance;
 
-require_once dirname(__DIR__, 3) . "/maintenance/Maintenance.php";
+require_once dirname( __DIR__, 3 ) . "/maintenance/Maintenance.php";
 
 use Maintenance;
 
@@ -24,7 +24,7 @@ class CopyEchoPreferences extends Maintenance {
 		parent::__construct();
 		$this->mDescription = "CopyEchoPreferences";
 
-		$this->addOption('final', 'Actually perform the copy instead of testing.', false, false);
+		$this->addOption( 'final', 'Actually perform the copy instead of testing.', false, false );
 	}
 
 	/**
@@ -50,8 +50,7 @@ class CopyEchoPreferences extends Maintenance {
 			'echo-subscriptions-email-thank-you-edit' => 'reverb-article-edit-email-thanks',
 			'echo-subscriptions-email-dynamicsettings-tools' => 'reverb-site-management-email-tools',
 			'echo-subscriptions-email-user-rights' => 'reverb-user-account-email-groups-changed',
-			'echo-subscriptions-email-user-rights-expiry-change' =>
-				'reverb-user-account-email-groups-expiration-change',
+			'echo-subscriptions-email-user-rights-expiry-change' => 'reverb-user-account-email-groups-expiration-change',
 			'echo-subscriptions-email-welcome' => 'reverb-user-interest-email-welcome',
 			'echo-subscriptions-email-dynamicsettings-wiki-edit' => 'reverb-site-management-email-wiki-edit',
 			'echo-subscriptions-web-article-linked' => 'reverb-user-interest-web-page-linked',
@@ -67,29 +66,24 @@ class CopyEchoPreferences extends Maintenance {
 			'echo-subscriptions-web-user-rights-expiry-change' => 'reverb-user-account-web-groups-expiration-change',
 			'echo-subscriptions-web-welcome' => 'reverb-user-interest-web-welcome ',
 			'echo-subscriptions-web-dynamicsettings-wiki-edit' => 'reverb-site-management-web-wiki-edit',
-			'enotifwatchlistpages' => 'reverb-article-edit-email-watch'
+			'enotifwatchlistpages' => 'reverb-article-edit-email-watch',
 		];
 
-		$db = wfGetDB(DB_MASTER);
+		$db = wfGetDB( DB_MASTER );
 
-		$results = $db->select(
-			['user_properties'],
-			[
-				'*'
-			],
-			[
-				"up_property LIKE 'echo-%' OR up_property = 'enotifwatchlistpages'"
-			],
-			__METHOD__
-		);
+		$results = $db->select( [ 'user_properties' ], [
+				'*',
+			], [
+				"up_property LIKE 'echo-%' OR up_property = 'enotifwatchlistpages'",
+			], __METHOD__ );
 
-		while ($row = $results->fetchRow()) {
-			if (!isset($preferenceMap[$row['up_property']])) {
-				$this->output("Skipping unknown preference {$row['up_property']}\n");
+		while ( $row = $results->fetchRow() ) {
+			if ( !isset( $preferenceMap[$row['up_property']] ) ) {
+				$this->output( "Skipping unknown preference {$row['up_property']}\n" );
 				continue;
 			}
 
-			if (!$preferenceMap[$row['up_property']]) {
+			if ( !$preferenceMap[$row['up_property']] ) {
 				// Skipping a preference we do not care about.
 				continue;
 			}
@@ -97,22 +91,16 @@ class CopyEchoPreferences extends Maintenance {
 			$insert = [
 				'up_user' => $row['up_user'],
 				'up_property' => $preferenceMap[$row['up_property']],
-				'up_value' => $row['up_value']
+				'up_value' => $row['up_value'],
 			];
 
 			$success = false;
-			if ($this->hasOption('final')) {
-				$success = $db->upsert(
-					'user_properties',
-					[
-						'up_user' => $row['up_user']
-					] + $insert,
-					['PRIMARY'],
-					$insert,
-					__METHOD__
-				);
+			if ( $this->hasOption( 'final' ) ) {
+				$success = $db->upsert( 'user_properties', [
+															   'up_user' => $row['up_user'],
+														   ] + $insert, [ 'PRIMARY' ], $insert, __METHOD__ );
 			}
-			$this->output("Insert " . json_encode($insert) . "... " . var_export($success, true) . "\n");
+			$this->output( "Insert " . json_encode( $insert ) . "... " . var_export( $success, true ) . "\n" );
 		}
 	}
 }
