@@ -20,7 +20,6 @@ use Fandom\Includes\User\UserInfo;
 use Fandom\Includes\Util\UrlUtilityService;
 use LinksUpdate;
 use MailAddress;
-use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Storage\EditResult;
