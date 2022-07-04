@@ -20,6 +20,7 @@ use Fandom\Includes\User\UserInfo;
 use Fandom\Includes\Util\UrlUtilityService;
 use LinksUpdate;
 use MailAddress;
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Storage\EditResult;
@@ -748,7 +749,7 @@ class Hooks {
 						'rev_page' => $article->getId(),
 					], __METHOD__, [], $revQuery['joins'] );
 			foreach ( $revisions as $row ) {
-				$user = $userFactory->newFromId( $row->rev_user );
+				$user = $userFactory->newFromId( (int)$row->rev_user );
 				if ( $user !== null ) {
 					$affectedRevisions[$row->rev_id] = $user;
 				}
