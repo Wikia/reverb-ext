@@ -39,7 +39,7 @@
 	&-icon {
 		width: 18px;
 		height: 18px;
-		@include svgAsBackground(url(/resources-ucp/dist/svg/wds-icons-controls-small.svg), currentColor);
+		@include svgAsBackground(url(/resources-ucp/v2/dist/svg/wds-icons-controls-small.svg), currentColor);
 	}
 
 	&-row {
@@ -75,11 +75,11 @@
 	}
 
 	&-checkbox--unchecked {
-		@include svgAsBackground(url(/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg), currentColor);
+		@include svgAsBackground(url(/resources-ucp/v2/dist/svg/wds-icons-checkbox-empty-small.svg), currentColor);
 	}
 
 	&-checkbox--checked {
-		@include svgAsBackground(url(/resources-ucp/dist/svg/wds-icons-checkbox-small.svg), var(--theme-link-color));
+		@include svgAsBackground(url(/resources-ucp/v2/dist/svg/wds-icons-checkbox-small.svg), var(--theme-link-color));
 	}
 }
 
@@ -222,23 +222,23 @@
 }
 
 .fa-user, .fa-user-circle {
-	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-user-small.svg);
+	--reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-user-small.svg);
 }
 .fa-user-cog {
-	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-gear-small.svg);
+	--reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-gear-small.svg);
 }
 .fa-users {
-	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-users-small.svg);
+	--reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-users-small.svg);
 }
 .fa-file {
-	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-page-small.svg);
+	--reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-page-small.svg);
 }
 .fa-edit {
-	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-pencil-small.svg);
+	--reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-pencil-small.svg);
 }
 .fa-history {
-	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-clock-small.svg);
+	--reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-clock-small.svg);
 }
 .fa-thumbs-up {
-	--reverb-icon: url(/resources-ucp/dist/svg/wds-icons-heart-small.svg);
+	--reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-heart-small.svg);
 }
