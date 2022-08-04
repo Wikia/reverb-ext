@@ -29,8 +29,8 @@
   height: 18px;
   background-color: currentColor;
   background-repeat: no-repeat;
-  -webkit-mask-image: url(/resources-ucp/dist/svg/wds-icons-controls-small.svg);
-  mask-image: url(/resources-ucp/dist/svg/wds-icons-controls-small.svg);
+  -webkit-mask-image: url(/resources-ucp/v2/dist/svg/wds-icons-controls-small.svg);
+  mask-image: url(/resources-ucp/v2/dist/svg/wds-icons-controls-small.svg);
 }
 .reverb-filter-row {
   padding: 12px 0;
@@ -60,14 +60,14 @@
 .reverb-filter-checkbox--unchecked {
   background-color: currentColor;
   background-repeat: no-repeat;
-  -webkit-mask-image: url(/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg);
-  mask-image: url(/resources-ucp/dist/svg/wds-icons-checkbox-empty-small.svg);
+  -webkit-mask-image: url(/resources-ucp/v2/dist/svg/wds-icons-checkbox-empty-small.svg);
+  mask-image: url(/resources-ucp/v2/dist/svg/wds-icons-checkbox-empty-small.svg);
 }
 .reverb-filter-checkbox--checked {
   background-color: var(--theme-link-color);
   background-repeat: no-repeat;
-  -webkit-mask-image: url(/resources-ucp/dist/svg/wds-icons-checkbox-small.svg);
-  mask-image: url(/resources-ucp/dist/svg/wds-icons-checkbox-small.svg);
+  -webkit-mask-image: url(/resources-ucp/v2/dist/svg/wds-icons-checkbox-small.svg);
+  mask-image: url(/resources-ucp/v2/dist/svg/wds-icons-checkbox-small.svg);
 }
 
 .reverb-button-bar {
@@ -192,31 +192,31 @@
 }
 
 .fa-user, .fa-user-circle {
-  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-user-small.svg);
+  --reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-user-small.svg);
 }
 
 .fa-user-cog {
-  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-gear-small.svg);
+  --reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-gear-small.svg);
 }
 
 .fa-users {
-  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-users-small.svg);
+  --reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-users-small.svg);
 }
 
 .fa-file {
-  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-page-small.svg);
+  --reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-page-small.svg);
 }
 
 .fa-edit {
-  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-pencil-small.svg);
+  --reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-pencil-small.svg);
 }
 
 .fa-history {
-  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-clock-small.svg);
+  --reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-clock-small.svg);
 }
 
 .fa-thumbs-up {
-  --reverb-icon: url(/resources-ucp/dist/svg/wds-icons-heart-small.svg);
+  --reverb-icon: url(/resources-ucp/v2/dist/svg/wds-icons-heart-small.svg);
 }
 
 /*# sourceMappingURL=reverb.specialNotifications.fandomdesktop.css.map */
