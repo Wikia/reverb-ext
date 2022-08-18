@@ -19,6 +19,7 @@ use Hydrawiki\Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful;
 use Hydrawiki\Reverb\Client\V1\Resources\NotificationDismissals as NotificationDismissalsResource;
 use MediaWiki\MediaWikiServices;
 use MWException;
+use Reverb\Fixer\NotificationUserNoteAssetsUrlFixer;
 use Reverb\Identifier\Identifier;
 use Reverb\Identifier\InvalidIdentifierException;
 use Reverb\Notification\Notification;
@@ -104,9 +105,13 @@ class ApiNotifications extends ApiBase {
 			$this->params['page']
 		);
 
+		/** @var NotificationUserNoteAssetsUrlFixer $notificationsUserNoteFixer */
+		$notificationsUserNoteFixer =
+			MediaWikiServices::getInstance()->getService( NotificationUserNoteAssetsUrlFixer::class );
+
 		if ( $bundle !== null ) {
 			foreach ( $bundle as $key => $notification ) {
-				$return['notifications'][] = $notification->toArray();
+				$return['notifications'][] = $notificationsUserNoteFixer->fix($notification->toArray());
 			}
 			$return['meta'] = [
 				'unread' => $bundle->getUnreadCount(),

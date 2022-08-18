@@ -15,6 +15,7 @@ use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Hydrawiki\Reverb\Client\V1\ClientFactory;
 use MediaWiki\MediaWikiServices;
+use Reverb\Fixer\NotificationUserNoteAssetsUrlFixer;
 
 return [
 	'ReverbApiClient' => static function ( MediaWikiServices $services ) {
@@ -46,4 +47,8 @@ return [
 			$apiKey
 		);
 	},
+
+	NotificationUserNoteAssetsUrlFixer::class => static function ( ) {
+		return new NotificationUserNoteAssetsUrlFixer();
+	}
 ];
