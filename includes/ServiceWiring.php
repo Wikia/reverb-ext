@@ -48,7 +48,7 @@ return [
 		);
 	},
 
-	NotificationUserNoteAssetsUrlFixer::class => static function ( ) {
-		return new NotificationUserNoteAssetsUrlFixer();
+	NotificationUserNoteAssetsUrlFixer::class => static function ( MediaWikiServices $services ) {
+		return new NotificationUserNoteAssetsUrlFixer( $services->getMainConfig()->get('Server') );
 	}
 ];
