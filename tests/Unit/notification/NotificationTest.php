@@ -32,11 +32,11 @@ class NotificationTest extends TestCase {
 	 */
 	public function testIdMatches() {
 		$resource = new NotificationResource();
-		$resource->setId(48);
+		$resource->setId( 48 );
 
-		$notification = new Notification($resource);
+		$notification = new Notification( $resource );
 
-		$this->assertSame(48, $notification->getId());
+		$this->assertSame( 48, $notification->getId() );
 	}
 
 	/**
@@ -48,11 +48,11 @@ class NotificationTest extends TestCase {
 	 */
 	public function testTypeIsTestType() {
 		$resource = new NotificationResource();
-		$resource->setAttributes(['type' => 'test-type']);
+		$resource->setAttributes( [ 'type' => 'test-type' ] );
 
-		$notification = new Notification($resource);
+		$notification = new Notification( $resource );
 
-		$this->assertSame('test-type', $notification->getType());
+		$this->assertSame( 'test-type', $notification->getType() );
 	}
 
 	/**
@@ -66,9 +66,9 @@ class NotificationTest extends TestCase {
 	public function testSetTypeAsTestType() {
 		$resource = new NotificationResource();
 
-		$notification = new Notification($resource);
-		$notification->setType('test-type');
+		$notification = new Notification( $resource );
+		$notification->setType( 'test-type' );
 
-		$this->assertSame('test-type', $notification->getType());
+		$this->assertSame( 'test-type', $notification->getType() );
 	}
 }

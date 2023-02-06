@@ -31,9 +31,9 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testTypeIsSite() {
-		$identifier = Identifier::factory('hydra:site:asdfbe');
+		$identifier = Identifier::factory( 'hydra:site:asdfbe' );
 
-		$this->assertSame('site', $identifier->whatAmI());
+		$this->assertSame( 'site', $identifier->whatAmI() );
 	}
 
 	/**
@@ -44,9 +44,9 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testTypeIsUser() {
-		$identifier = Identifier::factory('hydra:user:124234532');
+		$identifier = Identifier::factory( 'hydra:user:124234532' );
 
-		$this->assertSame('user', $identifier->whatAmI());
+		$this->assertSame( 'user', $identifier->whatAmI() );
 	}
 
 	/**
@@ -57,9 +57,9 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testValidUniqueIdIsReturned() {
-		$identifier = Identifier::factory('hydra:user:124234532');
+		$identifier = Identifier::factory( 'hydra:user:124234532' );
 
-		$this->assertSame('124234532', $identifier->whoAmI());
+		$this->assertSame( '124234532', $identifier->whoAmI() );
 	}
 
 	/**
@@ -70,9 +70,9 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testValidNamespaceIsReturned() {
-		$identifier = Identifier::factory('hydra:user:124234532');
+		$identifier = Identifier::factory( 'hydra:user:124234532' );
 
-		$this->assertSame('hydra', $identifier->whereIsHome());
+		$this->assertSame( 'hydra', $identifier->whereIsHome() );
 	}
 
 	/**
@@ -83,7 +83,7 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testNamespaceTooLong() {
-		$this->expectException(InvalidIdentifierException::class);
+		$this->expectException( InvalidIdentifierException::class );
 		$identifier = Identifier::factory('hydra' . str_repeat('a', 100) . ':user:124234532'); // @codingStandardsIgnoreLine
 	}
 
@@ -95,8 +95,8 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testTypeTooLong() {
-		$this->expectException(InvalidIdentifierException::class);
-		$identifier = Identifier::factory('hydra:user' . str_repeat('user', 10) . ':124234532');
+		$this->expectException( InvalidIdentifierException::class );
+		$identifier = Identifier::factory( 'hydra:user' . str_repeat( 'user', 10 ) . ':124234532' );
 	}
 
 	/**
@@ -107,8 +107,8 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testIdTooLong() {
-		$this->expectException(InvalidIdentifierException::class);
-		$identifier = Identifier::factory('hydra:user:124234532' . str_repeat(1, 100));
+		$this->expectException( InvalidIdentifierException::class );
+		$identifier = Identifier::factory( 'hydra:user:124234532' . str_repeat( 1, 100 ) );
 	}
 
 	/**
@@ -119,10 +119,10 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testIdentifierIsLocal() {
-		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbNamespace')->andReturn('hydra');
-		$identifier = Identifier::factory('hydra:user:124234532');
+		$this->mockGlobalConfig->shouldReceive( 'get' )->with( 'ReverbNamespace' )->andReturn( 'hydra' );
+		$identifier = Identifier::factory( 'hydra:user:124234532' );
 
-		$this->assertTrue($identifier->isLocal());
+		$this->assertTrue( $identifier->isLocal() );
 	}
 
 	/**
@@ -133,10 +133,10 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testIdentifierIsForeign() {
-		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbNamespace')->andReturn('hydra');
-		$identifier = Identifier::factory('fandom:user:124234532');
+		$this->mockGlobalConfig->shouldReceive( 'get' )->with( 'ReverbNamespace' )->andReturn( 'hydra' );
+		$identifier = Identifier::factory( 'fandom:user:124234532' );
 
-		$this->assertFalse($identifier->isLocal());
+		$this->assertFalse( $identifier->isLocal() );
 	}
 
 	/**
@@ -147,12 +147,12 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testSiteIdentifierIsLocal() {
-		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbNamespace')->andReturn('hydra');
-		$mockWfWikiID = $this->getPHPMock('Reverb\Identifier', 'wfWikiID');
-		$mockWfWikiID->andReturn('lol_gamepedia_en');
-		$identifier = Identifier::factory('hydra:site:lol_gamepedia_en');
+		$this->mockGlobalConfig->shouldReceive( 'get' )->with( 'ReverbNamespace' )->andReturn( 'hydra' );
+		$mockWfWikiID = $this->getPHPMock( 'Reverb\Identifier', 'wfWikiID' );
+		$mockWfWikiID->andReturn( 'lol_gamepedia_en' );
+		$identifier = Identifier::factory( 'hydra:site:lol_gamepedia_en' );
 
-		$this->assertTrue($identifier->isLocal());
+		$this->assertTrue( $identifier->isLocal() );
 	}
 
 	/**
@@ -163,12 +163,12 @@ class IdentifierTest extends TestCase {
 	 * @return void
 	 */
 	public function testSiteIdentifierIsForeign() {
-		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbNamespace')->andReturn('hydra');
-		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
-		$mockWfWikiID = $this->getPHPMock('Reverb\Identifier', 'wfWikiID');
-		$mockWfWikiID->andReturn('lol_gamepedia_en');
-		$identifier = Identifier::factory('fandom:site:lol_gamepedia_en');
+		$this->mockGlobalConfig->shouldReceive( 'get' )->with( 'ReverbNamespace' )->andReturn( 'hydra' );
+		$this->mockMWService->shouldReceive( 'getMainConfig' )->andReturn( $this->mockGlobalConfig );
+		$mockWfWikiID = $this->getPHPMock( 'Reverb\Identifier', 'wfWikiID' );
+		$mockWfWikiID->andReturn( 'lol_gamepedia_en' );
+		$identifier = Identifier::factory( 'fandom:site:lol_gamepedia_en' );
 
-		$this->assertFalse($identifier->isLocal());
+		$this->assertFalse( $identifier->isLocal() );
 	}
 }

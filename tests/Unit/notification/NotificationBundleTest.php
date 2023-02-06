@@ -30,8 +30,8 @@ class NotificationBundleTest extends TestCase {
 	 * @return void
 	 */
 	public function testValidFilterTypeReturnsString() {
-		$filters = NotificationBundle::validateFilters(['type' => 23423]);
-		$this->assertSame('23423', $filters['type']);
+		$filters = NotificationBundle::validateFilters( [ 'type' => 23423 ] );
+		$this->assertSame( '23423', $filters['type'] );
 	}
 
 	/**
@@ -42,8 +42,8 @@ class NotificationBundleTest extends TestCase {
 	 * @return void
 	 */
 	public function testValidFilterReadReturnsInteger() {
-		$filters = NotificationBundle::validateFilters(['read' => '1']);
-		$this->assertSame(1, $filters['read']);
+		$filters = NotificationBundle::validateFilters( [ 'read' => '1' ] );
+		$this->assertSame( 1, $filters['read'] );
 	}
 
 	/**
@@ -54,8 +54,8 @@ class NotificationBundleTest extends TestCase {
 	 * @return void
 	 */
 	public function testValidFilterReadStringReturnsZero() {
-		$filters = NotificationBundle::validateFilters(['read' => 'NAN']);
-		$this->assertSame(0, $filters['read']);
+		$filters = NotificationBundle::validateFilters( [ 'read' => 'NAN' ] );
+		$this->assertSame( 0, $filters['read'] );
 	}
 
 	/**
@@ -66,8 +66,8 @@ class NotificationBundleTest extends TestCase {
 	 * @return void
 	 */
 	public function testValidFilterUnreadReturnsInteger() {
-		$filters = NotificationBundle::validateFilters(['unread' => '1']);
-		$this->assertSame(1, $filters['unread']);
+		$filters = NotificationBundle::validateFilters( [ 'unread' => '1' ] );
+		$this->assertSame( 1, $filters['unread'] );
 	}
 
 	/**
@@ -78,8 +78,8 @@ class NotificationBundleTest extends TestCase {
 	 * @return void
 	 */
 	public function testValidFilterUnreadStringReturnsZero() {
-		$filters = NotificationBundle::validateFilters(['unread' => 'NAN']);
-		$this->assertSame(0, $filters['unread']);
+		$filters = NotificationBundle::validateFilters( [ 'unread' => 'NAN' ] );
+		$this->assertSame( 0, $filters['unread'] );
 	}
 
 	/**
@@ -90,8 +90,8 @@ class NotificationBundleTest extends TestCase {
 	 * @return void
 	 */
 	public function testValidFilterRemovesBadKeys() {
-		$filters = NotificationBundle::validateFilters(['this' => '1', 'that' => '1']);
-		$this->assertArrayNotHasKey('this', $filters);
-		$this->assertArrayNotHasKey('that', $filters);
+		$filters = NotificationBundle::validateFilters( [ 'this' => '1', 'that' => '1' ] );
+		$this->assertArrayNotHasKey( 'this', $filters );
+		$this->assertArrayNotHasKey( 'that', $filters );
 	}
 }

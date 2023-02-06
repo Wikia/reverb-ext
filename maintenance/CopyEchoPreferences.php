@@ -50,7 +50,8 @@ class CopyEchoPreferences extends Maintenance {
 			'echo-subscriptions-email-thank-you-edit' => 'reverb-article-edit-email-thanks',
 			'echo-subscriptions-email-dynamicsettings-tools' => 'reverb-site-management-email-tools',
 			'echo-subscriptions-email-user-rights' => 'reverb-user-account-email-groups-changed',
-			'echo-subscriptions-email-user-rights-expiry-change' => 'reverb-user-account-email-groups-expiration-change',
+			'echo-subscriptions-email-user-rights-expiry-change' =>
+				'reverb-user-account-email-groups-expiration-change',
 			'echo-subscriptions-email-welcome' => 'reverb-user-interest-email-welcome',
 			'echo-subscriptions-email-dynamicsettings-wiki-edit' => 'reverb-site-management-email-wiki-edit',
 			'echo-subscriptions-web-article-linked' => 'reverb-user-interest-web-page-linked',

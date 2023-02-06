@@ -42,15 +42,15 @@ abstract class TestCase extends BaseTestCase {
 	 */
 	public function setUp(): void {
 		parent::setUp();
-		$this->mockMWService = $this->getOverloadMock('MediaWiki\MediaWikiServices');
-		$this->mockGlobalConfig = $this->getOverloadMock('GlobalVarConfig');
+		$this->mockMWService = $this->getOverloadMock( 'MediaWiki\MediaWikiServices' );
+		$this->mockGlobalConfig = $this->getOverloadMock( 'GlobalVarConfig' );
 		$this->mockReverbApiClient = $this->getOverloadMock( 'Reverb\Client\V1\ClientFactory' );
 		$this->mockMWService
-			->shouldReceive('getService')
-			->with('ReverbApiClient')
-			->andReturn($this->mockReverbApiClient);
-		$this->mockMWService->shouldReceive('getMainConfig')->andReturn($this->mockGlobalConfig);
-		$this->mockMWService->shouldReceive('getInstance')->andReturn($this->mockMWService);
+			->shouldReceive( 'getService' )
+			->with( 'ReverbApiClient' )
+			->andReturn( $this->mockReverbApiClient );
+		$this->mockMWService->shouldReceive( 'getMainConfig' )->andReturn( $this->mockGlobalConfig );
+		$this->mockMWService->shouldReceive( 'getInstance' )->andReturn( $this->mockMWService );
 	}
 
 	/**
@@ -60,8 +60,8 @@ abstract class TestCase extends BaseTestCase {
 	 *
 	 * @return Mockery
 	 */
-	public function getMock($class) {
-		return Mockery::mock($class);
+	public function getMock( $class ) {
+		return Mockery::mock( $class );
 	}
 
 	/**
@@ -71,8 +71,8 @@ abstract class TestCase extends BaseTestCase {
 	 *
 	 * @return Mockery
 	 */
-	public function getOverloadMock($class) {
-		return Mockery::mock('overload:' . $class);
+	public function getOverloadMock( $class ) {
+		return Mockery::mock( 'overload:' . $class );
 	}
 
 	/**
@@ -83,8 +83,8 @@ abstract class TestCase extends BaseTestCase {
 	 *
 	 * @return PHPMockery
 	 */
-	public function getPHPMock($namespace, $function) {
-		return PHPMockery::mock($namespace, $function);
+	public function getPHPMock( $namespace, $function ) {
+		return PHPMockery::mock( $namespace, $function );
 	}
 
 	/**
@@ -94,8 +94,8 @@ abstract class TestCase extends BaseTestCase {
 	 */
 	public function tearDown(): void {
 		parent::tearDown();
-		if ($container = Mockery::getContainer()) {
-			$this->addToAssertionCount($container->mockery_getExpectationCount());
+		if ( $container = Mockery::getContainer() ) {
+			$this->addToAssertionCount( $container->mockery_getExpectationCount() );
 		}
 		Mockery::close();
 	}

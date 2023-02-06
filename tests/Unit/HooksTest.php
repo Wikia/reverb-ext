@@ -30,17 +30,17 @@ class HooksTest extends TestCase {
 	 */
 	protected function getMocks() {
 		return [
-			'mockCentralIdLookup' => $this->getOverloadMock('CentralIdLookup'),
-			'mockContent' => $this->getMock('Content'),
-			'mockLinksUpdate' => $this->getMock('LinksUpdate'),
-			'mockMWNamespace' => $this->getOverloadMock('MWNamespace'),
-			'mockOutputPage' => $this->getMock('OutputPage'),
-			'mockRevision' => $this->getOverloadMock('Revision'),
-			'mockSkinTemplate' => $this->getMock('SkinTemplate'),
-			'mockStatus' => $this->getMock('Status'),
-			'mockTitle' => $this->getMock('Title'),
-			'mockUser' => $this->getOverloadMock('User'),
-			'mockWikiPage' => $this->getMock('WikiPage')
+			'mockCentralIdLookup' => $this->getOverloadMock( 'CentralIdLookup' ),
+			'mockContent' => $this->getMock( 'Content' ),
+			'mockLinksUpdate' => $this->getMock( 'LinksUpdate' ),
+			'mockMWNamespace' => $this->getOverloadMock( 'MWNamespace' ),
+			'mockOutputPage' => $this->getMock( 'OutputPage' ),
+			'mockRevision' => $this->getOverloadMock( 'Revision' ),
+			'mockSkinTemplate' => $this->getMock( 'SkinTemplate' ),
+			'mockStatus' => $this->getMock( 'Status' ),
+			'mockTitle' => $this->getMock( 'Title' ),
+			'mockUser' => $this->getOverloadMock( 'User' ),
+			'mockWikiPage' => $this->getMock( 'WikiPage' )
 		];
 	}
 
@@ -53,7 +53,7 @@ class HooksTest extends TestCase {
 	 */
 	public function testNewHooks() {
 		$hooks = $this->createHooks();
-		$this->assertTrue($hooks instanceof Hooks);
+		$this->assertTrue( $hooks instanceof Hooks );
 	}
 
 	/**
@@ -64,34 +64,38 @@ class HooksTest extends TestCase {
 	 * @return void
 	 */
 	public function testOnPageContentSaveCompleteGood() {
-		$this->markTestIncomplete('Requires additional work and mock testing to be resolved after the staging deploy.');
+		$this->markTestIncomplete(
+			'Requires additional work and mock testing to be resolved after the staging deploy.'
+		);
 
-		define('NS_USER_TALK', 3);
+		define( 'NS_USER_TALK', 3 );
 		$hooks = $this->createHooks();
-		extract($this->getMocks());
+		extract( $this->getMocks() );
 		$flag = 1;
 
-		$mockEnvironment = $this->getOverloadMock('DynamicSettings\Environment');
-		$mockEnvironment->shouldReceive('getSiteKey')->andReturn('master');
+		$mockEnvironment = $this->getOverloadMock( 'DynamicSettings\Environment' );
+		$mockEnvironment->shouldReceive( 'getSiteKey' )->andReturn( 'master' );
 
-		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbNamespace')->andReturn('hydra');
-		$this->mockGlobalConfig->shouldReceive('get')->with('ReverbApiEndPoint')->andReturn('http://127.0.0.1:8101/v1');
+		$this->mockGlobalConfig->shouldReceive( 'get' )->with( 'ReverbNamespace' )->andReturn( 'hydra' );
+		$this->mockGlobalConfig->shouldReceive( 'get' )
+			->with( 'ReverbApiEndPoint' )
+			->andReturn( 'http://127.0.0.1:8101/v1' );
 
-		$mockCentralIdLookup->shouldReceive('factory')->andReturn($mockCentralIdLookup);
-		$mockCentralIdLookup->shouldReceive('centralIdFromLocalUser')->andReturn(1);
+		$mockCentralIdLookup->shouldReceive( 'factory' )->andReturn( $mockCentralIdLookup );
+		$mockCentralIdLookup->shouldReceive( 'centralIdFromLocalUser' )->andReturn( 1 );
 
-		$mockStatus->shouldReceive('isGood')->andReturn(true);
-		$mockWikiPage->shouldReceive('getTitle')->andReturn($mockTitle);
+		$mockStatus->shouldReceive( 'isGood' )->andReturn( true );
+		$mockWikiPage->shouldReceive( 'getTitle' )->andReturn( $mockTitle );
 
-		$mockTitle->shouldReceive('getNamespace')->andReturn(NS_USER_TALK);
-		$mockTitle->shouldReceive('getText')->andReturn('UserName');
+		$mockTitle->shouldReceive( 'getNamespace' )->andReturn( NS_USER_TALK );
+		$mockTitle->shouldReceive( 'getText' )->andReturn( 'UserName' );
 
-		$mockUser->shouldReceive('newFromName')->andReturn($mockUser);
-		$mockUser->shouldReceive('getId')->andReturn(1);
-		$mockUser->shouldReceive('isLoggedIn')->andReturn(true);
+		$mockUser->shouldReceive( 'newFromName' )->andReturn( $mockUser );
+		$mockUser->shouldReceive( 'getId' )->andReturn( 1 );
+		$mockUser->shouldReceive( 'isLoggedIn' )->andReturn( true );
 
-		$mockRevision->shouldReceive('isMinor')->andReturn(true);
-		$mockUser->shouldReceive('isAllowed')->with('nominornewtalk')->andReturn(false);
+		$mockRevision->shouldReceive( 'isMinor' )->andReturn( true );
+		$mockUser->shouldReceive( 'isAllowed' )->with( 'nominornewtalk' )->andReturn( false );
 
 		$hooks->onPageContentSaveComplete(
 			$mockWikiPage,
@@ -118,10 +122,10 @@ class HooksTest extends TestCase {
 	 */
 	public function testOnPageContentSaveCompleteBadStatus() {
 		$hooks = $this->createHooks();
-		extract($this->getMocks());
+		extract( $this->getMocks() );
 		$flag = 1;
 
-		$mockStatus->shouldReceive('isGood')->andReturn(false);
+		$mockStatus->shouldReceive( 'isGood' )->andReturn( false );
 
 		$result = $hooks->onPageContentSaveComplete(
 			$mockWikiPage,
@@ -137,7 +141,7 @@ class HooksTest extends TestCase {
 			1,
 			0
 		);
-		$this->assertTrue($result);
+		$this->assertTrue( $result );
 	}
 
 	/**
@@ -149,10 +153,10 @@ class HooksTest extends TestCase {
 	 */
 	public function testOnLocalUserCreated() {
 		$hooks = $this->createHooks();
-		extract($this->getMocks());
-		$result = $hooks->onLocalUserCreated($mockUser, true);
+		extract( $this->getMocks() );
+		$result = $hooks->onLocalUserCreated( $mockUser, true );
 
-		$this->assertTrue($result);
+		$this->assertTrue( $result );
 	}
 
 	/**
@@ -163,14 +167,16 @@ class HooksTest extends TestCase {
 	 * @return void
 	 */
 	public function testOnUserGroupsChanged() {
-		$this->markTestIncomplete('Requires additional work and mock testing to be resolved after the staging deploy.');
+		$this->markTestIncomplete(
+			'Requires additional work and mock testing to be resolved after the staging deploy.'
+		);
 
 		$hooks = $this->createHooks();
-		extract($this->getMocks());
+		extract( $this->getMocks() );
 		$addArray = [];
 		$removeArray = [];
 
-		$mockUser->shouldReceive('equals')->with($mockUser)->andReturn(false);
+		$mockUser->shouldReceive( 'equals' )->with( $mockUser )->andReturn( false );
 
 		$result = $hooks->onUserGroupsChanged(
 			$mockUser,
@@ -179,7 +185,7 @@ class HooksTest extends TestCase {
 			$mockUser
 		);
 
-		$this->assertTrue($result);
+		$this->assertTrue( $result );
 	}
 
 	/**
@@ -190,32 +196,34 @@ class HooksTest extends TestCase {
 	 * @return void
 	 */
 	public function testOnLinksUpdateAfterInsert() {
-		$this->markTestIncomplete('Requires additional work and mock testing to be resolved after the staging deploy.');
+		$this->markTestIncomplete(
+			'Requires additional work and mock testing to be resolved after the staging deploy.'
+		);
 
 		global $wgRequest;
-		$wgRequest = $this->getMock('RequestContext');
+		$wgRequest = $this->getMock( 'RequestContext' );
 		$hooks = $this->createHooks();
-		extract($this->getMocks());
+		extract( $this->getMocks() );
 
-		$wgRequest->shouldReceive('getVal')->with('wpUndidRevision')->andReturn(false);
-		$wgRequest->shouldReceive('getVal')->with('action')->andReturn('notRollback');
+		$wgRequest->shouldReceive( 'getVal' )->with( 'wpUndidRevision' )->andReturn( false );
+		$wgRequest->shouldReceive( 'getVal' )->with( 'action' )->andReturn( 'notRollback' );
 
 		$namespace = 'Reverb';
-		$mockTitle->shouldReceive('getNamespace')->andReturn($namespace);
-		$mockTitle->shouldReceive('isRedirect')->andReturn(false);
-		$mockLinksUpdate->shouldReceive('getTitle')->twice()->set('mRecursive', true)->andReturn($mockTitle);
-		$mockMWNamespace->shouldReceive('isContent')->with($namespace)->andReturn(true);
+		$mockTitle->shouldReceive( 'getNamespace' )->andReturn( $namespace );
+		$mockTitle->shouldReceive( 'isRedirect' )->andReturn( false );
+		$mockLinksUpdate->shouldReceive( 'getTitle' )->twice()->set( 'mRecursive', true )->andReturn( $mockTitle );
+		$mockMWNamespace->shouldReceive( 'isContent' )->with( $namespace )->andReturn( true );
 
-		$mockLinksUpdate->shouldReceive('getTriggeringUser')->andReturn($mockUser);
-		$mockRevision->shouldReceive('getId')->andReturn(1);
-		$mockLinksUpdate->shouldReceive('getRevision')->twice()->andReturn($mockRevision);
+		$mockLinksUpdate->shouldReceive( 'getTriggeringUser' )->andReturn( $mockUser );
+		$mockRevision->shouldReceive( 'getId' )->andReturn( 1 );
+		$mockLinksUpdate->shouldReceive( 'getRevision' )->twice()->andReturn( $mockRevision );
 		$result = $hooks->onLinksUpdateAfterInsert(
 			$mockLinksUpdate,
 			'pagelinks',
 			[]
 		);
 
-		$this->assertTrue($result);
+		$this->assertTrue( $result );
 	}
 
 	/**
@@ -226,16 +234,18 @@ class HooksTest extends TestCase {
 	 * @return void
 	 */
 	public function testOnArticleRollbackComplete() {
-		$this->markTestIncomplete('Requires additional work and mock testing to be resolved after the staging deploy.');
+		$this->markTestIncomplete(
+			'Requires additional work and mock testing to be resolved after the staging deploy.'
+		);
 
 		$hooks = $this->createHooks();
-		extract($this->getMocks());
+		extract( $this->getMocks() );
 
-		$mockRevision->shouldReceive('getUser')->andReturn($mockUser);
-		$mockWikiPage->shouldReceive('getRevision')->andReturn($mockRevision);
+		$mockRevision->shouldReceive( 'getUser' )->andReturn( $mockUser );
+		$mockWikiPage->shouldReceive( 'getRevision' )->andReturn( $mockRevision );
 
-		$mockContent->shouldReceive('equals')->with($mockContent)->andReturn(false);
-		$mockRevision->shouldReceive('getContent')->twice()->andReturn($mockContent);
+		$mockContent->shouldReceive( 'equals' )->with( $mockContent )->andReturn( false );
+		$mockRevision->shouldReceive( 'getContent' )->twice()->andReturn( $mockContent );
 
 		$result = $hooks->onArticleRollbackComplete(
 			$mockWikiPage,
@@ -244,7 +254,7 @@ class HooksTest extends TestCase {
 			$mockRevision
 		);
 
-		$this->assertTrue($result);
+		$this->assertTrue( $result );
 	}
 
 	/**
@@ -255,20 +265,20 @@ class HooksTest extends TestCase {
 	 * @return void
 	 */
 	public function testOnBeforePageDisplay() {
-		$this->markTestIncomplete('Update OutputPage mock to include RequestContext/User; '
-			. 'make two tests for logged-in vs logged-out.');
+		$this->markTestIncomplete( 'Update OutputPage mock to include RequestContext/User; '
+			. 'make two tests for logged-in vs logged-out.' );
 
 		$hooks = $this->createHooks();
-		extract($this->getMocks());
+		extract( $this->getMocks() );
 
-		$mockOutputPage->shouldReceive('addModuleStyles')->with('ext.reverb.notifications.styles');
-		$mockOutputPage->shouldReceive('addModules')->with('ext.reverb.notifications.scripts');
+		$mockOutputPage->shouldReceive( 'addModuleStyles' )->with( 'ext.reverb.notifications.styles' );
+		$mockOutputPage->shouldReceive( 'addModules' )->with( 'ext.reverb.notifications.scripts' );
 
 		$result = $hooks->onBeforePageDisplay(
 			$mockOutputPage,
 			$mockSkinTemplate
 		);
 
-		$this->assertTrue($result);
+		$this->assertTrue( $result );
 	}
 }

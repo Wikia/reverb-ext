@@ -13,7 +13,6 @@ declare( strict_types=1 );
 
 namespace Reverb;
 
-use Article;
 use Exception;
 use Fandom\FandomDesktop\PageHeaderActions;
 use Fandom\Includes\User\UserInfo;
@@ -560,13 +559,6 @@ class ReverbHookHandler {
 
 	/**
 	 * Handle setting up profile page handlers.
-	 *
-	 * @param Title &$title
-	 * @param Article &$article
-	 * @param object &$output
-	 * @param User &$user
-	 * @param object $request
-	 * @param object $mediaWiki
 	 *
 	 * @return void
 	 * @throws MWException
