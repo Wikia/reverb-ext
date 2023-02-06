@@ -11,6 +11,9 @@
 		},
 		"MediaWiki": ">= 1.31.0"
 	},
+	"AutoloadNamespaces": {
+		"Reverb\\": "src"
+	},
 	"SpecialPages": {
 		"Notifications": "Reverb\\Special\\SpecialNotifications"
 	},
@@ -21,25 +24,8 @@
 		"HydraCore": ["i18n"],
 		"FandomDesktop": ["i18n"]
 	},
-	"callback": "Reverb\\Hooks::registerExtension",
-	"AutoloadClasses": {
-		"Reverb\\Api\\ApiNotifications": "includes/Api/ApiNotifications.php",
-		"Reverb\\Hooks": "includes/Hooks.php",
-		"Reverb\\Identifier\\Identifier": "includes/Identifier/Identifier.php",
-		"Reverb\\Identifier\\InvalidIdentifierException": "includes/Identifier/InvalidIdentifierException.php",
-		"Reverb\\Identifier\\SiteIdentifier": "includes/Identifier/SiteIdentifier.php",
-		"Reverb\\Identifier\\UserIdentifier": "includes/Identifier/UserIdentifier.php",
-		"Reverb\\Notification\\Notification": "includes/Notification/Notification.php",
-		"Reverb\\Notification\\NotificationBroadcast": "includes/Notification/NotificationBroadcast.php",
-		"Reverb\\Notification\\NotificationBundle": "includes/Notification/NotificationBundle.php",
-		"Reverb\\Notification\\NotificationEmail": "includes/Notification/NotificationEmail.php",
-		"Reverb\\Special\\SpecialNotifications": "includes/Special/SpecialNotifications.php",
-		"Reverb\\Traits\\NotificationListTrait": "includes/Traits/NotificationListTrait.php",
-		"Reverb\\Traits\\UserContextTrait": "includes/Traits/UserContextTrait.php",
-		"Reverb\\TwiggyWiring": "includes/TwiggyWiring.php",
-		"Reverb\\UserIdHelper": "includes/UserIdHelper.php"
-	},
-	"ServiceWiringFiles": ["includes/ServiceWiring.php"],
+	"callback": "Reverb\\ReverbHookHandler::registerExtension",
+	"ServiceWiringFiles": ["ServiceWiring.php"],
 	"ResourceModules": {
 		"ext.reverb.notifications.styles": {
 			"targets": ["desktop", "mobile"],
@@ -95,20 +81,20 @@
 		"reverb-email-frequency": 1
 	},
 	"Hooks": {
-		"AbortEmailNotification": "Reverb\\Hooks::onAbortEmailNotification",
-		"AbortTalkPageEmailNotification": "Reverb\\Hooks::onAbortTalkPageEmailNotification",
-		"BeforeInitialize": "Reverb\\Hooks::onBeforeInitialize",
-		"BeforePageDisplay": "Reverb\\Hooks::onBeforePageDisplay",
-		"EmailUserComplete": "Reverb\\Hooks::onEmailUserComplete",
-		"FlaggedRevsRevisionReviewFormAfterDoSubmit": "Reverb\\Hooks::onFlaggedRevsRevisionReviewFormAfterDoSubmit",
-		"GetNewMessagesAlert": "Reverb\\Hooks::onGetNewMessagesAlert",
-		"GetPreferences": "Reverb\\Hooks::onGetPreferences",
-		"LinksUpdateAfterInsert": "Reverb\\Hooks::onLinksUpdateAfterInsert",
-		"PageSaveComplete": "Reverb\\Hooks::onPageSaveComplete",
-		"SpecialPageBeforeExecute": "Reverb\\Hooks::onSpecialPageBeforeExecute",
-		"UserGroupsChanged": "Reverb\\Hooks::onUserGroupsChanged",
-		"PageHeaderActionButtonShouldDisplay": "Reverb\\Hooks::onPageHeaderActionButtonShouldDisplay",
-		"BeforePrepareActionButtons": "Reverb\\Hooks::onBeforePrepareActionButtons"
+		"AbortEmailNotification": "Reverb\\ReverbHookHandler::onAbortEmailNotification",
+		"AbortTalkPageEmailNotification": "Reverb\\ReverbHookHandler::onAbortTalkPageEmailNotification",
+		"BeforeInitialize": "Reverb\\ReverbHookHandler::onBeforeInitialize",
+		"BeforePageDisplay": "Reverb\\ReverbHookHandler::onBeforePageDisplay",
+		"EmailUserComplete": "Reverb\\ReverbHookHandler::onEmailUserComplete",
+		"FlaggedRevsRevisionReviewFormAfterDoSubmit": "Reverb\\ReverbHookHandler::onFlaggedRevsRevisionReviewFormAfterDoSubmit",
+		"GetNewMessagesAlert": "Reverb\\ReverbHookHandler::onGetNewMessagesAlert",
+		"GetPreferences": "Reverb\\ReverbHookHandler::onGetPreferences",
+		"LinksUpdateAfterInsert": "Reverb\\ReverbHookHandler::onLinksUpdateAfterInsert",
+		"PageSaveComplete": "Reverb\\ReverbHookHandler::onPageSaveComplete",
+		"SpecialPageBeforeExecute": "Reverb\\ReverbHookHandler::onSpecialPageBeforeExecute",
+		"UserGroupsChanged": "Reverb\\ReverbHookHandler::onUserGroupsChanged",
+		"PageHeaderActionButtonShouldDisplay": "Reverb\\ReverbHookHandler::onPageHeaderActionButtonShouldDisplay",
+		"BeforePrepareActionButtons": "Reverb\\ReverbHookHandler::onBeforePrepareActionButtons"
 	},
 	"config": {
 		"ReverbApiEndPoint": {

@@ -7,7 +7,7 @@
  * @license GPL-2.0-or-later
  */
 
-namespace Tests\Unit;
+namespace Reverb\tests;
 
 use Tests\TestCase;
 

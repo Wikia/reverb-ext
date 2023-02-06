@@ -31,7 +31,7 @@ abstract class TestCase extends BaseTestCase {
 	/**
 	 * Container for mock of ReverbApiClient
 	 *
-	 * @var Hydrawiki\Reverb\Client\V1\ClientFactory
+	 * @var Reverb\Client\V1\ClientFactory
 	 */
 	public $mockReverbApiClient;
 
@@ -44,7 +44,7 @@ abstract class TestCase extends BaseTestCase {
 		parent::setUp();
 		$this->mockMWService = $this->getOverloadMock('MediaWiki\MediaWikiServices');
 		$this->mockGlobalConfig = $this->getOverloadMock('GlobalVarConfig');
-		$this->mockReverbApiClient = $this->getOverloadMock('Hydrawiki\Reverb\Client\V1\ClientFactory');
+		$this->mockReverbApiClient = $this->getOverloadMock( 'Reverb\Client\V1\ClientFactory' );
 		$this->mockMWService
 			->shouldReceive('getService')
 			->with('ReverbApiClient')
