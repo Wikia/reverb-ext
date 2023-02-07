@@ -15,7 +15,10 @@
 		"Reverb\\": "src"
 	},
 	"SpecialPages": {
-		"Notifications": "Reverb\\Special\\SpecialNotifications"
+		"Notifications": {
+			"class": "Reverb\\Special\\SpecialNotifications",
+			"services": ["Reverb\\Notification\\NotificationListService", "TwiggyService"]
+		}
 	},
 	"ExtensionMessagesFiles": {
 		"SpecialNotifications": "i18n/Reverb.i18n.alias.php"
@@ -24,7 +27,7 @@
 		"HydraCore": ["i18n"],
 		"FandomDesktop": ["i18n"]
 	},
-	"callback": "Reverb\\ReverbHookHandler::registerExtension",
+	"callback": "Reverb\\ReverbInit::registerExtension",
 	"ServiceWiringFiles": ["ServiceWiring.php"],
 	"ResourceModules": {
 		"ext.reverb.notifications.styles": {
@@ -75,26 +78,50 @@
 		"remoteExtPath": "Reverb"
 	},
 	"APIModules": {
-		"notifications": "\\Reverb\\Api\\ApiNotifications"
+		"notifications": {
+			"class": "Reverb\\Api\\ApiNotifications",
+			"services": ["MainConfig", "Reverb\\Notification\\NotificationService", "Reverb\\Fixer\\NotificationUserNoteAssetsUrlFixer"]
+		}
 	},
 	"DefaultUserOptions": {
 		"reverb-email-frequency": 1
 	},
+	"HookHandlers": {
+		"ReverbHookHandler": {
+			"class": "Reverb\\ReverbHookHandler",
+			"services": ["MainConfig", "Reverb\\Notification\\NotificationListService"]
+		},
+		"ReverbBroadcastHookHandler": {
+			"class": "Reverb\\ReverbBroadcastHookHandler",
+			"services": [
+				"MainConfig",
+				"UserFactory",
+				"RevisionLookup",
+				"NamespaceInfo",
+				"RevisionStore",
+				"UserOptionsLookup",
+				"LanguageFactory",
+				"DBLoadBalancer",
+				"WatchedItemStore",
+				"Fandom\\Includes\\User\\UserInfo",
+				"Fandom\\Includes\\Util\\UrlUtilityService"
+			]
+		}
+	},
 	"Hooks": {
-		"AbortEmailNotification": "Reverb\\ReverbHookHandler::onAbortEmailNotification",
-		"AbortTalkPageEmailNotification": "Reverb\\ReverbHookHandler::onAbortTalkPageEmailNotification",
-		"BeforeInitialize": "Reverb\\ReverbHookHandler::onBeforeInitialize",
-		"BeforePageDisplay": "Reverb\\ReverbHookHandler::onBeforePageDisplay",
-		"EmailUserComplete": "Reverb\\ReverbHookHandler::onEmailUserComplete",
-		"FlaggedRevsRevisionReviewFormAfterDoSubmit": "Reverb\\ReverbHookHandler::onFlaggedRevsRevisionReviewFormAfterDoSubmit",
-		"GetNewMessagesAlert": "Reverb\\ReverbHookHandler::onGetNewMessagesAlert",
-		"GetPreferences": "Reverb\\ReverbHookHandler::onGetPreferences",
-		"LinksUpdateAfterInsert": "Reverb\\ReverbHookHandler::onLinksUpdateAfterInsert",
-		"PageSaveComplete": "Reverb\\ReverbHookHandler::onPageSaveComplete",
-		"SpecialPageBeforeExecute": "Reverb\\ReverbHookHandler::onSpecialPageBeforeExecute",
-		"UserGroupsChanged": "Reverb\\ReverbHookHandler::onUserGroupsChanged",
-		"PageHeaderActionButtonShouldDisplay": "Reverb\\ReverbHookHandler::onPageHeaderActionButtonShouldDisplay",
-		"BeforePrepareActionButtons": "Reverb\\ReverbHookHandler::onBeforePrepareActionButtons"
+		"BeforePageDisplay": "ReverbHookHandler",
+		"BeforeInitialize": "ReverbHookHandler",
+		"GetNewMessagesAlert": "ReverbHookHandler",
+		"GetPreferences": "ReverbHookHandler",
+		"AbortTalkPageEmailNotification": "ReverbHookHandler",
+		"PageHeaderActionButtonShouldDisplay": "ReverbHookHandler",
+		"BeforePrepareActionButtons": "ReverbHookHandler",
+		"AbortEmailNotification": "ReverbBroadcastHookHandler",
+		"EmailUserComplete": "ReverbBroadcastHookHandler",
+		"FlaggedRevsRevisionReviewFormAfterDoSubmit": "ReverbBroadcastHookHandler",
+		"LinksUpdateAfterInsert": "ReverbBroadcastHookHandler",
+		"PageSaveComplete": "ReverbBroadcastHookHandler",
+		"UserGroupsChanged": "ReverbBroadcastHookHandler"
 	},
 	"config": {
 		"ReverbApiEndPoint": {

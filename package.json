@@ -11,7 +11,7 @@
     "jasmine": "^3.4.0"
   },
   "scripts": {
-    "test": "jasmine"
+    "jasmine": "jasmine"
   },
   "repository": {
     "type": "git",

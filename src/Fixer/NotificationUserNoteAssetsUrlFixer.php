@@ -5,11 +5,7 @@ declare( strict_types=1 );
 namespace Reverb\Fixer;
 
 final class NotificationUserNoteAssetsUrlFixer {
-	/** @var string */
-	private $domain;
-
-	public function __construct( string $domain ) {
-		$this->domain = $domain;
+	public function __construct( private string $domain ) {
 	}
 
 	public function fix( array $notification ): array {

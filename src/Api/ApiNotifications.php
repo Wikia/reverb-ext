@@ -13,83 +13,65 @@ declare( strict_types=1 );
 namespace Reverb\Api;
 
 use ApiBase;
-use ApiUsageException;
+use Config;
 use Exception;
-use MediaWiki\MediaWikiServices;
-use MWException;
-use Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful;
-use Reverb\Client\V1\Resources\NotificationDismissals as NotificationDismissalsResource;
 use Reverb\Fixer\NotificationUserNoteAssetsUrlFixer;
-use Reverb\Identifier\Identifier;
-use Reverb\Identifier\InvalidIdentifierException;
-use Reverb\Notification\Notification;
-use Reverb\Notification\NotificationBroadcast;
-use Reverb\Notification\NotificationBundle;
-use Reverb\UserIdHelper;
+use Reverb\Notification\NotificationService;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiNotifications extends ApiBase {
-	/** @var array */
-	private $params;
+	private const DO_PARAM = 'do';
+	private const PAGE_PARAM = 'page';
+	private const ITEMS_PER_PAGE_PARAM = 'itemsPerPage';
+	private const TYPE_PARAM = 'type';
+	private const READ_PARAM = 'read';
+	private const UNREAD_PARAM = 'unread';
+	private const NOTIFICATION_ID_PARAM = 'notificationId';
+	private const DISMISSED_AT_PARAM = 'dismissedAt';
 
-	/**
-	 * Main API entry point.
-	 *
-	 * @return void
-	 * @throws ApiUsageException
-	 * @throws InvalidIdentifierException
-	 * @throws MWException
-	 */
+	public function __construct(
+		$query,
+		$moduleName,
+		private Config $config,
+		private NotificationService $notificationService,
+		private NotificationUserNoteAssetsUrlFixer $notificationUserNoteAssetsUrlFixer
+	) {
+		parent::__construct( $query, $moduleName );
+	}
+
 	public function execute() {
-		$this->params = $this->extractRequestParams();
-
 		if ( !$this->getUser()->isRegistered() ) {
 			$this->dieWithError( [ 'apierror-permissiondenied-generic' ] );
 		}
+		$params = $this->extractRequestParams();
 
-		switch ( $this->params['do'] ) {
-			case 'getNotificationsForUser':
-				$response = $this->getNotificationsForUser();
-				break;
-			case 'dismissNotification':
-				$response = $this->dismissNotification();
-				break;
-			case 'dismissAllNotifications':
-				$response = $this->dismissAllNotifications();
-				break;
-			default:
-				$this->dieWithError( [ 'invaliddo', $this->params['do'] ] );
-				break;
-		}
+		$response = match ( $params[self::DO_PARAM] ) {
+			'getNotificationsForUser' => $this->getNotificationsForUser( $params ),
+			'dismissNotification' => $this->dismissNotification(
+				$params[self::NOTIFICATION_ID_PARAM],
+				$params[self::DISMISSED_AT_PARAM]
+			),
+			'dismissAllNotifications' => $this->dismissAllNotifications(),
+			default => $this->dieWithError( [ 'invaliddo', $params[self::DO_PARAM] ] )
+		};
 
 		foreach ( $response as $key => $value ) {
 			$this->getResult()->addValue( null, $key, $value );
 		}
 	}
 
-	/**
-	 * Get notifications for the current user.
-	 *
-	 * @return array
-	 * @throws MWException
-	 * @throws InvalidIdentifierException
-	 */
-	public function getNotificationsForUser(): array {
-		$return = [
-			'notifications' => [],
-		];
-
+	public function getNotificationsForUser( array $params ): array {
 		$filters = [];
-		if ( $this->params['read'] === 1 ) {
+		if ( $params[self::READ_PARAM] === 1 ) {
 			$filters['read'] = 1;
 		}
-		if ( $this->params['unread'] === 1 ) {
+		if ( $params[self::UNREAD_PARAM] === 1 ) {
 			$filters['unread'] = 1;
 		}
-		if ( !empty( $this->params['type'] ) ) {
-			$types = explode( ',', $this->params['type'] );
+		if ( !empty( $params[self::TYPE_PARAM] ) ) {
+			$types = explode( ',', $params[self::TYPE_PARAM] );
 			foreach ( $types as $key => $type ) {
-				if ( !NotificationBroadcast::isTypeConfigured( $type ) ) {
+				if ( !$this->isTypeConfigured( $type ) ) {
 					unset( $types[$key] );
 				}
 			}
@@ -98,142 +80,107 @@ class ApiNotifications extends ApiBase {
 			}
 		}
 
-		$bundle = NotificationBundle::getBundleForUser(
+		$bundle = $this->notificationService->getNotificationBundle(
 			$this->getUser(),
 			$filters,
-			$this->params['itemsPerPage'],
-			$this->params['page']
+			// Make sure this is from 1 to 100.
+			max( min( $params[self::ITEMS_PER_PAGE_PARAM], 100 ), 1 ),
+			// Make sure the page number is >= 0.
+			max( 0, $params[self::PAGE_PARAM] )
 		);
 
-		/** @var NotificationUserNoteAssetsUrlFixer $notificationsUserNoteFixer */
-		$notificationsUserNoteFixer =
-			MediaWikiServices::getInstance()->getService( NotificationUserNoteAssetsUrlFixer::class );
-
-		if ( $bundle !== null ) {
-			foreach ( $bundle as $key => $notification ) {
-				$return['notifications'][] = $notificationsUserNoteFixer->fix( $notification->toArray() );
-			}
-			$return['meta'] = [
-				'unread' => $bundle->getUnreadCount(),
-				'read' => $bundle->getReadCount(),
-				'total_this_page' => $bundle->getTotalThisPage(),
-				'total_all' => $bundle->getTotalAll(),
-				'page' => $bundle->getPageNumber(),
-				'items_per_page' => $bundle->getItemsPerPage(),
-			];
+		$result = [ 'notifications' => [] ];
+		if ( $bundle === null ) {
+			return $result;
 		}
 
-		return $return;
+		foreach ( $bundle->getNotifications() as $key => $notification ) {
+			$result['notifications'][] = $this->notificationUserNoteAssetsUrlFixer->fix( $notification->toArray() );
+		}
+		$result['meta'] = [
+			'unread' => $bundle->getUnreadCount(),
+			'read' => $bundle->getReadCount(),
+			'total_this_page' => $bundle->getTotalThisPage(),
+			'total_all' => $bundle->getTotalAll(),
+			'page' => $bundle->getPageNumber(),
+			'items_per_page' => $bundle->getItemsPerPage(),
+		];
+
+		return $result;
 	}
 
-	/**
-	 * Dismiss a notification based on ID.
-	 *
-	 * @return array
-	 * @throws ApiUsageException
-	 * @throws InvalidIdentifierException
-	 */
-	public function dismissNotification(): array {
+	private function isTypeConfigured( string $type ): bool {
+		return isset( $this->config->get( 'ReverbNotifications' )[$type] );
+	}
+
+	public function dismissNotification( ?string $notificationId, ?int $dismissedAt ): array {
 		if ( !$this->getRequest()->wasPosted() ) {
 			$this->dieWithError( [ 'apierror-mustbeposted', __FUNCTION__ ] );
 		}
 
-		$success = false;
-
-		$id = $this->params['notificationId'];
-		$timestamp = $this->params['dismissedAt'];
-		if ( $timestamp === null ) {
-			$timestamp = time();
+		$timestamp = $dismissedAt ?? time();
+		if ( !empty( $notificationId ) ) {
+			try {
+				$this->notificationService->dismissNotification( $this->getUser(), $notificationId, $timestamp );
+				return [ 'success' => true ];
+			} catch ( Exception $e ) {
+			}
 		}
 
-		if ( !empty( $id ) ) {
-			$success = Notification::dismissNotification( $this->getUser(), (string)$id, $timestamp );
-		}
-
-		return [
-			'success' => $success,
-		];
+		return [ 'success' => false ];
 	}
 
-	/**
-	 * Dismiss a notification based on ID.
-	 *
-	 * @return array
-	 * @throws ApiUsageException
-	 * @throws InvalidIdentifierException
-	 */
 	public function dismissAllNotifications(): array {
 		if ( !$this->getRequest()->wasPosted() ) {
 			$this->dieWithError( [ 'apierror-mustbeposted', __FUNCTION__ ] );
 		}
 
-		$success = false;
-
-		$serviceUserId = UserIdHelper::getUserIdForService( $this->getUser() );
-		$userIdentifier = Identifier::newUser( $serviceUserId );
-		$dismiss = new NotificationDismissalsResource( [
-				'target-id' => (string)$userIdentifier,
-			] );
-
 		try {
-			$client = MediaWikiServices::getInstance()->getService( 'ReverbApiClient' );
-			$response = $client->notification_dismissals()->create( $dismiss );
-			$success = true;
+			$this->notificationService->dismissAllNotifications( $this->getUser() );
+			return [ 'success' => true ];
+		} catch ( Exception $e ) {
+			return [ 'success' => false ];
 		}
-		catch ( ApiRequestUnsuccessful $e ) {
-			wfLogWarning( 'Invalid API response from the service: ' . $e->getMessage() );
-		}
-		catch ( Exception $e ) {
-			wfLogWarning( 'General exception encountered when communicating with the service: ' . $e->getMessage() );
-		}
-
-		return [
-			'success' => $success,
-		];
 	}
 
-	/**
-	 * Array of allowed parameters on the API request.
-	 *
-	 * @return array
-	 */
+	/** @inheritDoc */
 	public function getAllowedParams() {
 		return [
-			'do' => [
+			self::DO_PARAM => [
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
 			],
-			'page' => [
+			self::PAGE_PARAM => [
 				ParamValidator::PARAM_TYPE => 'integer',
 				ParamValidator::PARAM_REQUIRED => true,
 				ParamValidator::PARAM_DEFAULT => 0,
 			],
-			'itemsPerPage' => [
+			self::ITEMS_PER_PAGE_PARAM => [
 				ParamValidator::PARAM_TYPE => 'integer',
 				ParamValidator::PARAM_REQUIRED => true,
 				ParamValidator::PARAM_DEFAULT => 50,
 			],
-			'type' => [
+			self::TYPE_PARAM => [
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => false,
 				ParamValidator::PARAM_DEFAULT => null,
 			],
-			'read' => [
+			self::READ_PARAM => [
 				ParamValidator::PARAM_TYPE => 'integer',
 				ParamValidator::PARAM_REQUIRED => false,
 				ParamValidator::PARAM_DEFAULT => null,
 			],
-			'unread' => [
+			self::UNREAD_PARAM => [
 				ParamValidator::PARAM_TYPE => 'integer',
 				ParamValidator::PARAM_REQUIRED => false,
 				ParamValidator::PARAM_DEFAULT => null,
 			],
-			'notificationId' => [
+			self::NOTIFICATION_ID_PARAM => [
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => false,
 				ParamValidator::PARAM_DEFAULT => null,
 			],
-			'dismissedAt' => [
+			self::DISMISSED_AT_PARAM => [
 				ParamValidator::PARAM_TYPE => 'integer',
 				ParamValidator::PARAM_REQUIRED => false,
 				ParamValidator::PARAM_DEFAULT => null,
@@ -241,11 +188,7 @@ class ApiNotifications extends ApiBase {
 		];
 	}
 
-	/**
-	 * Get example URL parameters and help message key.
-	 *
-	 * @return array
-	 */
+	/** @inheritDoc */
 	protected function getExamplesMessages() {
 		return [
 			'action=notifications&do=getNotificationsForUser&page=0&itemsPerPage=50' =>
@@ -257,11 +200,7 @@ class ApiNotifications extends ApiBase {
 		];
 	}
 
-	/**
-	 * Destination URL of help information for this API.
-	 *
-	 * @return string
-	 */
+	/** @inheritDoc */
 	public function getHelpUrls() {
 		return '';
 	}

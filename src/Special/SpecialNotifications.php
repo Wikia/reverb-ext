@@ -12,83 +12,57 @@ declare( strict_types=1 );
 
 namespace Reverb\Special;
 
-use Reverb\Traits\NotificationListTrait;
-use Reverb\TwiggyWiring;
+use Reverb\Notification\NotificationListService;
 use SpecialPage;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
-use UserNotLoggedIn;
+use Twiggy\TwiggyService;
 
 class SpecialNotifications extends SpecialPage {
-	use NotificationListTrait;
-
-	/**
-	 * Main Constructor
-	 *
-	 * @return void
-	 */
-	public function __construct() {
+	public function __construct(
+		private NotificationListService $notificationListService,
+		private TwiggyService $twiggyService
+	) {
 		parent::__construct( 'Notifications' );
+		$this->twiggyService->setTemplateLocation( 'Reverb', __DIR__ . '/../../resources/templates' );
 	}
 
-	/**
-	 * Main Executor
-	 *
-	 * @param string|null $subpage Sub page passed in the URL.
-	 *
-	 * @return void [Outputs to screen]
-	 * @throws LoaderError
-	 * @throws RuntimeError
-	 * @throws SyntaxError
-	 * @throws UserNotLoggedIn
-	 */
+	/** @inheritDoc */
 	public function execute( $subpage ) {
 		$this->requireLogin();
 
-		$twig = TwiggyWiring::init();
-		$template = $twig->load( $this->getContext()->getSkin()->getSkinName() === 'fandomdesktop'
-				? '@Reverb/special_notifications_fandomdesktop.twig' : '@Reverb/special_notifications.twig' );
-
-		$groups = self::getNotificationsGroupedByPreference( $this->getUser() );
+		$isFandomDesktop = $this->getContext()->getSkin()->getSkinName() === 'fandomdesktop';
+		$outputPage = $this->getOutput();
 
 		// Additional Scrips for the Notification Page
-		if ( $this->getOutput()->getContext()->getSkin()->getSkinName() === 'fandomdesktop' ) {
-			$this->getOutput()->addModuleStyles( 'ext.reverb.specialNotifications.fandomdesktop.styles' );
+		if ( $isFandomDesktop ) {
+			$outputPage->addModuleStyles( 'ext.reverb.specialNotifications.fandomdesktop.styles' );
 		} else {
-			$this->getOutput()->addModuleStyles( 'ext.reverb.notifications.styles.notificationPage' );
+			$outputPage->addModuleStyles( 'ext.reverb.notifications.styles.notificationPage' );
 		}
+		$outputPage->addModules( 'ext.reverb.notifications.scripts.notificationPage' );
+		$outputPage->setPageTitle( $this->msg( 'notifications' )->escaped() );
 
-		$this->getOutput()->addModules( 'ext.reverb.notifications.scripts.notificationPage' );
-		$this->getOutput()->setPageTitle( $this->msg( 'notifications' )->escaped() );
+		$groups = $this->notificationListService->getNotificationsGroupedByPreference( $this->getUser() );
+		$template = $this->twiggyService->load(
+			$isFandomDesktop ?
+				'@Reverb/special_notifications_fandomdesktop.twig' :
+				'@Reverb/special_notifications.twig'
+		);
 
-		$this->getOutput()->addHtml( $template->render( [ 'groups' => $groups ] ) );
+		$outputPage->addHtml( $template->render( [ 'groups' => $groups ] ) );
 	}
 
-	/**
-	 * Hides special page from SpecialPages special page.
-	 *
-	 * @return bool
-	 */
+	/** @inheritDoc */
 	public function isListed() {
 		return $this->getUser()->isRegistered();
 	}
 
-	/**
-	 * Lets others determine that this special page is restricted.
-	 *
-	 * @return bool
-	 */
+	/** @inheritDoc */
 	public function isRestricted(): bool {
 		return true;
 	}
 
-	/**
-	 * Return the group name for this special page.
-	 *
-	 * @return string
-	 */
-	protected function getGroupName(): string {
+	/** @inheritDoc */
+	protected function getGroupName() {
 		return 'users';
 	}
 }

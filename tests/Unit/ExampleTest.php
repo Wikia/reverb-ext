@@ -9,7 +9,7 @@
 
 namespace Reverb\tests;
 
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class ExampleTest extends TestCase {
 	/**
