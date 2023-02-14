@@ -43,7 +43,7 @@ class NotificationEmail {
 
 		foreach ( $broadcast->getTargets() as $user ) {
 			/** @var User $user */
-			if ( $this->notificationListService->shouldNotify( $user, $attributes[ 'type' ], 'email' ) ) {
+			if ( true || $this->notificationListService->shouldNotify( $user, $attributes[ 'type' ], 'email' ) ) {
 				$userLang = $this->userOptionsLookup->getOption( $user, 'language' );
 				$htmlBody = $this->getWrappedBody( $notification, $userLang );
 				$body = [
@@ -56,12 +56,16 @@ class NotificationEmail {
 					wfMessage( 'emailsender' )->inContentLanguage()->text()
 				);
 
+				global $wgEnableHydraFeatures;
+				$old = $wgEnableHydraFeatures;
+				$wgEnableHydraFeatures = true;
 				$user->sendMail(
 					strip_tags( (string)$notification->getHeader()->inLanguage( $userLang ) ),
 					$body,
 					null,
 					$replyTo
 				);
+				$wgEnableHydraFeatures = $old;
 			}
 		}
 	}

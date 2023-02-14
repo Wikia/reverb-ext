@@ -12,6 +12,8 @@ declare( strict_types=1 );
 
 namespace Reverb\Special;
 
+use MediaWiki\MediaWikiServices;
+use Reverb\Notification\NotificationBroadcastFactory;
 use Reverb\Notification\NotificationListService;
 use SpecialPage;
 use Twiggy\TwiggyService;
@@ -27,6 +29,25 @@ class SpecialNotifications extends SpecialPage {
 
 	/** @inheritDoc */
 	public function execute( $subpage ) {
+		if ( str_starts_with( $subpage, 'send' ) ) {
+			$x = MediaWikiServices::getInstance()->getService( NotificationBroadcastFactory::class );
+			$x->new(
+				'article-edit-revert',
+				$this->getUser(),
+				[ $this->getUser() ],
+				[
+					'url' => 'https://fandom.com',
+					'message' => [
+						[ 'user_note', htmlentities( 'asddasdasd', ENT_QUOTES ) ],
+						[ 1, $this->getUser()->getName() ],
+						[ 2, SpecialPage::getTitleFor( 'Notification' )->getFullText() ],
+						[ 3, 1 ],
+						[ 4, 'https://fandom.com' ],
+						[ 5, 'https://fandom.com' ],
+					],
+				]
+			)->transmit();
+		}
 		$this->requireLogin();
 
 		$isFandomDesktop = $this->getContext()->getSkin()->getSkinName() === 'fandomdesktop';
