@@ -43,7 +43,7 @@ jobs:
 
     - name: Install npm dependencies
       if: steps.npm-cache.outputs.cache-hit != 'true'
-      run: npm install
+      run: npm ci
 
     - name: Run PHPCS
       run: composer phpcs
@@ -54,6 +54,5 @@ jobs:
     - name: Run PHPUnit tests with coverage
       run: composer phpunit
 
-# TODO: enable js tests. Currently it's failing with `sh: 1: jasmine: not found`
-#    - name: Run JS Jasmine tests
-#      run: npm run jasmine
+    - name: Run JS Jasmine tests
+      run: npm run jasmine
