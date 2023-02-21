@@ -6,6 +6,7 @@ use Config;
 use Fandom\Includes\Util\UrlUtilityService;
 use Fandom\WikiConfig\WikiVariablesDataService;
 use MediaWiki\User\UserFactory;
+use Reverb\Identifier\IdentifierService;
 use WikiDomain\WikiConfigDataService;
 
 class NotificationFactory {
@@ -15,7 +16,8 @@ class NotificationFactory {
 		private UrlUtilityService $urlUtilityService,
 		private WikiConfigDataService $wikiConfigDataService,
 		private WikiVariablesDataService $wikiVariablesDataService,
-		private UserFactory $userFactory
+		private UserFactory $userFactory,
+		private IdentifierService $identifierService
 	) {
 	}
 
@@ -42,8 +44,8 @@ class NotificationFactory {
 				$id,
 				(int)( $data['attributes']['created-at'] ?? '' ),
 				$dissmissals[$id],
-				$data['attributes']['origin-id'] ?? '',
-				$data['attributes']['agent-id'] ?? ''
+				$this->identifierService->idFromKey( $data['attributes']['origin-id'] ?? '' ) ?? '',
+				$this->identifierService->idFromKey( $data['attributes']['agent-id'] ?? '' ) ?? ''
 			);
 		}
 		return $notifications;

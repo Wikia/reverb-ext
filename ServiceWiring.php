@@ -41,7 +41,8 @@ return [
 			$services->getService( UrlUtilityService::class ),
 			$services->getService( WikiConfigDataService::class ),
 			$services->getService( WikiVariablesDataService::class ),
-			$services->getUserFactory()
+			$services->getUserFactory(),
+			$services->getService( IdentifierService::class )
 		);
 	},
 

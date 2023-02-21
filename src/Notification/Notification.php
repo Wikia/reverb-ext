@@ -146,6 +146,7 @@ class Notification {
 	 */
 	private function getWikiInformation( string $siteKey ): ?WikiConfigData {
 		if ( strlen( $siteKey ) !== 32 ) {
+
 			return $this->wikiConfigDataService->getWikiDataById( (int)$siteKey );
 		}
 
