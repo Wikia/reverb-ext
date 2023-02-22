@@ -16,7 +16,6 @@ namespace Reverb;
 use Config;
 use Fandom\Includes\User\UserInfo;
 use Fandom\Includes\Util\UrlUtilityService;
-use FlaggedRevsRevisionReviewFormAfterDoSubmitHook;
 use MediaWiki\Deferred\LinksUpdate\TitleLinksTable;
 use MediaWiki\Hook\AbortEmailNotificationHook;
 use MediaWiki\Hook\EmailUserCompleteHook;
@@ -51,7 +50,6 @@ class ReverbBroadcastHookHandler implements
 	PageSaveCompleteHook,
 	UserGroupsChangedHook,
 	LinksUpdateHook,
-	FlaggedRevsRevisionReviewFormAfterDoSubmitHook,
 	AbortEmailNotificationHook,
 	EmailUserCompleteHook
 {
@@ -459,7 +457,7 @@ class ReverbBroadcastHookHandler implements
 		// written. If the write rolls back, we shouldn't notify; additionally, this does all the service calls
 		// in post-output.
 		$this->loadBalancer->getConnection( DB_PRIMARY )
-			->onTransactionCommitOrIdle( static fn() => $this->sendNotificationsForEdit( $editor, $title, $rc ) );
+			->onTransactionCommitOrIdle( fn() => $this->sendNotificationsForEdit( $editor, $title, $rc ) );
 
 		return false;
 	}

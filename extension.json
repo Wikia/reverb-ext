@@ -104,7 +104,8 @@
 				"DBLoadBalancer",
 				"WatchedItemStore",
 				"Fandom\\Includes\\User\\UserInfo",
-				"Fandom\\Includes\\Util\\UrlUtilityService"
+				"Fandom\\Includes\\Util\\UrlUtilityService",
+				"Reverb\\Notification\\NotificationBroadcastFactory"
 			]
 		}
 	},
