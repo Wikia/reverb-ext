@@ -38,7 +38,7 @@
             "phpcbf"
         ],
         "phpcs": "phpcs",
-        "phan": "vendor/bin/phan -d . --long-progress-bar",
+        "phan": "vendor/bin/phan -d src --long-progress-bar",
         "phpunit": "phpunit"
     }
 }
