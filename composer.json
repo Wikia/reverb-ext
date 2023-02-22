@@ -38,7 +38,7 @@
             "phpcbf"
         ],
         "phpcs": "phpcs",
-        "phan": "vendor/bin/phan -d . --long-progress-bar --load-baseline=.phan-config.php",
+        "phan": "vendor/bin/phan -d . --long-progress-bar",
         "phpunit": "phpunit"
     }
 }
