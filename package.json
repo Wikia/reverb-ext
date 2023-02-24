@@ -1,6 +1,6 @@
 {
   "name": "Reverb",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -11,7 +11,7 @@
     "jasmine": "^3.4.0"
   },
   "scripts": {
-    "test": "jasmine"
+    "jasmine": "jasmine"
   },
   "repository": {
     "type": "git",

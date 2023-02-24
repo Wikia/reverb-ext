@@ -7,9 +7,9 @@
  * @license GPL-2.0-or-later
  */
 
-namespace Tests\Unit;
+namespace Reverb\tests;
 
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class ExampleTest extends TestCase {
 	/**
@@ -20,6 +20,6 @@ class ExampleTest extends TestCase {
 	 * @return void
 	 */
 	public function testBasicTest() {
-		$this->assertTrue(true);
+		$this->assertTrue( true );
 	}
 }
