@@ -16,7 +16,7 @@ trait UserContextTrait {
 	/**
 	 * User context for this scope.
 	 *
-	 * @var User $user
+	 * @var User
 	 */
 	protected $user;
 
@@ -36,7 +36,7 @@ trait UserContextTrait {
 	 *
 	 * @return void
 	 */
-	public function setUser(?User $user) {
+	public function setUser( ?User $user ) {
 		$this->user = $user;
 	}
 }

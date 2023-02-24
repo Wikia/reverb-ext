@@ -34,7 +34,7 @@
 div.reverb-np .reverb-npnrb-site a:link,
 div.reverb-np .reverb-npnrb-site a:active,
 div.reverb-np .reverb-npnrb-site a:visited {
-	color: #d9d9d9;
+	color: var(--theme-link-color);
 }
 
 div.reverb-np-arrow:before,
@@ -196,11 +196,12 @@ div.reverb-np-arrow {
 }
 
 .reverb-npnr-unread {
-	background-color: #f37f20;
+	background-color: var(--theme-accent-color);
 }
 
 .reverb-npnr-read {
-	background-color: #303030;
+	background-color: transparent;
+	border: 1px solid var(--theme-accent-color);
 }
 
 .reverb-npnr-hitbox {
@@ -234,11 +235,11 @@ div.reverb-np-arrow {
 .reverb-npnr-header a:link,
 .reverb-npnr-header a:active,
 .reverb-npnr-header a:visited {
-	color: #f37f20;
+	color: var(--theme-link-color);
 }
 
 .reverb-npnr-header a:hover {
-	color: #f37f20;
+	color: var(--theme-link-color--hover);
 }
 
 .reverb-npnr-body {
@@ -265,13 +266,13 @@ div.reverb-np-arrow {
 .reverb-npnrb-site {
 	font-weight: normal;
 	font-size: 12px;
-	color: #d9d9d9;
+	color: var(--theme-page-text-color);
 }
 
 .reverb-npnrb-site a:link,
 .reverb-npnrb-site a:active,
 .reverb-npnrb-site a:visited {
-	color: #d9d9d9;
+	color: var(--theme-link-color);
 }
 
 .reverb-notification-page {
@@ -364,25 +365,25 @@ div.reverb-np-arrow {
 }
 
 .reverb-button-bar button {
-	border-radius: 2px;
-	border: solid 1px #f37f20;
-	background-color: #000000;
-	color: #ffffff;
-	padding: 10px;
-	margin-left: -5px; /* Dumb way to bump them all together. Roll Tide */
-	font-size: 14px;
-	font-family: Helveta, sans-serif;
+	border-radius: 3px;
+	border: solid 1px currentColor;
+	color: var(--theme-accent-label-color);
+	background-color: var(--theme-accent-color);
+	padding: 9px 12px;
+	margin-left: -1px; /* Dumb way to bump them all together. Roll Tide */
 	font-weight: bold;
 	cursor: pointer;
+	text-transform: uppercase;
+	font-size: 12px;
 }
 
  button.reverb-active-button {
-	color: #f37f20;
+	/*background-color: var(--theme-accent-color--hover);*/
 }
 
 .reverb-button-bar button:hover,
 .reverb-button-bar button.reverb-selected {
-	color: #f37f20;
+	background-color: var(--theme-accent-color--hover);
 }
 
 .reverb-npp-bottom {
@@ -396,7 +397,7 @@ div.reverb-np-arrow {
 }
 
 .reverb-bell-unread {
-	color: #f37f20;
+	color: var(--theme-link-color);
 }
 
 .reverb-mobile-bell-unread:before {
@@ -407,7 +408,7 @@ div.reverb-np-arrow {
 	position: relative;
 	top: 5px;
 	left: 5px;
-	color: #36c;
+	color: var(--fandom-accent-color);
 }
 
 .reverb-bell-notification-count {

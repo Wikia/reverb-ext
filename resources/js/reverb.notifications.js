@@ -56,7 +56,14 @@
 		return userBox;
 	}
 
+	const IS_FANDOM_DESKTOP = mw.config.get('skin') === 'fandomdesktop';
+	var setButtonActive = function (target) {
+		const activeButtonClass = IS_FANDOM_DESKTOP ? 'wds-is-current' : 'reverb-active-button';
+		const button = IS_FANDOM_DESKTOP ? target.parent() : target;
 
+		$('.reverb-button-bar .' + activeButtonClass).removeClass(activeButtonClass);
+		button.addClass(activeButtonClass);
+	};
 
 	reverbNotificationPage = (typeof window.reverbNotificationPage !== "undefined") ? true : false;
 	log('Notification Page: ' + reverbNotificationPage);
@@ -236,8 +243,8 @@
 			var created = created_at.fromNow();
 			var timestamp = created_at.format("dddd, MMMM Do YYYY, h:mm:ss a");
 
-			var site_name = n.site_name;
-			var site_url = n.origin_url;
+			var site_name = !n.site_name ? 'Unknown Wiki' : n.site_name;
+			var site_url = !n.origin_url ? '' : n.origin_url.replace(/\/$/,"");
 
 			// Handle Read Count -- Not available from API yet
 			var wasRead = n.dismissed_at ? true : false;
@@ -343,7 +350,7 @@
 			meta.read = meta.read + meta.unread;
 			meta.unread = 0;
 			updateCounts();
-		});	
+		});
 	});
 
 	/***
@@ -387,9 +394,7 @@
 						}
 					});
 					generateWithFilters({page: 0, perpage: perPage}, false);
-					$(".reverb-active-button").removeClass('reverb-active-button');
-					$("#reverb-ru-all").addClass('reverb-active-button');
-
+					setButtonActive($("#reverb-ru-all"));
 			} else {
 
 				if (e.originalEvent !== undefined) {
@@ -423,8 +428,7 @@
 						}
 
 						generateWithFilters({page: 0, perpage: perPage, type: filters.join(',')}, false);
-						$(".reverb-active-button").removeClass('reverb-active-button');
-						$("#reverb-ru-all").addClass('reverb-active-button');
+						setButtonActive($("#reverb-ru-all"));
 					}
 				}
 			}
@@ -440,17 +444,15 @@
 		$("#reverb-ru-all").click(function(){
 			var newFilters = makeNewFilter();
 			generateWithFilters(newFilters, true);
-			$(".reverb-active-button").removeClass('reverb-active-button');
-			$(this).addClass('reverb-active-button');
+			setButtonActive($(this));
 		});
 
-		$("#reverb-ru-unread").click(function(){
+		$("#reverb-ru-unread").click(function(e){
 			var newFilters = makeNewFilter();
 			newFilters.unread = 1;
 			delete(newFilters.read);
 			generateWithFilters(newFilters, true);
-			$(".reverb-active-button").removeClass('reverb-active-button');
-			$(this).addClass('reverb-active-button');
+			setButtonActive($(this));
 		});
 
 		$("#reverb-ru-read").click(function(){
@@ -458,8 +460,7 @@
 			newFilters.read = 1;
 			delete(newFilters.unread);
 			generateWithFilters(newFilters, true);
-			$(".reverb-active-button").removeClass('reverb-active-button');
-			$(this).addClass('reverb-active-button');
+			setButtonActive($(this));
 		});
 
 
@@ -532,7 +533,8 @@
 	 */
 
 	var buildViewMore = function(more) {
-		var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="/Special:Notifications">'+mw.message('view-additional-unread', more).text()+' <i class="fa fa-arrow-right"></i></button></div>';
+		var notificationsUrl = new mw.Title('Special:Notifications').getUrl();
+		var html = '<div class="reverb-npn-row"><a class="reverb-npn-viewmore" href="' + notificationsUrl + '">'+mw.message('view-additional-unread', more).text()+' <i class="fa fa-arrow-right"></i></button></div>';
 		return $(html);
 	}
 
@@ -565,12 +567,15 @@
 	}
 
 	var buildNotificationPanel = function(data) {
+		var notificationUrl = new mw.Title('Special:Notifications').getUrl();
+		var preferencesUrl = new mw.Title('Special:Preferences#mw-prefsection-reverb').getUrl();
+
 		// lots of i18n stuff to add in here...
 		var html = '<div class="reverb-np">'
 				 + '    <div class="reverb-np-header">'
 				 + '        <span class="reverb-nph-right"><span id="reverb-mark-all-read-panel">' + l('special-button-mark-all-read') + '</span></span>'
-				 + '        <span class="reverb-nph-notifications"><a href="/Special:Notifications">'+ l('notifications') +' (<span class="reverb-total-notifications">0</span>)</a></span>'
-				 + '        <span class="reverb-nph-preferences"><a href="/Special:Preferences#mw-prefsection-reverb"><i class="fa fa-cog"></i></a></span>'
+				 + '        <span class="reverb-nph-notifications"><a href="' + notificationUrl + '">'+ l('notifications') +' (<span class="reverb-total-notifications">0</span>)</a></span>'
+				 + '        <span class="reverb-nph-preferences"><a href="' + preferencesUrl + '"><i class="fa fa-cog"></i></a></span>'
 				 + '    </div>'
 				 + '    <div class="reverb-npn">'
 				 + '        <div class="reverb-np-no-unread">'+l('no-unread')+'</div>'

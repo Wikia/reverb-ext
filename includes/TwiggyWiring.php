@@ -20,8 +20,8 @@ class TwiggyWiring {
 	 * @return TwiggyService
 	 */
 	public static function init() {
-		$twig = MediaWikiServices::getInstance()->getService('TwiggyService');
-		$twig->setTemplateLocation('Reverb', __DIR__ . '/../resources/templates');
+		$twig = MediaWikiServices::getInstance()->getService( 'TwiggyService' );
+		$twig->setTemplateLocation( 'Reverb', __DIR__ . '/../resources/templates' );
 
 		return $twig;
 	}

@@ -35,7 +35,7 @@
 	"long-header-article-edit-revert": "{{PLURAL:$3|Twoja [$5 edycja] na [$4 $2] została zrewerowana|Twoje [$5 edycje] na [$4 $2] zostały zrewertowane}}.",
 	"user-note-article-edit-revert": "$4 {{GENDER:$4|usunął|usunęła}} {{PLURAL:$3|edycję|edycje}} w artykule <strong>$2<\/strong>.",
 	"short-header-article-edit-watch": "[$1 $2] {{GENDER:$2|wykonał|wykonała}} [$5 edycję] na [$3 $4]",
-	"long-header-article-edit-watch": "[$1 $2] {{GENDER:$2|wykonał|wykonała}} [$5 edycję] na obserwowanej przez ciebie [$3 $4].",
+	"long-header-article-edit-watch": "[$1 $2] {{GENDER:$2|wykonał|wykonała}} [$5 edycję] na obserwowanej przez ciebie [$3 $4] o $6.",
 	"notifications": "Powiadomienia",
 	"view-all": "Zobacz wszystkie",
 	"no-unread": "Brak nieprzeczytanych powiadomień",

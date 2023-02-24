@@ -8,12 +8,13 @@
  * @license GPL-2.0-or-later
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace Reverb\Notification;
 
-use DynamicSettings\Wiki;
 use Exception;
+use Fandom\Includes\Util\UrlUtilityService;
+use Fandom\WikiConfig\WikiVariablesDataService;
 use Hydrawiki\Reverb\Client\V1\Exceptions\ApiRequestUnsuccessful as ApiRequestUnsuccessful;
 use Hydrawiki\Reverb\Client\V1\Resources\Notification as NotificationResource;
 use Hydrawiki\Reverb\Client\V1\Resources\NotificationTarget as NotificationTargetResource;
@@ -29,6 +30,8 @@ use Reverb\Traits\UserContextTrait;
 use Reverb\UserIdHelper;
 use Title;
 use User;
+use WikiDomain\WikiConfigData;
+use WikiDomain\WikiConfigDataService;
 
 class Notification {
 	use UserContextTrait;
@@ -58,7 +61,7 @@ class Notification {
 	/**
 	 * Dismissed Timestamp
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $dismissedAt = 0;
 
@@ -76,18 +79,18 @@ class Notification {
 	 *
 	 * @return void
 	 */
-	public function __construct(NotificationResource $resource) {
+	public function __construct( NotificationResource $resource ) {
 		$this->resource = $resource;
 	}
 
 	/**
 	 * Get the unique ID for this notification used by the service.
 	 *
-	 * @return integer ID
+	 * @return int ID
 	 */
 	public function getId(): int {
 		// The resource can return null if nothing is initialized.
-		return intval($this->resource->id());
+		return intval( $this->resource->id() );
 	}
 
 	/**
@@ -108,36 +111,34 @@ class Notification {
 	 *
 	 * @return void
 	 */
-	public function setType(string $type) {
-		$this->resource->setAttributes(['type' => $type]);
+	public function setType( string $type ) {
+		$this->resource->setAttributes( [ 'type' => $type ] );
 	}
 
 	/**
 	 * Get the header for this notification.
 	 *
-	 * @param boolean $long Use the short or long version of the header.
+	 * @param bool $long Use the short or long version of the header.
 	 *
-	 * @return string Message
+	 * @return Message
 	 */
-	public function getHeader(bool $long = false): Message {
+	public function getHeader( bool $long = false ): Message {
 		$parameters = $this->getMessageParameters();
-		unset($parameters['user_note']);
+		unset( $parameters['user_note'] );
 
 		// Pad parameters that start at not 1.
 		// This fixes issues with legacy Echo language strings missing parameters at the beginning of the string.
-		if (count($parameters) > 0) {
-			$max = max(array_keys($parameters));
-			for ($i = 1; $i < $max; $i++) {
-				if (!isset($parameters[$i])) {
+		if ( count( $parameters ) > 0 ) {
+			$max = max( array_keys( $parameters ) );
+			for ( $i = 1; $i < $max; $i++ ) {
+				if ( !isset( $parameters[$i] ) ) {
 					$parameters[$i] = null;
 				}
 			}
-			ksort($parameters);
+			ksort( $parameters );
 		}
 
-		return wfMessage(
-			($long ? 'long' : 'short') . '-header-' . $this->getType()
-		)->params($parameters);
+		return wfMessage( ( $long ? 'long' : 'short' ) . '-header-' . $this->getType() )->params( $parameters );
 	}
 
 	/**
@@ -147,6 +148,7 @@ class Notification {
 	 */
 	public function getUserNote(): ?string {
 		$parameters = $this->getMessageParameters();
+
 		return $parameters['user_note'] ?? null;
 	}
 
@@ -156,13 +158,13 @@ class Notification {
 	 * @return array
 	 */
 	protected function getMessageParameters(): array {
-		$json = (array)json_decode($this->resource->message);
+		$json = (array)json_decode( $this->resource->message );
 
 		$parameters = [];
-		foreach ($json as $parameter) {
+		foreach ( $json as $parameter ) {
 			$parameters[$parameter[0]] = $parameter[1];
 		}
-		ksort($parameters, SORT_NATURAL);
+		ksort( $parameters, SORT_NATURAL );
 
 		return $parameters;
 	}
@@ -170,7 +172,7 @@ class Notification {
 	/**
 	 * Get the created date for this notification.
 	 *
-	 * @return integer Creation Date
+	 * @return int Creation Date
 	 */
 	public function getCreatedAt(): int {
 		return $this->resource->created_at;
@@ -179,29 +181,29 @@ class Notification {
 	/**
 	 * Is this notification dismissed?
 	 *
-	 * @return boolean Is dismissed
+	 * @return bool Is dismissed
 	 */
 	public function isDismissed(): bool {
-		return boolval($this->resource->dismissed_at);
+		return boolval( $this->resource->dismissed_at );
 	}
 
 	/**
 	 * Get the dismissed timestamp for this notification.
 	 *
-	 * @return integer Dismissed Timestamp
+	 * @return int Dismissed Timestamp
 	 */
 	public function getDismissedAt(): int {
-		return intval($this->dismissedAt);
+		return intval( $this->dismissedAt );
 	}
 
 	/**
 	 * Set the dismissed timestamp for this notification.
 	 *
-	 * @param integer $dismissedAt Dismissed Timestamp
+	 * @param int $dismissedAt Dismissed Timestamp
 	 *
 	 * @return void
 	 */
-	public function setDismissedAt(int $dismissedAt) {
+	public function setDismissedAt( int $dismissedAt ) {
 		$this->dismissedAt = $dismissedAt;
 	}
 
@@ -220,42 +222,75 @@ class Notification {
 	 * @return SiteIdentifier|null
 	 */
 	public function getOriginId(): ?SiteIdentifier {
-		if ($this->originIdCache === null) {
+		if ( $this->originIdCache === null ) {
 			try {
-				$this->originIdCache = Identifier::factory($this->resource->origin_id);
-			} catch (InvalidIdentifierException $e) {
+				$this->originIdCache = Identifier::factory( $this->resource->origin_id );
+			}
+			catch ( InvalidIdentifierException $e ) {
 				$this->originIdCache = null;
 			}
 		}
+
 		return $this->originIdCache;
 	}
 
 	/**
 	 * Return a Wiki object that has wiki information.
 	 *
-	 * @return Wiki|null
+	 * @return WikiConfigData|null
 	 */
-	public function getOrigin(): ?Wiki {
+	public function getOrigin(): ?WikiConfigData {
 		$id = $this->getOriginId();
 
-		if ($id !== null) {
+		if ( $id !== null ) {
 			$id = $id->whoAmI();
 
-			if (isset(self::$wikiCache[$id])) {
+			if ( isset( self::$wikiCache[$id] ) ) {
 				return self::$wikiCache[$id];
 			}
 
-			if ($id === 'master') {
-				$wiki = Wiki::getFakeMainWiki();
-			} else {
-				$wiki = Wiki::loadFromHash($id);
-			}
-			if (!empty($wiki)) {
+			$wiki = self::getWikiInformation( (string)$id );
+			if ( !empty( $wiki ) ) {
 				self::$wikiCache[$id] = $wiki;
+
 				return $wiki;
 			}
 		}
+
 		return null;
+	}
+
+	/**
+	 * Get wiki information based on the provided site identifier.($dsSiteKey or $cityId)
+	 * This function is copied from Extension:Cheevos.  We should migrate this into another extension.
+	 *
+	 * @param string $siteKey
+	 *
+	 * @return WikiConfigData|null
+	 */
+	private static function getWikiInformation( string $siteKey ): ?WikiConfigData {
+		$services = MediaWikiServices::getInstance();
+		$wikiConfigDataService = $services->getService( WikiConfigDataService::class );
+		if ( strlen( $siteKey ) === 32 ) {
+			// Handle legecy $dsSiteKey MD5 hash.
+			$wikiVariablesService = $services->getService( WikiVariablesDataService::class );
+			$variableId = (int)$wikiVariablesService->getVarIdByName( 'dsSiteKey' );
+			if ( !$variableId ) {
+				return null;
+			}
+			$listOfWikisWithVar = $wikiVariablesService->getListOfWikisWithVar( $variableId, '=', $siteKey, '$', 0, 1 );
+			if ( $listOfWikisWithVar['total_count'] === 1 ) {
+				$cityId = key( $listOfWikisWithVar['result'] );
+				$wiki = $wikiConfigDataService->getWikiDataById( (int)$cityId );
+			}
+		} else {
+			$wiki = $wikiConfigDataService->getWikiDataById( (int)$siteKey );
+		}
+		if ( empty( $wiki ) ) {
+			$wiki = null;
+		}
+
+		return $wiki;
 	}
 
 	/**
@@ -264,10 +299,15 @@ class Notification {
 	 * @return string|null
 	 */
 	public function getOriginUrl(): ?string {
+		/**
+		 * @var UrlUtilityService $urlUtilityService
+		 */
+		$urlUtilityService = MediaWikiServices::getInstance()->getService( UrlUtilityService::class );
 		$origin = $this->getOrigin();
-		if ($origin !== null) {
-			return wfExpandUrl('//' . $origin->getDomains()->getDomain(), PROTO_HTTPS);
+		if ( $origin !== null ) {
+			return $urlUtilityService->forceHttps( $origin->getWikiUrl() );
 		}
+
 		return null;
 	}
 
@@ -277,29 +317,32 @@ class Notification {
 	 * @return UserIdentifier|null
 	 */
 	public function getAgentId(): ?UserIdentifier {
-		if ($this->agentIdCache === null) {
+		if ( $this->agentIdCache === null ) {
 			try {
-				$this->agentIdCache = Identifier::factory($this->resource->agent_id);
-			} catch (InvalidIdentifierException $e) {
+				$this->agentIdCache = Identifier::factory( $this->resource->agent_id );
+			}
+			catch ( InvalidIdentifierException $e ) {
 				$this->agentIdCache = null;
 			}
 		}
+
 		return $this->agentIdCache;
 	}
 
 	/**
 	 * Return an User object of the agent that created this notification.
 	 *
-	 * @return Wiki|null
+	 * @return User|null
 	 */
 	public function getAgent(): ?User {
 		$id = $this->getAgentId();
-		if ($id !== null) {
-			$user = UserIdHelper::getUserForServiceUserId(intval($id->whoAmI()));
-			if ($user !== null) {
+		if ( $id !== null ) {
+			$user = UserIdHelper::getUserForServiceUserId( intval( $id->whoAmI() ) );
+			if ( $user !== null ) {
 				return $user;
 			}
 		}
+
 		return null;
 	}
 
@@ -310,9 +353,10 @@ class Notification {
 	 */
 	public function getAgentUrl(): ?string {
 		$agent = $this->getAgent();
-		if ($agent !== null) {
-			return Title::newFromText($agent->getName(), NS_USER)->getCanonicalURL();
+		if ( $agent !== null ) {
+			return Title::newFromText( $agent->getName(), NS_USER )->getCanonicalURL();
 		}
+
 		return null;
 	}
 
@@ -322,7 +366,7 @@ class Notification {
 	 * @return string Category
 	 */
 	public function getCategory(): string {
-		return $this->getCategoryFromType($this->getType());
+		return $this->getCategoryFromType( $this->getType() );
 	}
 
 	/**
@@ -331,16 +375,17 @@ class Notification {
 	 * @return string Subcategory
 	 */
 	public function getSubcategory(): string {
-		return $this->getSubCategoryFromType($this->getType());
+		return $this->getSubCategoryFromType( $this->getType() );
 	}
 
 	/**
 	 * Return the URL for the notification icon.
 	 *
 	 * @return string|null URL or null if missing.
+	 * @throws MWException
 	 */
 	public function getNotificationIcon(): ?string {
-		$icons = $this->getIconsConfig('notification');
+		$icons = $this->getIconsConfig( 'notification' );
 
 		return $icons[$this->getType()] ?? null;
 	}
@@ -349,9 +394,10 @@ class Notification {
 	 * Return the URL for the category icon.
 	 *
 	 * @return string|null URL or null if missing.
+	 * @throws MWException
 	 */
 	public function getCategoryIcon(): ?string {
-		$icons = $this->getIconsConfig('category');
+		$icons = $this->getIconsConfig( 'category' );
 
 		return $icons[$this->getCategory()] ?? null;
 	}
@@ -360,9 +406,10 @@ class Notification {
 	 * Return the URL for the subcategory icon.
 	 *
 	 * @return string|null URL or null if missing.
+	 * @throws MWException
 	 */
 	public function getSubcategoryIcon(): ?string {
-		$icons = $this->getIconsConfig('subcategory');
+		$icons = $this->getIconsConfig( 'subcategory' );
 
 		return $icons[$this->getSubcategory()] ?? null;
 	}
@@ -375,12 +422,14 @@ class Notification {
 	 * @return array Array containing key of type name to the URL location for it.
 	 * @throws MWException
 	 */
-	private function getIconsConfig(string $type = 'notification'): array {
+	private function getIconsConfig( string $type = 'notification' ): array {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
-		$reverbIcons = $mainConfig->get('ReverbIcons');
+		$reverbIcons = $mainConfig->get( 'ReverbIcons' );
 
-		if (!isset($reverbIcons[$type])) {
-			throw new MWException("The request icon type '{$type}' is missing from the \$wgReverbIcons configuration.");
+		if ( !isset( $reverbIcons[$type] ) ) {
+			throw new MWException(
+				"The request icon type '{$type}' is missing from the \$wgReverbIcons configuration."
+			);
 		}
 
 		return $reverbIcons[$type];
@@ -389,12 +438,13 @@ class Notification {
 	/**
 	 * Get the importance of this notification to assist with sorting.
 	 *
-	 * @return integer Importance
+	 * @return int Importance
 	 */
 	public function getImportance(): int {
 		$mainConfig = MediaWikiServices::getInstance()->getMainConfig();
-		$reverbNotifications = $mainConfig->get('ReverbNotifications');
-		return intval($reverbNotifications[$this->getType()]['importance']);
+		$reverbNotifications = $mainConfig->get( 'ReverbNotifications' );
+
+		return intval( $reverbNotifications[$this->getType()]['importance'] );
 	}
 
 	/**
@@ -403,13 +453,14 @@ class Notification {
 	 * @return string
 	 */
 	public function getVisualGroup(): string {
-		return self::replaceTypeWithUsePreference($this->getType());
+		return self::replaceTypeWithUsePreference( $this->getType() );
 	}
 
 	/**
 	 * Get an array representation of this object suitable for APIs or otherwise.
 	 *
 	 * @return array
+	 * @throws MWException
 	 */
 	public function toArray(): array {
 		$wiki = $this->getOrigin();
@@ -418,7 +469,7 @@ class Notification {
 			'icons' => [
 				'notification' => $this->getNotificationIcon(),
 				'category' => $this->getCategoryIcon(),
-				'subcategory' => $this->getSubcategoryIcon()
+				'subcategory' => $this->getSubcategoryIcon(),
 			],
 			'category' => $this->getCategory(),
 			'subcategory' => $this->getSubcategory(),
@@ -426,52 +477,56 @@ class Notification {
 			'id' => $this->getId(),
 			'type' => $this->getType(),
 			'header_short' => $this->getHeader(),
-			'header_long' => $this->getHeader(true),
+			'header_long' => $this->getHeader( true ),
 			'user_note' => $this->getUserNote(),
 			'created_at' => $this->getCreatedAt(),
 			'dismissed_at' => $this->getDismissedAt(),
 			'origin_url' => $this->getOriginUrl(),
-			'site_key' => ($wiki !== null ? $wiki->getSiteKey() : null),
-			'site_name' => ($wiki !== null ? $wiki->getNameForDisplay() : null),
+			'site_key' => ( $wiki !== null ? $wiki->getWikiId() : null ),
+			'site_name' => ( $wiki !== null ? sprintf( '%s (%s)', $wiki->getTitle(),
+				mb_strtoupper( $wiki->getLangCode(), 'UTF-8' ) ) : null ),
 			'agent_url' => $this->getAgentUrl(),
 			'canonical_url' => $this->getCanonicalUrl(),
-			'importance' => $this->getImportance()
+			'importance' => $this->getImportance(),
 		];
 	}
 
 	/**
 	 * Dismiss a notification based on the original resource ID.
 	 *
-	 * @param User    $user      Target user that the notification originally targetted.
-	 * @param string  $id        The ID from the original resource.
-	 * @param boolean $timestamp Unix timestamp of when the notification was dismissed.
+	 * @param User $user Target user that the notification originally targetted.
+	 * @param string $id The ID from the original resource.
+	 * @param int $timestamp Unix timestamp of when the notification was dismissed.
 	 *
-	 * @return null
+	 * @return bool
+	 * @throws InvalidIdentifierException
 	 */
-	public static function dismissNotification(User $user, string $id, int $timestamp): bool {
-		$serviceUserId = UserIdHelper::getUserIdForService($user);
-		$userIdentifier = Identifier::newUser($serviceUserId);
-		if (!$userIdentifier) {
+	public static function dismissNotification( User $user, string $id, int $timestamp ): bool {
+		$serviceUserId = UserIdHelper::getUserIdForService( $user );
+		$userIdentifier = Identifier::newUser( $serviceUserId );
+		if ( !$userIdentifier ) {
 			return false;
 		}
 
-		$target = new NotificationTargetResource(
-			[
+		$target = new NotificationTargetResource( [
 				'target-id' => (string)$userIdentifier,
-				'dismissed-at' => $timestamp
-			]
-		);
-		$target->setId((string)$userIdentifier . ':' . $id);
+				'dismissed-at' => $timestamp,
+			] );
+		$target->setId( (string)$userIdentifier . ':' . $id );
 
 		try {
-			$client = MediaWikiServices::getInstance()->getService('ReverbApiClient');
-			$response = $client->update($target);
+			$client = MediaWikiServices::getInstance()->getService( 'ReverbApiClient' );
+			$response = $client->update( $target );
+
 			return true;
-		} catch (ApiRequestUnsuccessful $e) {
-			wfLogWarning('Invalid API response from the service: ' . $e->getMessage());
-		} catch (Exception $e) {
-			wfLogWarning('General exception encountered when communicating with the service: ' . $e->getMessage());
 		}
+		catch ( ApiRequestUnsuccessful $e ) {
+			wfLogWarning( 'Invalid API response from the service: ' . $e->getMessage() );
+		}
+		catch ( Exception $e ) {
+			wfLogWarning( 'General exception encountered when communicating with the service: ' . $e->getMessage() );
+		}
+
 		return false;
 	}
 }
