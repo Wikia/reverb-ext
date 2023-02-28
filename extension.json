@@ -120,7 +120,7 @@
 		"AbortEmailNotification": "ReverbBroadcastHookHandler",
 		"EmailUserComplete": "ReverbBroadcastHookHandler",
 		"FlaggedRevsRevisionReviewFormAfterDoSubmit": "ReverbBroadcastHookHandler",
-		"LinksUpdateAfterInsert": "ReverbBroadcastHookHandler",
+		"LinksUpdate": "ReverbBroadcastHookHandler",
 		"PageSaveComplete": "ReverbBroadcastHookHandler",
 		"UserGroupsChanged": "ReverbBroadcastHookHandler"
 	},
