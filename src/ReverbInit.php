@@ -23,7 +23,7 @@ class ReverbInit {
 			   $wgReverbNotifications,
 			   $wgReverbEnableWatchlistHandling;
 
-		if ( $wgEnableHydraFeatures ) {
+		if ( !$wgEnableHydraFeatures ) {
 			return;
 		}
 
