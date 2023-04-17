@@ -91,6 +91,12 @@ class ReverbHookHandler implements
 			'section' => 'reverb/email-user-notification',
 		];
 
+		$preferences[ NotificationListService::getPreferenceKey( 'user-interest-thanks', 'email' ) ] = [
+			'type' => 'toggle',
+			'label-message' => 'user-interest-thanks',
+			'section' => 'reverb/email-user-notification',
+		];
+
 		// Setup Check Matrix columns
 		$columns = [];
 		$reverbNotifiers = $this->config->get( 'ReverbNotifiers' );

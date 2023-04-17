@@ -95,6 +95,7 @@
 	"reverb-pref-email-frequency-immediately": "Individual notifications as they come in",
 	"prefs-email-user-notification": "User Email Notifications",
 	"user-interest-email-user": "Receive a notification when you are sent an email from a user",
+	"user-interest-thanks": "Receive a notification when someone thanks me for an edit I made",
 	"reverb-pref-title-article-edit-watch": "Watched Article Edited",
 	"reverb-pref-title-article-edit-revert": "Article Edit Reverted",
 	"reverb-pref-title-article-edit-thanks": "Article Editing Milestone",
