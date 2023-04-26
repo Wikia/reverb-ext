@@ -24,12 +24,12 @@ class NotificationFactory {
 	/** @return Notification[] */
 	public function fromResponse( array $response ): array {
 		$dissmissals = [];
-		foreach ( $response['data'] as $data ) {
+		foreach ( $response['data'] ?? [] as $data ) {
 			$dissmissals[(int)$data['relationships']['notification']['data']['id']] =
 				(int)$data['attributes']['dismissed-at'];
 		}
 		$notifications = [];
-		foreach ( $response['included'] as $data ) {
+		foreach ( $response['included'] ?? [] as $data ) {
 			$id = (int)$data['id'];
 			$notifications[$id] = new Notification(
 				$this->config,
