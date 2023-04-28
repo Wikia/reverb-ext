@@ -17,12 +17,6 @@ final class NotificationUserNoteAssetsUrlFixer {
 			return $notification;
 		}
 
-		$notification['user_note'] = preg_replace(
-			'/\/extensions-ucp(?!\/v2\/)\//',
-			'/extensions-ucp/v2/',
-			$notification['user_note']
-		);
-
 		// replace relative path with full urls, so notifications displayed outside of wiki context
 		// (i.e. fandom.com page) work well
 		$notification['user_note'] = preg_replace(
