@@ -498,7 +498,7 @@ class ReverbBroadcastHookHandler implements
 			$broadcast = $this->notificationBroadcastFactory->new(
 				'article-edit-watch',
 				$editor,
-				$watchingUser,
+				[ $watchingUser ],
 				[
 					'url' => $canonicalUrl,
 					'message' => [
