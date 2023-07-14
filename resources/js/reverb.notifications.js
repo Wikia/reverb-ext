@@ -1,5 +1,6 @@
 
 (function(){ $.when( mw.loader.using(['mediawiki.api', 'mediawiki.jqueryMsg']), $.ready).then(function() {
+	const perPage = 10;
 	/***
 	 *    ██████╗ ███████╗██╗   ██╗███████╗██████╗ ██████╗
 	 *    ██╔══██╗██╔════╝██║   ██║██╔════╝██╔══██╗██╔══██╗
@@ -34,6 +35,15 @@
 		"page": 0,
 		"items_per_page": 0
 	}
+
+	let currentMeta = {
+		"unread": 0,
+		"read": 0,
+		"total_this_page": 0,
+		"total_all": 0,
+		"page": 0,
+		"items_per_page": 0
+	};
 
 	/**
 	 *  Identify user box to place notifications directly next to it.
@@ -100,10 +110,10 @@
 			case "dropdown":
 			default:
 				selector = '.reverb-npn';
-			break;
+				break;
 			case "specialpage":
 				selector = '.reverb-notification-page-notifications';
-			break;
+				break;
 		}
 		$('.reverb-np-no-unread').hide();
 		notification.appendTo(selector);
@@ -140,7 +150,7 @@
 
 			var panelTotal = 10;
 
-			loadNotifications({page: 0, perpage: panelTotal, unread: 1},function(data){
+			loadNotifications({page: 0, perpage: panelTotal},function(data){
 				updateCounts();
 				if (reverbNotificationPage) {
 					initialSpecialPageData();
@@ -152,7 +162,7 @@
 					}
 
 					if (meta.unread > panelTotal) {
-					addNotification(
+						addNotification(
 							buildViewMore( meta.unread - panelTotal )
 						)
 					}
@@ -161,7 +171,7 @@
 		} else {
 			// If we cant find the userbox, lets assume we are mobile.
 			var mheader = $("form.header");
-			loadNotifications({page: 0, perpage: 1, unread: 1},function(data){
+			loadNotifications({page: 0, perpage: 1},function(data){
 				if (reverbNotificationPage) {
 					initialSpecialPageData();
 				}
@@ -169,6 +179,8 @@
 			});
 		}
 	}
+
+	let metaHasSet = false;
 
 	var loadNotifications = function(filters, cb) {
 
@@ -198,23 +210,29 @@
 			data.uselang = urlParams.get('uselang');
 		}
 
+		let refreshMeta = true;
+
 		if (f.type) {
 			data.type = f.type;
 		}
 		if (f.unread) {
 			data.unread = f.unread;
+			refreshMeta = false;
 		}
 		if (f.read) {
 			data.read = f.read;
+			refreshMeta = false;
 		}
 
 		api.get(data)
-		.done(function(data) {
-			if (data.meta) {
-				meta = data.meta;
-			}
-			cb(data)
-		});
+			.done(function(data) {
+				if (data.meta && refreshMeta && !metaHasSet) {
+					meta = data.meta;
+					metaHasSet = true;
+				}
+				currentMeta = data.meta;
+				cb(data)
+			});
 	}
 
 	var buildNotificationsFromData = function(data, compact) {
@@ -279,34 +297,34 @@
 	 *
 	 */
 
-	// Handle marking events as read!
+		// Handle marking events as read!
 	var markRead = function(id, unread){
-		unread = unread ? true : false;
-		var opts = {action:'notifications', do:'dismissNotification', notificationId: id, format:'json', formatversion: 2};
-		if (unread) {
-			opts.dismissedAt = 0;
-		}
-
-		api.post(opts)
-		.done(function(data) {
-			if (data.success) {
-				if (unread) {
-					$(".reverb-npnrc[data-id='"+id+"']").addClass('reverb-npnr-unread').removeClass('reverb-npnr-read');
-					$(".reverb-npn-row[data-id='"+id+"']").addClass('reverb-npn-row-unread');
-					meta.unread = meta.unread + 1;
-					meta.read = meta.read - 1;
-				} else {
-					$(".reverb-npnrc[data-id='"+id+"']").addClass('reverb-npnr-read').removeClass('reverb-npnr-unread');
-					$(".reverb-npn-row[data-id='"+id+"']").removeClass('reverb-npn-row-unread');
-					meta.unread = meta.unread - 1;
-					meta.read = meta.read + 1;
-				}
-				updateCounts();
-			} else {
-				log('There was an issue with api call for id '+id);
+			unread = unread ? true : false;
+			var opts = {action:'notifications', do:'dismissNotification', notificationId: id, format:'json', formatversion: 2};
+			if (unread) {
+				opts.dismissedAt = 0;
 			}
-		});
-	}
+
+			api.post(opts)
+				.done(function(data) {
+					if (data.success) {
+						if (unread) {
+							$(".reverb-npnrc[data-id='"+id+"']").addClass('reverb-npnr-unread').removeClass('reverb-npnr-read');
+							$(".reverb-npn-row[data-id='"+id+"']").addClass('reverb-npn-row-unread');
+							meta.unread = meta.unread + 1;
+							meta.read = meta.read - 1;
+						} else {
+							$(".reverb-npnrc[data-id='"+id+"']").addClass('reverb-npnr-read').removeClass('reverb-npnr-unread');
+							$(".reverb-npn-row[data-id='"+id+"']").removeClass('reverb-npn-row-unread');
+							meta.unread = meta.unread - 1;
+							meta.read = meta.read + 1;
+						}
+						updateCounts();
+					} else {
+						log('There was an issue with api call for id '+id);
+					}
+				});
+		}
 
 	// Mark notification as read if we click a link in the notification.
 	$(document).on('click', ".reverb-npnr-header > a, .reverb-npnr-body > a", function(e){
@@ -367,15 +385,21 @@
 	 */
 
 	if (reverbNotificationPage) {
-		var perPage = 10;
-		var activeFilters = {};
+		let activeFilters = {};
 
 		// Mark All as Read button
 		$("#reverb-mark-all-read").click(function(){
 			api.post({action:'notifications', do:'dismissAllNotifications', format:'json', formatversion: 2})
-			.done(function(data) {
-				generateWithFilters({page: 0, perpage: perPage}, false);
-			});
+				.done(function(data) {
+					generateWithFilters({page: 0, perpage: perPage}, false);
+					if ($('#reverb-ru-unread').parents('li').hasClass('wds-is-current')) {
+						$('#reverb-ru-read').click();
+					}
+
+					meta.read = meta.read + meta.unread;
+					meta.unread = 0;
+					updateCounts();
+				});
 		});
 
 		// Make firefox work like a good web browser.
@@ -387,14 +411,14 @@
 			// check original event to verify human interaction
 			if (this.id == "filter_all" && this.checked) {
 
-					// This is the all checkbox. Lets check every other box
-					$('.reverb-filter-checkbox').each(function () {
-						if (this.id !== "filter_all") {
-							this.checked = true;
-						}
-					});
-					generateWithFilters({page: 0, perpage: perPage}, false);
-					setButtonActive($("#reverb-ru-all"));
+				// This is the all checkbox. Lets check every other box
+				$('.reverb-filter-checkbox').each(function () {
+					if (this.id !== "filter_all") {
+						this.checked = true;
+					}
+				});
+				generateWithFilters({page: 0, perpage: perPage}, false);
+				setButtonActive($("#reverb-ru-all"));
 			} else {
 
 				if (e.originalEvent !== undefined) {
@@ -402,7 +426,7 @@
 					if (this.id == "filter_all") {
 						// we uncheked all, so uncheck everything else
 						$('.reverb-filter-checkbox').each(function () {
-								this.checked = false;
+							this.checked = false;
 						});
 					}
 					// A different filter was clicked.
@@ -434,21 +458,23 @@
 			}
 		});
 
-		var makeNewFilter = function() {
-			var newFilters = activeFilters;
+		const makeNewFilter = function () {
+			const newFilters = activeFilters;
 			newFilters.page = 0;
 			newFilters.perpage = perPage;
 			return newFilters;
 		};
 
 		$("#reverb-ru-all").click(function(){
-			var newFilters = makeNewFilter();
+			const newFilters = makeNewFilter();
+			delete(newFilters.read);
+			delete(newFilters.unread);
 			generateWithFilters(newFilters, true);
 			setButtonActive($(this));
 		});
 
 		$("#reverb-ru-unread").click(function(e){
-			var newFilters = makeNewFilter();
+			const newFilters = makeNewFilter();
 			newFilters.unread = 1;
 			delete(newFilters.read);
 			generateWithFilters(newFilters, true);
@@ -456,7 +482,7 @@
 		});
 
 		$("#reverb-ru-read").click(function(){
-			var newFilters = makeNewFilter();
+			const newFilters = makeNewFilter();
 			newFilters.read = 1;
 			delete(newFilters.unread);
 			generateWithFilters(newFilters, true);
@@ -466,7 +492,7 @@
 
 		var generateWithFilters = function(filters, noUpdateCount) {
 			activeFilters = filters;
-			noUpdateCount = noUpdateCount ? true : false;
+			noUpdateCount = !!noUpdateCount;
 			var showingRead = false;
 
 			if (typeof filters.read !== "undefined" && filters.read) {
@@ -485,14 +511,14 @@
 						addNotification(notifications[x],'specialpage');
 					}
 
-					if (meta.total_all > meta.total_this_page) {
+					if (currentMeta.total_all > currentMeta.total_this_page) {
 						// Oh boy, we gotta do pagination guys
 						$(".reverb-notification-page-paging").pagination({
-							items: meta.total_all,
-							itemsOnPage: meta.items_per_page,
+							items: currentMeta.total_all,
+							itemsOnPage: currentMeta.items_per_page,
 							cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
 							onPageClick: function(page,event) {
-								var newfilters = activeFilters;
+								const newfilters = activeFilters;
 								newfilters.page = page-1;
 								loadNotifications(newfilters, function(data) {
 									if (data.notifications && data.notifications.length) {
@@ -547,22 +573,22 @@
 	var buildNotification = function(d) {
 		var extra = d.read == "unread" ? " reverb-npn-row-unread" : "";
 		var html = ''
-		+ '<div class="reverb-npn-row'+extra+'" data-id="'+d.id+'">'
-		+ '    <div class="reverb-npnr-left">'
-		+ '        <i class="fa '+d.icon+' fa-lg reverb-icon"></i>'
-		+ '    </div>'
-		+ '    <div class="reverb-npnr-right">'
-		+ '        <div class="reverb-npnr-header" data-id="'+d.id+'">'+d.header+'</div>';
+			+ '<div class="reverb-npn-row'+extra+'" data-id="'+d.id+'">'
+			+ '    <div class="reverb-npnr-left">'
+			+ '        <i class="fa '+d.icon+' fa-lg reverb-icon"></i>'
+			+ '    </div>'
+			+ '    <div class="reverb-npnr-right">'
+			+ '        <div class="reverb-npnr-header" data-id="'+d.id+'">'+d.header+'</div>';
 		if (d.body && d.body.length) {
-		   html += '<div class="reverb-npnr-body" data-id="'+d.id+'">'+d.body+'</div>'
+			html += '<div class="reverb-npnr-body" data-id="'+d.id+'">'+d.body+'</div>'
 		}
 		html += '      <div class="reverb-npnr-bottom">'
-		+ '            <span class="reverb-npnr-hitbox"><span class="reverb-npnr-'+d.read+' reverb-npnrc" data-id="'+d.id+'"></span></span>'
-		+ '            <span title="'+d.timestamp+'">' + d.created + '</span>'
-		+ '            <span class="reverb-npnrb-site">on <a href="'+d.site_url+'/Special:Notifications">'+d.site_name+'</span>'
-		+ '        </div>'
-		+ '    </div>'
-		+ '</div>';
+			+ '            <span class="reverb-npnr-hitbox"><span class="reverb-npnr-'+d.read+' reverb-npnrc" data-id="'+d.id+'"></span></span>'
+			+ '            <span title="'+d.timestamp+'">' + d.created + '</span>'
+			+ '            <span class="reverb-npnrb-site">on <a href="'+d.site_url+'/Special:Notifications">'+d.site_name+'</span>'
+			+ '        </div>'
+			+ '    </div>'
+			+ '</div>';
 		return $(html);
 	}
 
@@ -572,24 +598,24 @@
 
 		// lots of i18n stuff to add in here...
 		var html = '<div class="reverb-np">'
-				 + '    <div class="reverb-np-header">'
-				 + '        <span class="reverb-nph-right"><span id="reverb-mark-all-read-panel">' + l('special-button-mark-all-read') + '</span></span>'
-				 + '        <span class="reverb-nph-notifications"><a href="' + notificationUrl + '">'+ l('notifications') +' (<span class="reverb-total-notifications">0</span>)</a></span>'
-				 + '        <span class="reverb-nph-preferences"><a href="' + preferencesUrl + '"><i class="fa fa-cog"></i></a></span>'
-				 + '    </div>'
-				 + '    <div class="reverb-npn">'
-				 + '        <div class="reverb-np-no-unread">'+l('no-unread')+'</div>'
-				 + '    </div>'
-				 + '</div>'
+			+ '    <div class="reverb-np-header">'
+			+ '        <span class="reverb-nph-right"><span id="reverb-mark-all-read-panel">' + l('special-button-mark-all-read') + '</span></span>'
+			+ '        <span class="reverb-nph-notifications"><a href="' + notificationUrl + '">'+ l('notifications') +' (<span class="reverb-total-notifications">0</span>)</a></span>'
+			+ '        <span class="reverb-nph-preferences"><a href="' + preferencesUrl + '"><i class="fa fa-cog"></i></a></span>'
+			+ '    </div>'
+			+ '    <div class="reverb-npn">'
+			+ '        <div class="reverb-np-no-unread">'+l('no-unread')+'</div>'
+			+ '    </div>'
+			+ '</div>'
 		return $(html);
 	}
 
 	var buildNotificationButton = function(data) {
 		var html = '<div class="netbar-box right reverb-notifications reverb-bell reverb-ddt">'
-				 + '    <i class="fas fa-bell reverb-ddt"></i>'
-				 + '	<span class="reverb-total-notifications reverb-bell-notification-count reverb-ddt"></span>'
-				 + '	<div class="reverb-np-arrow"></div>'
-				 + '</div>'
+			+ '    <i class="fas fa-bell reverb-ddt"></i>'
+			+ '	<span class="reverb-total-notifications reverb-bell-notification-count reverb-ddt"></span>'
+			+ '	<div class="reverb-np-arrow"></div>'
+			+ '</div>'
 		return $(html);
 	}
 
