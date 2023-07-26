@@ -194,6 +194,7 @@
 
 		for (var x in filters) {
 			f[x] = filters[x];
+			metaHasSet = false;
 		}
 
 		var data = {
@@ -445,6 +446,9 @@
 						$(".reverb-notification-page-paging").empty();
 						$(".reverb-notification-page-notifications").empty();
 						addNotification(buildNoNotifications(),'specialpage');
+						$("#reverb-ru-all").html( mw.msg('special-button-all', 0) );
+						$("#reverb-ru-read").html( mw.msg('special-button-read', 0) );
+						$("#reverb-ru-unread").html( mw.msg('special-button-unread', 0) );
 					} else {
 						if (checked.length == $('.reverb-filter-checkbox').length - 1) {
 							// if all are checked (except for all) then check all
@@ -465,7 +469,22 @@
 			return newFilters;
 		};
 
+		const makeEmptyBox = function (showingRead, buttonActive) {
+			$(".reverb-notification-page-paging").empty();
+			$(".reverb-notification-page-notifications").empty();
+			addNotification(buildNoNotifications(showingRead),'specialpage');
+			setButtonActive(buttonActive);
+		};
+
+		const isAllFiltersNotChecked = function() {
+			return $(".reverb-filter-row input:checkbox:checked").length === 0
+		};
+
 		$("#reverb-ru-all").click(function(){
+			if (isAllFiltersNotChecked()) {
+				makeEmptyBox(false, $(this));
+				return;
+			}
 			const newFilters = makeNewFilter();
 			delete(newFilters.read);
 			delete(newFilters.unread);
@@ -474,6 +493,12 @@
 		});
 
 		$("#reverb-ru-unread").click(function(e){
+
+			if (isAllFiltersNotChecked()) {
+				makeEmptyBox(false, $(this));
+				return;
+			}
+
 			const newFilters = makeNewFilter();
 			newFilters.unread = 1;
 			delete(newFilters.read);
@@ -482,6 +507,12 @@
 		});
 
 		$("#reverb-ru-read").click(function(){
+
+			if (isAllFiltersNotChecked()) {
+				makeEmptyBox(true, $(this));
+				return;
+			}
+
 			const newFilters = makeNewFilter();
 			newFilters.read = 1;
 			delete(newFilters.unread);
