@@ -529,6 +529,15 @@
 			if (typeof filters.read !== "undefined" && filters.read) {
 				showingRead = true;
 			}
+			const getNumberOfItemsInViewedCategory = function(filters){
+				if (filters.unread === 1) {
+					return meta.unread;
+				} else if (filters.read === 1) {
+					return meta.read;
+				} else {
+					return meta.total_all;
+				}
+			}
 
 			loadNotifications(filters, function(data) {
 				if (!noUpdateCount) {
@@ -549,17 +558,40 @@
 							itemsOnPage: currentMeta.items_per_page,
 							cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
 							onPageClick: function(page,event) {
+								// this refers to pagination object
 								const newfilters = activeFilters;
-								newfilters.page = page-1;
-								loadNotifications(newfilters, function(data) {
+								// when user un/read too many messages the pagination might end earlier
+								const itemsInViewedCategory = getNumberOfItemsInViewedCategory(newfilters);
+								const itemsInCategoryDecreased = this.items > itemsInViewedCategory;
+								// edge case, if user dismissed notices and want next page, to avoid having gap just refresh current page
+								const userExpectsNextPage = page === this.currentPage + 1;
+								const pagesInViewedCategory = Math.ceil(itemsInViewedCategory / perPage);
+								// if user clicks on page 4 and that page is no longer available because of dismissals we will put him on page 3
+								newfilters.page = Math.min(
+									itemsInCategoryDecreased && userExpectsNextPage ? this.currentPage : page,
+									itemsInViewedCategory
+								) - 1; // -1 because we index pages from 0, so first page is pages[0]
+
+								loadNotifications(newfilters, function (data) {
 									if (data.notifications && data.notifications.length) {
-										$(".reverb-notification-page-notifications").empty();
-										var notifications = buildNotificationsFromData(data,false);
+										$('.reverb-notification-page-notifications').empty();
+										var notifications = buildNotificationsFromData(data, false);
 										for (var x in notifications) {
-											addNotification(notifications[x],'specialpage');
+											addNotification(notifications[x], 'specialpage');
 										}
 									}
 								});
+
+								// update values for pagination
+								this.items = itemsInViewedCategory;
+								// pass down computed page value to pagination (paginator count from 1 here so 1,2,3...)
+								this.currentPage = newfilters.page + 1;
+								// redraw pagination if number of pages changed (destroy if one page left)
+								if (this.pages !== pagesInViewedCategory) {
+									this.pages = pagesInViewedCategory;
+									const elem = $('.reverb-notification-page-paging');
+									this.pages === 1 ? elem.pagination('destroy') : elem.pagination('selectPage', this.currentPage);
+								}
 							}
 						});
 					}
