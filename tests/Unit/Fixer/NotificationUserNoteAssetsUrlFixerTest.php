@@ -51,7 +51,7 @@ class NotificationUserNoteAssetsUrlFixerTest extends TestCase {
 
 		return [
 			[
-				'<img src="/extensions-ucp/mw139/Cheevos/images/gp30.png"',
+				'<img src="/extensions-ucp/v2/Cheevos/images/gp30.png"',
 				'<img src="fandom.com/extensions-ucp/mw139/Cheevos/images/gp30.png"',
 			],
 			[
@@ -59,7 +59,7 @@ class NotificationUserNoteAssetsUrlFixerTest extends TestCase {
 				'<img src="fandom.com/extensions-ucp/mw139/Cheevos/images/gp30.png"',
 			],
 			[
-				'<img src="/extensions-ucp/mw139/mw139/Cheevos/images/gp30.png"',
+				'<img src="/extensions-ucp/v2/mw139/Cheevos/images/gp30.png"',
 				'<img src="fandom.com/extensions-ucp/mw139/Cheevos/images/gp30.png"',
 			],
 			[
@@ -67,7 +67,7 @@ class NotificationUserNoteAssetsUrlFixerTest extends TestCase {
 				'<img src="fandom.com/extensions-ucp/mw139/Cheevos/images/gp30.png"',
 			],
 			[
-				'<img src="/extensions-ucp/mw139/mw139/C/x.png"',
+				'<img src="/extensions-ucp/v2/v2/C/x.png"',
 				'<img src="fandom.com/extensions-ucp/mw139/v2/C/x.png"',
 			],
 			[
