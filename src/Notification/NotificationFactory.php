@@ -5,9 +5,9 @@ namespace Reverb\Notification;
 use Config;
 use Fandom\Includes\Util\UrlUtilityService;
 use Fandom\WikiConfig\WikiVariablesDataService;
+use Fandom\WikiDomain\WikiConfigDataService;
 use MediaWiki\User\UserFactory;
 use Reverb\Identifier\IdentifierService;
-use WikiDomain\WikiConfigDataService;
 
 class NotificationFactory {
 	public function __construct(
