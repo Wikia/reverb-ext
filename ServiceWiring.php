@@ -12,6 +12,7 @@ declare( strict_types=1 );
 
 use Fandom\Includes\Util\UrlUtilityService;
 use Fandom\WikiConfig\WikiVariablesDataService;
+use Fandom\WikiDomain\WikiConfigDataService;
 use MediaWiki\MediaWikiServices;
 use Reverb\Fixer\NotificationUserNoteAssetsUrlFixer;
 use Reverb\Identifier\IdentifierService;
@@ -21,7 +22,6 @@ use Reverb\Notification\NotificationEmail;
 use Reverb\Notification\NotificationFactory;
 use Reverb\Notification\NotificationListService;
 use Reverb\Notification\NotificationService;
-use WikiDomain\WikiConfigDataService;
 
 return [
 	NotificationBroadcastFactory::class =>

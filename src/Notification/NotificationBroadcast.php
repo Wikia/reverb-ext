@@ -140,7 +140,9 @@ class NotificationBroadcast {
 			$this->notificationService->broadcastNotification(
 				array_merge( $this->attributes, [
 					'origin-id' => $this->origin,
-					'agent-id' => $this->identifierService->forUser( (string)$this->agent->getId() ),
+					'agent-id' => $this->agent ?
+						$this->identifierService->forUser( (string)$this->agent->getId() ) :
+						null,
 					'target-ids' => $this->targetIds,
 				] )
 			);

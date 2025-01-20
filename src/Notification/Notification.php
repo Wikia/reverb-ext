@@ -15,10 +15,10 @@ namespace Reverb\Notification;
 use Config;
 use Fandom\Includes\Util\UrlUtilityService;
 use Fandom\WikiConfig\WikiVariablesDataService;
+use Fandom\WikiDomain\WikiConfigData;
+use Fandom\WikiDomain\WikiConfigDataService;
 use MediaWiki\User\UserFactory;
 use Message;
-use WikiDomain\WikiConfigData;
-use WikiDomain\WikiConfigDataService;
 
 class Notification {
 	// Cache of loaded wikis.
