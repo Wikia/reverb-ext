@@ -13,17 +13,17 @@ declare( strict_types=1 );
 
 namespace Reverb;
 
-use Config;
 use Fandom\FandomDesktop\PageHeaderActions;
+use MediaWiki\Config\Config;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Hook\AbortTalkPageEmailNotificationHook;
 use MediaWiki\Hook\BeforeInitializeHook;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\GetNewMessagesAlertHook;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
-use RequestContext;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\Title\Title;
 use Reverb\Notification\NotificationListService;
-use SpecialPage;
-use Title;
 
 class ReverbHookHandler implements
 	BeforePageDisplayHook,
@@ -32,7 +32,10 @@ class ReverbHookHandler implements
 	GetPreferencesHook,
 	AbortTalkPageEmailNotificationHook
 {
-	public function __construct( private Config $config, private NotificationListService $notificationListService ) {
+	public function __construct(
+		private readonly Config $config,
+		private readonly NotificationListService $notificationListService
+	) {
 	}
 
 	/** @inheritDoc */
@@ -49,7 +52,7 @@ class ReverbHookHandler implements
 	}
 
 	/** @inheritDoc */
-	public function onBeforeInitialize( $title, $unused, $output, $user, $request, $mediaWiki ) {
+	public function onBeforeInitialize( $title, $unused, $output, $user, $request, $mediaWiki ): void {
 		if ( !$this->config->get( 'EnableHydraFeatures' ) ||
 			!$title->equals( SpecialPage::getTitleFor( 'Preferences' ) ) ) {
 			return;
@@ -65,12 +68,12 @@ class ReverbHookHandler implements
 	 *
 	 * @inheritDoc
 	 */
-	public function onGetNewMessagesAlert( &$newMessagesAlert, $newtalks, $user, $out ) {
+	public function onGetNewMessagesAlert( &$newMessagesAlert, $newtalks, $user, $out ): bool {
 		return !$this->config->get( 'EnableHydraFeatures' );
 	}
 
 	/** @inheritDoc */
-	public function onGetPreferences( $user, &$preferences ) {
+	public function onGetPreferences( $user, &$preferences ): void {
 		if ( !$this->config->get( 'EnableHydraFeatures' ) ) {
 			return;
 		}
@@ -144,17 +147,17 @@ class ReverbHookHandler implements
 	 * Abort all talk page emails since that is handled by Reverb now.
 	 * @inheritDoc
 	 */
-	public function onAbortTalkPageEmailNotification( $targetUser, $title ) {
+	public function onAbortTalkPageEmailNotification( $targetUser, $title ): bool {
 		return !$this->config->get( 'EnableHydraFeatures' );
 	}
 
-	public function onPageHeaderActionButtonShouldDisplay( Title $title, bool &$shouldDisplay ) {
+	public function onPageHeaderActionButtonShouldDisplay( Title $title, bool &$shouldDisplay ): void {
 		if ( $title->isSpecial( 'Notifications' ) ) {
 			$shouldDisplay = true;
 		}
 	}
 
-	public function onBeforePrepareActionButtons( PageHeaderActions $actionButton, &$contentActions ) {
+	public function onBeforePrepareActionButtons( PageHeaderActions $actionButton, &$contentActions ): void {
 		$context = RequestContext::getMain();
 		$skinName = $context->getSkin()->getSkinName();
 		$title = $context->getTitle();

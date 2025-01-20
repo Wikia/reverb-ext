@@ -12,22 +12,22 @@ declare( strict_types=1 );
 
 namespace Reverb\Notification;
 
-use Config;
 use MailAddress;
+use MediaWiki\Config\Config;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\User\User;
 use MediaWiki\User\UserOptionsLookup;
-use SpecialPage;
 use Twiggy\TwiggyService;
-use User;
 
 // TODO--for removal?? this class is noop as $user->email is noop action
 // (FandomDisableCustomMailer is true by default and correspondig variable is not available in WikiConfig)
 class NotificationEmail {
 	public function __construct(
-		private UserOptionsLookup $userOptionsLookup,
-		private Config $config,
-		private NotificationListService $notificationListService,
-		private NotificationFactory $notificationFactory,
-		private TwiggyService $twiggyService
+		private readonly UserOptionsLookup $userOptionsLookup,
+		private readonly Config $config,
+		private readonly NotificationListService $notificationListService,
+		private readonly NotificationFactory $notificationFactory,
+		private readonly TwiggyService $twiggyService
 	) {
 		$this->twiggyService->setTemplateLocation( 'Reverb', __DIR__ . '/../../resources/templates' );
 	}

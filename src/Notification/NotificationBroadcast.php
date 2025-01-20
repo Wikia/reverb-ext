@@ -15,23 +15,23 @@ namespace Reverb\Notification;
 use Exception;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\User;
 use MWException;
 use Psr\Log\LoggerInterface;
 use Reverb\Identifier\IdentifierService;
-use User;
 
 class NotificationBroadcast {
-	private LoggerInterface $logger;
+	private readonly LoggerInterface $logger;
 
 	public function __construct(
-		private IdentifierService $identifierService,
-		private NotificationEmail $notificationEmail,
-		private NotificationService $notificationService,
-		private array $attributes,
-		private string $origin,
-		private array $targetIds,
-		private array $targets,
-		private ?User $agent
+		private readonly IdentifierService $identifierService,
+		private readonly NotificationEmail $notificationEmail,
+		private readonly NotificationService $notificationService,
+		private readonly array $attributes,
+		private readonly string $origin,
+		private readonly array $targetIds,
+		private readonly array $targets,
+		private readonly ?\MediaWiki\User\User $agent
 	) {
 		$this->logger = LoggerFactory::getInstance( __CLASS__ );
 	}

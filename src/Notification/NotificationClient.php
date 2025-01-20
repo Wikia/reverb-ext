@@ -7,9 +7,9 @@ use GuzzleHttp\RequestOptions;
 
 class NotificationClient {
 	public function __construct(
-		private Client $httpClient,
-		private string $serviceUrl,
-		private array $headers
+		private readonly Client $httpClient,
+		private readonly string $serviceUrl,
+		private readonly array $headers
 	) {
 	}
 

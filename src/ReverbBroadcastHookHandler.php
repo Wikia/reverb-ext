@@ -13,9 +13,10 @@ declare( strict_types=1 );
 
 namespace Reverb;
 
-use Config;
 use Fandom\Includes\User\UserInfo;
 use Fandom\Includes\Util\UrlUtilityService;
+use MediaWiki\Config\Config;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Deferred\LinksUpdate\TitleLinksTable;
 use MediaWiki\Hook\AbortEmailNotificationHook;
 use MediaWiki\Hook\EmailUserCompleteHook;
@@ -25,22 +26,21 @@ use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\RevisionStore;
 use MediaWiki\Revision\SlotRecord;
+use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Storage\EditResult;
 use MediaWiki\Storage\Hook\PageSaveCompleteHook;
+use MediaWiki\Title\NamespaceInfo;
+use MediaWiki\Title\Title;
 use MediaWiki\User\Hook\UserGroupsChangedHook;
+use MediaWiki\User\User;
+use MediaWiki\User\UserArray;
+use MediaWiki\User\UserArrayFromResult;
 use MediaWiki\User\UserFactory;
 use MediaWiki\User\UserIdentity;
 use MediaWiki\User\UserOptionsLookup;
-use MWTimestamp;
-use NamespaceInfo;
+use MediaWiki\Utils\MWTimestamp;
 use RecentChange;
-use RequestContext;
 use Reverb\Notification\NotificationBroadcastFactory;
-use SpecialPage;
-use Title;
-use User;
-use UserArray;
-use UserArrayFromResult;
 use WatchedItemStore;
 use Wikimedia\Assert\Assert;
 use Wikimedia\Rdbms\ILoadBalancer;
@@ -54,18 +54,18 @@ class ReverbBroadcastHookHandler implements
 	EmailUserCompleteHook
 {
 	public function __construct(
-		private Config $config,
-		private UserFactory $userFactory,
-		private RevisionLookup $revisionLookup,
-		private NamespaceInfo $namespaceInfo,
-		private RevisionStore $revisionStore,
-		private UserOptionsLookup $userOptionsLookup,
-		private LanguageFactory $languageFactory,
-		private ILoadBalancer $loadBalancer,
-		private WatchedItemStore $watchedItemStore,
-		private UserInfo $userInfo,
-		private UrlUtilityService $urlUtilityService,
-		private NotificationBroadcastFactory $notificationBroadcastFactory
+		private readonly Config $config,
+		private readonly UserFactory $userFactory,
+		private readonly RevisionLookup $revisionLookup,
+		private readonly NamespaceInfo $namespaceInfo,
+		private readonly RevisionStore $revisionStore,
+		private readonly UserOptionsLookup $userOptionsLookup,
+		private readonly LanguageFactory $languageFactory,
+		private readonly ILoadBalancer $loadBalancer,
+		private readonly WatchedItemStore $watchedItemStore,
+		private readonly UserInfo $userInfo,
+		private readonly UrlUtilityService $urlUtilityService,
+		private readonly NotificationBroadcastFactory $notificationBroadcastFactory
 	) {
 	}
 
@@ -152,7 +152,7 @@ class ReverbBroadcastHookHandler implements
 	}
 
 	/** @inheritDoc */
-	public function onUserGroupsChanged( $user, $added, $removed, $performer, $reason, $oldUGMs, $newUGMs ) {
+	public function onUserGroupsChanged( $user, $added, $removed, $performer, $reason, $oldUGMs, $newUGMs ): void {
 		if ( !$this->config->get( 'EnableHydraFeatures' ) ||
 			// TODO: Implement support for autopromotion
 			!$performer ||
@@ -231,7 +231,7 @@ class ReverbBroadcastHookHandler implements
 	}
 
 	/** @inheritDoc */
-	public function onLinksUpdate( $linksUpdate ) {
+	public function onLinksUpdate( $linksUpdate ): void {
 		if ( !$this->config->get( 'EnableHydraFeatures' ) ) {
 			return;
 		}
@@ -360,7 +360,7 @@ class ReverbBroadcastHookHandler implements
 	}
 
 	/** @inheritDoc */
-	public function onPageSaveComplete( $wikiPage, $user, $summary, $flags, $revisionRecord, $editResult ) {
+	public function onPageSaveComplete( $wikiPage, $user, $summary, $flags, $revisionRecord, $editResult ): void {
 		if ( !$this->config->get( 'EnableHydraFeatures' ) ) {
 			return;
 		}
@@ -373,7 +373,7 @@ class ReverbBroadcastHookHandler implements
 	}
 
 	/** @inheritDoc */
-	public function onFlaggedRevsRevisionReviewFormAfterDoSubmit( $form, $status ) {
+	public function onFlaggedRevsRevisionReviewFormAfterDoSubmit( $form, $status ): void {
 		if ( !$this->config->get( 'EnableHydraFeatures' ) ||
 			$form->getAction() !== 'reject' ||
 			$status === false
@@ -447,7 +447,7 @@ class ReverbBroadcastHookHandler implements
 	}
 
 	/** @inheritDoc */
-	public function onAbortEmailNotification( $editor, $title, $rc ) {
+	public function onAbortEmailNotification( $editor, $title, $rc ): bool {
 		if ( !$this->config->get( 'EnableHydraFeatures' ) ||
 			!$this->config->get( 'ReverbEnableWatchlistHandling' ) ) {
 			return true;
@@ -457,7 +457,7 @@ class ReverbBroadcastHookHandler implements
 		// written. If the write rolls back, we shouldn't notify; additionally, this does all the service calls
 		// in post-output.
 		$this->loadBalancer->getConnection( DB_PRIMARY )
-			->onTransactionCommitOrIdle( fn() => $this->sendNotificationsForEdit( $editor, $title, $rc ) );
+			->onTransactionCommitOrIdle( fn () => $this->sendNotificationsForEdit( $editor, $title, $rc ), __METHOD__ );
 
 		return false;
 	}
@@ -581,7 +581,7 @@ class ReverbBroadcastHookHandler implements
 	}
 
 	/** @inheritDoc */
-	public function onEmailUserComplete( $to, $from, $subject, $text ) {
+	public function onEmailUserComplete( $to, $from, $subject, $text ): void {
 		if ( !$this->config->get( 'EnableHydraFeatures' ) ) {
 			return;
 		}

@@ -15,12 +15,12 @@ namespace Reverb\Notification;
 class NotificationBundle {
 	/** @param Notification[] $notifications */
 	public function __construct(
-		private array $notifications,
-		private int $itemsPerPage,
-		private int $pageNumber,
-		private int $totalThisPage,
-		private int $unreadCount,
-		private int $readCount
+		private readonly array $notifications,
+		private readonly int $itemsPerPage,
+		private readonly int $pageNumber,
+		private readonly int $totalThisPage,
+		private readonly int $unreadCount,
+		private readonly int $readCount
 	) {
 	}
 

@@ -11,7 +11,7 @@ final class NotificationUserNoteAssetsUrlFixer {
 		'^(?=.*\/extensions-ucp\/v2\/.*$).*|' .
 		'^(?=.*\/extensions-ucp\/[^\/]+\/.*$))/m';
 
-	public function __construct( private string $domain ) {
+	public function __construct( private readonly string $domain ) {
 	}
 
 	public function fix( array $notification ): array {
@@ -33,7 +33,7 @@ final class NotificationUserNoteAssetsUrlFixer {
 	}
 
 	private function replaceNotificationImgAssetUrl( $userNote ): array|string|null {
-		return preg_replace_callback( self::REGEX, static function ( $matches ) {
+		return preg_replace_callback( self::REGEX, static function ( $matches ): string|array {
 			$match = $matches[0];
 
 			if ( str_contains( $match, '/extensions-ucp/mw139/' ) ) {

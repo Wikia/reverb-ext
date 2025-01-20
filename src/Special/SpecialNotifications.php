@@ -12,21 +12,21 @@ declare( strict_types=1 );
 
 namespace Reverb\Special;
 
+use MediaWiki\SpecialPage\SpecialPage;
 use Reverb\Notification\NotificationListService;
-use SpecialPage;
 use Twiggy\TwiggyService;
 
 class SpecialNotifications extends SpecialPage {
 	public function __construct(
-		private NotificationListService $notificationListService,
-		private TwiggyService $twiggyService
+		private readonly NotificationListService $notificationListService,
+		private readonly TwiggyService $twiggyService
 	) {
 		parent::__construct( 'Notifications' );
 		$this->twiggyService->setTemplateLocation( 'Reverb', __DIR__ . '/../../resources/templates' );
 	}
 
 	/** @inheritDoc */
-	public function execute( $subpage ) {
+	public function execute( $subpage ): void {
 		$this->requireLogin();
 
 		$isFandomDesktop = $this->getContext()->getSkin()->getSkinName() === 'fandomdesktop';
