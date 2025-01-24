@@ -5,17 +5,17 @@ namespace Reverb\Notification;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\User\User;
 use Psr\Log\LoggerInterface;
 use Reverb\Identifier\IdentifierService;
-use User;
 
 class NotificationService {
-	private LoggerInterface $logger;
+	private readonly LoggerInterface $logger;
 
 	public function __construct(
-		private IdentifierService $identifierService,
-		private NotificationClient $notificationClient,
-		private NotificationFactory $notificationFactory
+		private readonly IdentifierService $identifierService,
+		private readonly NotificationClient $notificationClient,
+		private readonly NotificationFactory $notificationFactory
 	) {
 		$this->logger = LoggerFactory::getInstance( __CLASS__ );
 	}

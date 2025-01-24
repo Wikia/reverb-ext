@@ -6,7 +6,7 @@ class IdentifierService {
 	private const SITE = 'site';
 	private const USER = 'user';
 
-	public function __construct( private int $wikiId, private string $reverbNamespace ) {
+	public function __construct( private readonly int $wikiId, private readonly string $reverbNamespace ) {
 	}
 
 	public function forUser( string $id ): string {

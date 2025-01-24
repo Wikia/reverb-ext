@@ -32,7 +32,7 @@ class CopyEchoPreferences extends Maintenance {
 	 *
 	 * @return void
 	 */
-	public function execute() {
+	public function execute(): void {
 		// @TODO: Waiting on Sam's WIP merge request for ClaimWiki.
 		$preferenceMap = [
 			'echo-subscriptions-email-mention' => false,
@@ -70,7 +70,7 @@ class CopyEchoPreferences extends Maintenance {
 			'enotifwatchlistpages' => 'reverb-article-edit-email-watch',
 		];
 
-		$db = wfGetDB( DB_MASTER );
+		$db = wfGetDB( DB_PRIMARY );
 
 		$results = $db->select( [ 'user_properties' ], [
 				'*',

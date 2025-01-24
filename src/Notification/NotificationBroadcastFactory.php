@@ -2,18 +2,18 @@
 
 namespace Reverb\Notification;
 
-use Config;
+use MediaWiki\Config\Config;
+use MediaWiki\User\User;
 use MWException;
 use Reverb\Identifier\IdentifierService;
-use User;
 
 class NotificationBroadcastFactory {
 	public function __construct(
-		private Config $config,
-		private NotificationListService $notificationListService,
-		private IdentifierService $identifierService,
-		private NotificationEmail $notificationEmail,
-		private NotificationService $notificationService
+		private readonly Config $config,
+		private readonly NotificationListService $notificationListService,
+		private readonly IdentifierService $identifierService,
+		private readonly NotificationEmail $notificationEmail,
+		private readonly NotificationService $notificationService
 	) {
 	}
 

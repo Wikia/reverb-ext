@@ -2,22 +2,22 @@
 
 namespace Reverb\Notification;
 
-use Config;
 use Fandom\Includes\Util\UrlUtilityService;
 use Fandom\WikiConfig\WikiVariablesDataService;
 use Fandom\WikiDomain\WikiConfigDataService;
+use MediaWiki\Config\Config;
 use MediaWiki\User\UserFactory;
 use Reverb\Identifier\IdentifierService;
 
 class NotificationFactory {
 	public function __construct(
-		private Config $config,
-		private NotificationListService $notificationListService,
-		private UrlUtilityService $urlUtilityService,
-		private WikiConfigDataService $wikiConfigDataService,
-		private WikiVariablesDataService $wikiVariablesDataService,
-		private UserFactory $userFactory,
-		private IdentifierService $identifierService
+		private readonly Config $config,
+		private readonly NotificationListService $notificationListService,
+		private readonly UrlUtilityService $urlUtilityService,
+		private readonly WikiConfigDataService $wikiConfigDataService,
+		private readonly WikiVariablesDataService $wikiVariablesDataService,
+		private readonly UserFactory $userFactory,
+		private readonly IdentifierService $identifierService
 	) {
 	}
 

@@ -12,11 +12,11 @@ declare( strict_types=1 );
 
 namespace Reverb\Notification;
 
-use Config;
 use Fandom\Includes\Util\UrlUtilityService;
 use Fandom\WikiConfig\WikiVariablesDataService;
 use Fandom\WikiDomain\WikiConfigData;
 use Fandom\WikiDomain\WikiConfigDataService;
+use MediaWiki\Config\Config;
 use MediaWiki\User\UserFactory;
 use Message;
 
@@ -25,20 +25,20 @@ class Notification {
 	private static array $wikiCache = [];
 
 	public function __construct(
-		private Config $config,
-		private NotificationListService $notificationListService,
-		private UrlUtilityService $urlUtilityService,
-		private WikiConfigDataService $wikiConfigDataService,
-		private WikiVariablesDataService $wikiVariablesDataService,
-		private UserFactory $userFactory,
-		private string $type,
-		private string $message,
-		private string $canonicalUrl,
-		private int $id = 0,
-		private int $createdAt = 0,
-		private int $dismissedAt = 0,
-		private ?string $originId = null,
-		private ?string $agentId = null
+		private readonly Config $config,
+		private readonly NotificationListService $notificationListService,
+		private readonly UrlUtilityService $urlUtilityService,
+		private readonly WikiConfigDataService $wikiConfigDataService,
+		private readonly WikiVariablesDataService $wikiVariablesDataService,
+		private readonly UserFactory $userFactory,
+		private readonly string $type,
+		private readonly string $message,
+		private readonly string $canonicalUrl,
+		private readonly int $id = 0,
+		private readonly int $createdAt = 0,
+		private readonly int $dismissedAt = 0,
+		private readonly ?string $originId = null,
+		private readonly ?string $agentId = null
 	) {
 	}
 

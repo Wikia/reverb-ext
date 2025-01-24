@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        php_version: ['8.0']
+        php_version: ['8.2']
     runs-on: ubuntu-latest
     steps:
     - name: Setup PHP

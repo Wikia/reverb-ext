@@ -10,21 +10,21 @@
 
 namespace Reverb\Notification;
 
-use Config;
+use MediaWiki\Config\Config;
+use MediaWiki\User\User;
 use MediaWiki\User\UserGroupManager;
 use MediaWiki\User\UserOptionsLookup;
-use User;
 
 class NotificationListService {
 	public function __construct(
-		private UserOptionsLookup $userOptionsLookup,
-		private Config $config,
-		private UserGroupManager $userGroupManager
+		private readonly UserOptionsLookup $userOptionsLookup,
+		private readonly Config $config,
+		private readonly UserGroupManager $userGroupManager
 	) {
 	}
 
 	public function shouldNotify( User $user, string $type, string $group ): bool {
-		if ( $group === 'email' && $this->userOptionsLookup->getOption( $user,  'reverb-email-frequency' ) == 0 ) {
+		if ( $group === 'email' && $this->userOptionsLookup->getOption( $user, 'reverb-email-frequency' ) == 0 ) {
 			return false;
 		}
 		$type = $this->replaceTypeWithUsePreference( $type );

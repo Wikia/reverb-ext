@@ -12,9 +12,9 @@ declare( strict_types=1 );
 
 namespace Reverb\Api;
 
-use ApiBase;
-use Config;
 use Exception;
+use MediaWiki\Api\ApiBase;
+use MediaWiki\Config\Config;
 use Reverb\Fixer\NotificationUserNoteAssetsUrlFixer;
 use Reverb\Notification\NotificationService;
 use Wikimedia\ParamValidator\ParamValidator;
@@ -32,14 +32,14 @@ class ApiNotifications extends ApiBase {
 	public function __construct(
 		$query,
 		$moduleName,
-		private Config $config,
-		private NotificationService $notificationService,
-		private NotificationUserNoteAssetsUrlFixer $notificationUserNoteAssetsUrlFixer
+		private readonly Config $config,
+		private readonly NotificationService $notificationService,
+		private readonly NotificationUserNoteAssetsUrlFixer $notificationUserNoteAssetsUrlFixer
 	) {
 		parent::__construct( $query, $moduleName );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		if ( !$this->getUser()->isRegistered() ) {
 			$this->dieWithError( [ 'apierror-permissiondenied-generic' ] );
 		}
@@ -123,7 +123,7 @@ class ApiNotifications extends ApiBase {
 			try {
 				$this->notificationService->dismissNotification( $this->getUser(), $notificationId, $timestamp );
 				return [ 'success' => true ];
-			} catch ( Exception $e ) {
+			} catch ( Exception ) {
 			}
 		}
 
@@ -138,7 +138,7 @@ class ApiNotifications extends ApiBase {
 		try {
 			$this->notificationService->dismissAllNotifications( $this->getUser() );
 			return [ 'success' => true ];
-		} catch ( Exception $e ) {
+		} catch ( Exception ) {
 			return [ 'success' => false ];
 		}
 	}
