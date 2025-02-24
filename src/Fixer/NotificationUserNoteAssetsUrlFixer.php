@@ -4,12 +4,12 @@ declare( strict_types=1 );
 
 namespace Reverb\Fixer;
 
+use MediaWiki\MainConfigNames;
+use MediaWiki\MediaWikiServices;
+
 final class NotificationUserNoteAssetsUrlFixer {
 	private const REGEX =
-		'/(<img\s+[^>]*?\bsrc=["\'].*?)' .
-		'((?!.*\/extensions-ucp\/mw139\/.*).*|' .
-		'^(?=.*\/extensions-ucp\/v2\/.*$).*|' .
-		'^(?=.*\/extensions-ucp\/[^\/]+\/.*$))/m';
+		'/(?:<img\s+[^>]*?\bsrc=["\'].*(?<extPath>extensions-ucp\/(?:v2\/)?(?:mw[0-9]{3})?))/m';
 
 	public function __construct( private readonly string $domain ) {
 	}
@@ -33,18 +33,12 @@ final class NotificationUserNoteAssetsUrlFixer {
 	}
 
 	private function replaceNotificationImgAssetUrl( $userNote ): array|string|null {
-		return preg_replace_callback( self::REGEX, static function ( $matches ): string|array {
-			$match = $matches[0];
-
-			if ( str_contains( $match, '/extensions-ucp/mw139/' ) ) {
-				return $match;
-			} elseif ( str_contains( $match, '/extensions-ucp/v2/mw139/' ) ) {
-				return str_replace( '/extensions-ucp/v2/mw139/', '/extensions-ucp/mw139/', $match );
-			} elseif ( str_contains( $match, '/extensions-ucp/v2/' ) ) {
-				return str_replace( '/extensions-ucp/v2/', '/extensions-ucp/mw139/', $match );
-			} else {
-				return str_replace( '/extensions-ucp/', '/extensions-ucp/mw139/', $match );
-			}
+		$extensionAssetsPath = ltrim( MediaWikiServices::getInstance()->getMainConfig()->get(
+			MainConfigNames::ExtensionAssetsPath
+		), '/' );
+		return preg_replace_callback( self::REGEX, static function ( $matches ) use ( $extensionAssetsPath
+		): string|array {
+			return str_replace( $matches['extPath'], $extensionAssetsPath, $matches[0] );
 		}, $userNote );
 	}
 }
