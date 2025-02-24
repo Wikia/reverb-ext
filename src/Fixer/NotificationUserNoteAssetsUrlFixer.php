@@ -9,7 +9,7 @@ use MediaWiki\MediaWikiServices;
 
 final class NotificationUserNoteAssetsUrlFixer {
 	private const REGEX =
-		'/(?:<img\s+[^>]*?\bsrc=["\'].*(?<extPath>extensions-ucp\/(?:v2\/)?(?:mw[0-9]{3})?))/m';
+		'/(?:<img\s+[^>]*?\bsrc=["\'].*(?<extPath>\/extensions-ucp(?:\/v2)?(?:\/mw[0-9]{3})?))/m';
 
 	public function __construct( private readonly string $domain ) {
 	}
@@ -33,9 +33,9 @@ final class NotificationUserNoteAssetsUrlFixer {
 	}
 
 	private function replaceNotificationImgAssetUrl( $userNote ): array|string|null {
-		$extensionAssetsPath = ltrim( MediaWikiServices::getInstance()->getMainConfig()->get(
+		$extensionAssetsPath = MediaWikiServices::getInstance()->getMainConfig()->get(
 			MainConfigNames::ExtensionAssetsPath
-		), '/' );
+		);
 		return preg_replace_callback( self::REGEX, static function ( $matches ) use ( $extensionAssetsPath
 		): string|array {
 			return str_replace( $matches['extPath'], $extensionAssetsPath, $matches[0] );
