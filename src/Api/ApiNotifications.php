@@ -15,6 +15,7 @@ namespace Reverb\Api;
 use Exception;
 use MediaWiki\Api\ApiBase;
 use MediaWiki\Config\Config;
+use MediaWiki\MainConfigNames;
 use Reverb\Fixer\NotificationUserNoteAssetsUrlFixer;
 use Reverb\Notification\NotificationService;
 use Wikimedia\ParamValidator\ParamValidator;
@@ -95,7 +96,10 @@ class ApiNotifications extends ApiBase {
 		}
 
 		foreach ( $bundle->getNotifications() as $key => $notification ) {
-			$result['notifications'][] = $this->notificationUserNoteAssetsUrlFixer->fix( $notification->toArray() );
+			$result['notifications'][] = $this->notificationUserNoteAssetsUrlFixer->fix(
+				$notification->toArray(),
+				$this->config->get( MainConfigNames::ExtensionAssetsPath )
+			);
 		}
 		$result['meta'] = [
 			'unread' => $bundle->getUnreadCount(),

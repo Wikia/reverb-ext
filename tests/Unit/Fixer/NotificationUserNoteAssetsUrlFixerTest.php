@@ -19,7 +19,7 @@ class NotificationUserNoteAssetsUrlFixerTest extends TestCase {
 			'user_note' => $input
 		];
 
-		$fixedNotification = $fixer->fix( $notificationInput );
+		$fixedNotification = $fixer->fix( $notificationInput, '/extensions-ucp/mw143' );
 
 		self::assertSame( $expectedResult, $fixedNotification['user_note'] );
 	}
