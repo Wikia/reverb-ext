@@ -19,12 +19,12 @@ class NotificationUserNoteAssetsUrlFixerTest extends TestCase {
 			'user_note' => $input
 		];
 
-		$fixedNotification = $fixer->fix( $notificationInput );
+		$fixedNotification = $fixer->fix( $notificationInput, '/extensions-ucp/mw143' );
 
 		self::assertSame( $expectedResult, $fixedNotification['user_note'] );
 	}
 
-	public function cheevosDataProvider(): array {
+	public static function cheevosDataProvider(): array {
 		$fullNotification = '
 			<div class=\'reverb-npn-ach\'>
 				<div class=\'reverb-npn-ach-text\'>
@@ -44,7 +44,7 @@ class NotificationUserNoteAssetsUrlFixerTest extends TestCase {
 					<div class=\'reverb-npn-ach-description\'>Visit the Achievements Special Page.</div>
 				</div>
 				<div class=\'reverb-npn-ach-points\'>10
-					<img src="fandom.com/extensions-ucp/mw139/Cheevos/images/gp30.png" />
+					<img src="fandom.com/extensions-ucp/mw143/Cheevos/images/gp30.png" />
 				</div>
 			</div>
 		';
@@ -52,23 +52,23 @@ class NotificationUserNoteAssetsUrlFixerTest extends TestCase {
 		return [
 			[
 				'<img src="/extensions-ucp/v2/Cheevos/images/gp30.png"',
-				'<img src="fandom.com/extensions-ucp/mw139/Cheevos/images/gp30.png"',
+				'<img src="fandom.com/extensions-ucp/mw143/Cheevos/images/gp30.png"',
 			],
 			[
 				'<img src="/extensions-ucp/mw139/Cheevos/images/gp30.png"',
-				'<img src="fandom.com/extensions-ucp/mw139/Cheevos/images/gp30.png"',
+				'<img src="fandom.com/extensions-ucp/mw143/Cheevos/images/gp30.png"',
 			],
 			[
 				'<img src="/extensions-ucp/v2/mw139/Cheevos/images/gp30.png"',
-				'<img src="fandom.com/extensions-ucp/mw139/Cheevos/images/gp30.png"',
+				'<img src="fandom.com/extensions-ucp/mw143/Cheevos/images/gp30.png"',
 			],
 			[
 				'<img src="/extensions-ucp/Cheevos/images/gp30.png"',
-				'<img src="fandom.com/extensions-ucp/mw139/Cheevos/images/gp30.png"',
+				'<img src="fandom.com/extensions-ucp/mw143/Cheevos/images/gp30.png"',
 			],
 			[
 				'<img src="/extensions-ucp/v2/v2/C/x.png"',
-				'<img src="fandom.com/extensions-ucp/mw139/v2/C/x.png"',
+				'<img src="fandom.com/extensions-ucp/mw143/v2/C/x.png"',
 			],
 			[
 				$fullNotification,
