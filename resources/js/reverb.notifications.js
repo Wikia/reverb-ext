@@ -559,7 +559,7 @@
 							cssStyle: 'light-theme', // CSS has hydradark and hydra selectors in it
 							onPageClick: function(page,event) {
 								// this refers to pagination object
-								const newfilters = activeFilters;
+								const newfilters = JSON.parse(JSON.stringify(activeFilters));
 								// when user un/read too many messages the pagination might end earlier
 								const itemsInViewedCategory = getNumberOfItemsInViewedCategory(newfilters);
 								const itemsInCategoryDecreased = this.items > itemsInViewedCategory;
