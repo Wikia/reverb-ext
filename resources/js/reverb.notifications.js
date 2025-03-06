@@ -225,12 +225,17 @@
 			refreshMeta = false;
 		}
 
+		const totalAll = meta.total_all;
 		api.get(data)
 			.done(function(data) {
 				if (data.meta && refreshMeta && !metaHasSet) {
 					meta = data.meta;
 					metaHasSet = true;
 				}
+				if (f.isPagination) {
+					meta.total_all = totalAll;
+				}
+
 				currentMeta = data.meta;
 				cb(data)
 			});
@@ -560,6 +565,7 @@
 							onPageClick: function(page,event) {
 								// this refers to pagination object
 								const newfilters = JSON.parse(JSON.stringify(activeFilters));
+								newfilters.isPagination = true;
 								// when user un/read too many messages the pagination might end earlier
 								const itemsInViewedCategory = getNumberOfItemsInViewedCategory(newfilters);
 								const itemsInCategoryDecreased = this.items > itemsInViewedCategory;
