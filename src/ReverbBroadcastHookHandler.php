@@ -41,6 +41,7 @@ use MediaWiki\User\UserOptionsLookup;
 use MediaWiki\Utils\MWTimestamp;
 use RecentChange;
 use Reverb\Notification\NotificationBroadcastFactory;
+use RevisionReviewForm;
 use WatchedItemStore;
 use Wikimedia\Assert\Assert;
 use Wikimedia\Rdbms\ILoadBalancer;
@@ -94,7 +95,7 @@ class ReverbBroadcastHookHandler implements
 					$broadcast = $this->notificationBroadcastFactory->new(
 						'user-interest-talk-page-edit',
 						$agent,
-						$notifyUser,
+						[ $notifyUser ],
 						[
 							'url' => $this->getUserFacingUrl( $title ),
 							'message' => [
@@ -123,7 +124,7 @@ class ReverbBroadcastHookHandler implements
 					$broadcast = $this->notificationBroadcastFactory->new(
 						'article-edit-revert',
 						$agent,
-						$notifyUser,
+						[ $notifyUser ],
 						[
 							'url' => $this->getUserFacingUrl( $title ),
 							'message' => [
@@ -372,7 +373,10 @@ class ReverbBroadcastHookHandler implements
 		}
 	}
 
-	/** @inheritDoc */
+	/**
+	 * @param RevisionReviewForm $form
+	 * @param string|bool $status
+	 */
 	public function onFlaggedRevsRevisionReviewFormAfterDoSubmit( $form, $status ): void {
 		if ( !$this->config->get( 'EnableHydraFeatures' ) ||
 			$form->getAction() !== 'reject' ||
@@ -384,8 +388,8 @@ class ReverbBroadcastHookHandler implements
 		// revid -> userid
 		$affectedRevisions = [];
 		$revQuery = $this->revisionStore->getQueryInfo();
-		$newRev = $this->revisionLookup->getRevisionByTitle( $form->getPage(), $form->getOldId() );
-		$oldRev = $this->revisionLookup->getRevisionByTitle( $form->getPage(), $form->getRefId() );
+		$newRev = $this->revisionLookup->getRevisionByTitle( $form->getTitle(), $form->getOldId() );
+		$oldRev = $this->revisionLookup->getRevisionByTitle( $form->getTitle(), $form->getRefId() );
 
 		$revisions = $this->loadBalancer->getConnection( DB_REPLICA )
 			->select(
@@ -396,7 +400,7 @@ class ReverbBroadcastHookHandler implements
 					"rev_timestamp <= " . $newRev->getTimestamp(),
 					'rev_id > ' . $oldRev->getId(),
 					"rev_timestamp > " . $oldRev->getTimestamp(),
-					'rev_page' => $form->getPage()->getId(),
+					'rev_page' => $form->getTitle()->getId(),
 				],
 				__METHOD__,
 				[],
@@ -411,16 +415,16 @@ class ReverbBroadcastHookHandler implements
 			$form->getUser(),
 			$affectedRevisions,
 			[
-				'url' => $this->getUserFacingUrl( $form->getPage() ),
+				'url' => $this->getUserFacingUrl( $form->getTitle() ),
 				'message' => [
 					[ 'user_note', '' ],
 					[ 1, $form->getUser()->getName() ],
-					[ 2, $form->getPage()->getFullText() ],
+					[ 2, $form->getTitle()->getFullText() ],
 					[ 3, 1 ],
-					[ 4, $this->getUserFacingUrl( $form->getPage() ) ],
+					[ 4, $this->getUserFacingUrl( $form->getTitle() ) ],
 					[
 						5,
-						$this->getUserFacingUrl( $form->getPage(), [
+						$this->getUserFacingUrl( $form->getTitle(), [
 							'type' => 'revision',
 							'oldid' => $oldRev->getId(),
 							'diff' => $newRev->getId(),
