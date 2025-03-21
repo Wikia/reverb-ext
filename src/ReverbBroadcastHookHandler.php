@@ -95,7 +95,7 @@ class ReverbBroadcastHookHandler implements
 					$broadcast = $this->notificationBroadcastFactory->new(
 						'user-interest-talk-page-edit',
 						$agent,
-						[$notifyUser],
+						[ $notifyUser ],
 						[
 							'url' => $this->getUserFacingUrl( $title ),
 							'message' => [
@@ -124,7 +124,7 @@ class ReverbBroadcastHookHandler implements
 					$broadcast = $this->notificationBroadcastFactory->new(
 						'article-edit-revert',
 						$agent,
-						[$notifyUser],
+						[ $notifyUser ],
 						[
 							'url' => $this->getUserFacingUrl( $title ),
 							'message' => [
